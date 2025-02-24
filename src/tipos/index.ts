@@ -30,9 +30,10 @@ export interface PlanoEnsino {
   carga_horaria_pratica: number;
   carga_horaria_pratica_percentual: number;
   carga_horaria_semanal: number;
+  carga_horaria_semanal_percentual: number;
   ementa: string;
   objetivo_geral: string;
-  objetivos_especificos: string[];
+  objetivos_especificos: ObjetivosEspecificos[];
   conteudo_programatico: ConteudoProgramatico[];
   metodologia: string;
   criterios_avaliacao: CriterioAvaliacao[];
@@ -49,6 +50,13 @@ export interface ConteudoProgramatico {
   id: string;
   titulo: string;
   subtopicos: ConteudoProgramatico[];
+  ordem: number;
+}
+
+export interface ObjetivosEspecificos {
+  id: string;
+  titulo: string;
+  subtopicos: ObjetivosEspecificos[];
   ordem: number;
 }
 

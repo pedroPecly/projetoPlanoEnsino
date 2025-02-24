@@ -7,6 +7,7 @@ import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
 import { CriteriosAvaliacao } from '../components/CriteriosAvaliacao';
 import { Bibliografia } from '../components/Bibliografia';
+import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 import type { Curso } from '../tipos';
 
 export function NovoPlano() {
@@ -27,9 +28,10 @@ export function NovoPlano() {
     carga_horaria_pratica: number;
     carga_horaria_pratica_percentual: number;
     carga_horaria_semanal: number;
+    carga_horaria_semanal_percentual: number;
     ementa: string;
     objetivo_geral: string;
-    objetivos_especificos: string[];
+    objetivos_especificos: any[];
     conteudo_programatico: any[];
     metodologia: string;
     criterios_avaliacao: { descricao: string; peso: number }[];
@@ -50,9 +52,10 @@ export function NovoPlano() {
     carga_horaria_pratica: 0,
     carga_horaria_pratica_percentual: 0,
     carga_horaria_semanal: 0,
+    carga_horaria_semanal_percentual: 0,
     ementa: '',
     objetivo_geral: '',
-    objetivos_especificos: [''],
+    objetivos_especificos: [],
     conteudo_programatico: [],
     metodologia: '',
     criterios_avaliacao: [],
@@ -138,12 +141,13 @@ export function NovoPlano() {
     carga_horaria_pratica: number;
     carga_horaria_pratica_percentual: number;
     carga_horaria_semanal: number;
+    carga_horaria_semanal_percentual: number;
   }) {
     setPlano(prev => ({ ...prev, ...values }));
   }
 
-  function handleObjetivosEspecificosChange(objetivos: string[]) {
-    setPlano(prev => ({ ...prev, objetivos_especificos: objetivos }));
+  function handleObjetivosEspecificosChange(conteudos: any[]) {
+    setPlano(prev => ({ ...prev, objetivos_especificos: conteudos }));
   }
 
   function handleConteudoProgramaticoChange(conteudos: any[]) {
@@ -186,6 +190,7 @@ export function NovoPlano() {
           criterios_avaliacao: JSON.stringify(plano.criterios_avaliacao),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
+          
           finalizado: status === 'finalizado'
         }]);
 
@@ -287,6 +292,7 @@ export function NovoPlano() {
                 carga_horaria_pratica={plano.carga_horaria_pratica}
                 carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
                 carga_horaria_semanal={plano.carga_horaria_semanal}
+                carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
                 onChange={handleCargaHorariaChange}
               />
             </div>
@@ -313,6 +319,14 @@ export function NovoPlano() {
                 rows={3}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
+              {/* Conteúdo Programático */}
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos especificos</h2>
+                <ObjetivosEspecificos
+                  conteudos={plano.objetivos_especificos}
+                  onChange={handleObjetivosEspecificosChange}
+                />
+              </div>
             </div>
 
             {/* Conteúdo Programático */}

@@ -10,6 +10,7 @@ import { Bibliografia } from '../components/Bibliografia';
 import { PlanoPDF } from '../components/PlanoPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import type { PlanoEnsino, Professor, Curso } from '../tipos';
+import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 
 export function EditarPlano() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export function EditarPlano() {
       const parsedPlano = {
         ...planoData,
         conteudo_programatico: planoData.conteudo_programatico ? JSON.parse(planoData.conteudo_programatico) : [],
-        objetivos_especificos: planoData.objetivos_especificos ? JSON.parse(planoData.objetivos_especificos) : [''],
+        objetivos_especificos: planoData.objetivos_especificos ? JSON.parse(planoData.objetivos_especificos) : [],
         criterios_avaliacao: planoData.criterios_avaliacao ? JSON.parse(planoData.criterios_avaliacao) : [],
         bibliografia_basica: planoData.bibliografia_basica ? JSON.parse(planoData.bibliografia_basica) : [''],
         bibliografia_complementar: planoData.bibliografia_complementar ? JSON.parse(planoData.bibliografia_complementar) : ['']
@@ -124,12 +125,13 @@ export function EditarPlano() {
     carga_horaria_pratica: number;
     carga_horaria_pratica_percentual: number;
     carga_horaria_semanal: number;
+    carga_horaria_semanal_percentual: number;
   }) {
     setPlano(prev => prev ? ({ ...prev, ...values }) : null);
   }
 
-  function handleObjetivosEspecificosChange(objetivos: string[]) {
-    setPlano(prev => prev ? ({ ...prev, objetivos_especificos: objetivos }) : null);
+  function handleObjetivosEspecificosChange(conteudos: any[]) {
+    setPlano(prev => prev ? ({ ...prev, objetivos_especificos: conteudos }) : null);
   }
 
   function handleConteudoProgramaticoChange(conteudos: any[]) {
@@ -237,7 +239,7 @@ export function EditarPlano() {
               </button>
               {plano.status === 'finalizado' && (
                 <PDFDownloadLink
-                  document={<PlanoPDF planos={[plano]} curso={String(plano.curso_id)} periodo={String(plano.periodo_numero)} />}
+                  document={<PlanoPDF planos={[plano]} curso={cursos.find(curso => curso.id === plano.curso_id)?.nome || ''} periodo={String(plano.periodo_numero)} />}
                   fileName={`PlanoEnsino_${plano.titulo}.pdf`}
                   className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
@@ -348,6 +350,7 @@ export function EditarPlano() {
                 carga_horaria_pratica={plano.carga_horaria_pratica}
                 carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
                 carga_horaria_semanal={plano.carga_horaria_semanal}
+                carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
                 onChange={handleCargaHorariaChange}
               />
             </div>
@@ -374,6 +377,13 @@ export function EditarPlano() {
                 rows={3}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos especificos</h2>
+                <ObjetivosEspecificos
+                  conteudos={plano.objetivos_especificos}
+                  onChange={handleObjetivosEspecificosChange}
+                />
+              </div>
             </div>
 
             {/* Conteúdo Programático */}
