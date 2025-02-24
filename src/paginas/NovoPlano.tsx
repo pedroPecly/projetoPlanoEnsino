@@ -167,21 +167,18 @@ export function NovoPlano() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const { data: professor, error: professorError } = await supabase
+      const { data: professor } = await supabase
         .from('professores')
-        .select('id')
+        .select('nome')
         .eq('id', user.id)
         .single();
-
-      if (professorError || !professor) {
-        throw new Error('Registro do professor não encontrado');
-      }
 
       const { error } = await supabase
         .from('planos_ensino')
         .insert([{
           ...plano,
           professor_id: user.id,
+          professor_nome: professor ? professor.nome : 'Professor',
           status,
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),

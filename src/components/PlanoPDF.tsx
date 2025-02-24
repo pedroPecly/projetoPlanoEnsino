@@ -90,7 +90,9 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Informações Gerais</Text>
               <Text style={styles.content}>Disciplina: {plano.disciplina}</Text>
-              <Text style={styles.content}>Status: {plano.status}</Text>
+              <Text style={styles.content}>Professor: {plano.professor_nome}</Text>
+              <Text style={styles.content}>Curso: {curso}</Text>
+              <Text style={styles.content}>Período: {periodo}º periodo</Text>
             </View>
 
             <View style={styles.section}>
