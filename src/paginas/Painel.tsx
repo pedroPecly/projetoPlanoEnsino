@@ -13,6 +13,7 @@ export function Painel() {
   const [cursos, setCursos] = useState<Record<string, Curso>>({});
   const [filtroCurso, setFiltroCurso] = useState<string>('');
   const [filtroPeriodo, setFiltroPeriodo] = useState<string>('');
+  const [filtroStatus, setFiltroStatus] = useState<string>('');
   const [ordenarPor, setOrdenarPor] = useState<string>('titulo');
   const [ordemAscendente, setOrdemAscendente] = useState<boolean>(true);
 
@@ -78,13 +79,16 @@ export function Painel() {
     .filter(plano => {
       const filtroCursoValido = filtroCurso ? plano.curso_id === filtroCurso : true;
       const filtroPeriodoValido = filtroPeriodo ? plano.periodo === filtroPeriodo : true;
-      return filtroCursoValido && filtroPeriodoValido;
+      const filtroStatusValido = filtroStatus ? plano.status === filtroStatus : true;
+      return filtroCursoValido && filtroPeriodoValido && filtroStatusValido;
     })
     .sort((a, b) => {
       if (ordenarPor === 'titulo') {
         return ordemAscendente ? a.titulo.localeCompare(b.titulo) : b.titulo.localeCompare(a.titulo);
       } else if (ordenarPor === 'data') {
         return ordemAscendente ? new Date(a.atualizado_em).getTime() - new Date(b.atualizado_em).getTime() : new Date(b.atualizado_em).getTime() - new Date(a.atualizado_em).getTime();
+      } else if (ordenarPor === 'disciplina') {
+        return ordemAscendente ? a.disciplina.localeCompare(b.disciplina) : b.disciplina.localeCompare(a.disciplina);
       }
       return 0;
     });
@@ -135,7 +139,7 @@ export function Painel() {
         <div className="mb-4 flex flex-wrap items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <label className="block text-sm font-medium text-gray-700">Curso</label>
+              <label className="block text-sm font-medium text-gray-700">Filtros</label>
               <select
                 value={filtroCurso}
                 onChange={(e) => setFiltroCurso(e.target.value)}
@@ -150,7 +154,6 @@ export function Painel() {
               </select>
             </div>
             <div className="flex items-center space-x-2">
-              <label className="block text-sm font-medium text-gray-700">Período</label>
               <select
                 value={filtroPeriodo}
                 onChange={(e) => setFiltroPeriodo(e.target.value)}
@@ -165,13 +168,24 @@ export function Painel() {
               </select>
             </div>
             <div className="flex items-center space-x-2">
+              <select
+                value={filtroStatus}
+                onChange={(e) => setFiltroStatus(e.target.value)}
+                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+              >
+                <option value="">Todos status</option>
+                <option value="rascunho">Rascunho</option>
+                <option value="finalizado">Finalizado</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-2">
               <label className="block text-sm font-medium text-gray-700">Ordenar</label>
               <button
                 onClick={() => {
                   setOrdenarPor('titulo');
                   setOrdemAscendente(!ordemAscendente);
                 }}
-                className="inline-flex items-center px-2 py-0 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 Título {ordenarPor === 'titulo' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
               </button>
@@ -180,9 +194,18 @@ export function Painel() {
                   setOrdenarPor('data');
                   setOrdemAscendente(!ordemAscendente);
                 }}
-                className="inline-flex items-center px-2 py-0 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 Data de Atualização {ordenarPor === 'data' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
+              </button>
+              <button
+                onClick={() => {
+                  setOrdenarPor('disciplina');
+                  setOrdemAscendente(!ordemAscendente);
+                }}
+                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                Disciplina {ordenarPor === 'disciplina' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
               </button>
             </div>
           </div>

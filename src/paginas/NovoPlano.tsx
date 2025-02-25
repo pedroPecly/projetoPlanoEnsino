@@ -183,7 +183,7 @@ export function NovoPlano() {
           ...plano,
           professor_id: user.id,
           professor_nome: professor ? professor.nome : 'Professor',
-          professor_matricula_siape: professor ? professor.matricula_siape : '',
+          matricula_siape: professor ? professor.matricula_siape : '',
           status,
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
