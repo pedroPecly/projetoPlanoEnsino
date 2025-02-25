@@ -63,12 +63,6 @@ export function EditarPlano() {
 
       if (erroPlano) throw erroPlano;
 
-      // Verificar permissão
-      if (!dadosProfessor.admin && planoData.professor_id !== user.id) {
-        setSemPermissao(true);
-        return;
-      }
-
       // Parse JSON fields
       const parsedPlano = {
         ...planoData,
@@ -219,11 +213,6 @@ export function EditarPlano() {
             <ArrowLeft className="h-5 w-5 mr-2" />
             Voltar ao Painel
           </button>
-          {professor?.admin && (
-            <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">
-              Administrador
-            </span>
-          )}
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">

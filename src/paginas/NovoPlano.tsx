@@ -173,7 +173,7 @@ export function NovoPlano() {
 
       const { data: professor } = await supabase
         .from('professores')
-        .select('nome')
+        .select('nome, matricula_siape')
         .eq('id', user.id)
         .single();
 
@@ -183,6 +183,7 @@ export function NovoPlano() {
           ...plano,
           professor_id: user.id,
           professor_nome: professor ? professor.nome : 'Professor',
+          professor_matricula_siape: professor ? professor.matricula_siape : '',
           status,
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
@@ -190,7 +191,6 @@ export function NovoPlano() {
           criterios_avaliacao: JSON.stringify(plano.criterios_avaliacao),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
-          
           finalizado: status === 'finalizado'
         }]);
 

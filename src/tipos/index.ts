@@ -3,8 +3,7 @@ export interface Professor {
   nome: string;
   email: string;
   created_at: string;
-  admin: boolean;
-  matricula_siape?: string;
+  matricula_siape: string;
 }
 
 export interface Curso {
@@ -21,6 +20,7 @@ export interface PlanoEnsino {
   curso_id: string;
   professor_id: string;
   professor_nome: string; // Adicione esta linha
+  matricula_siape: string; // Adicione esta linha
   disciplina: string;
   carga_horaria_total: number;
   carga_horaria_presencial: number;

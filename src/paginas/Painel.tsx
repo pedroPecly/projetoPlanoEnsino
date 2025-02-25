@@ -112,24 +112,12 @@ export function Painel() {
               <div className="flex items-center text-sm text-gray-700">
                 <User className="h-5 w-5 text-gray-400 mr-2" />
                 <span>Olá, {professor?.nome}</span>
-                {professor?.admin && (
-                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                    Admin
-                  </span>
-                )}
               </div>
               <button
                 onClick={() => navigate('/alterar-dados-usuario')}
                 className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <Settings className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => navigate('/novo-plano')}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                <PlusCircle className="h-5 w-5 mr-2" />
-                Novo Plano
               </button>
               <button
                 onClick={handleLogout}
@@ -144,16 +132,16 @@ export function Painel() {
       </nav>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="mb-4">
-          <div className="flex flex-wrap items-center space-x-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between">
+          <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <label className="block text-sm font-medium text-gray-700">Curso</label>
               <select
                 value={filtroCurso}
                 onChange={(e) => setFiltroCurso(e.target.value)}
-                className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
               >
-                <option value="">Todos os Cursos</option>
+                <option value="">Todos Cursos</option>
                 {Object.values(cursos).map(curso => (
                   <option key={curso.id} value={curso.id}>
                     {curso.nome}
@@ -166,9 +154,9 @@ export function Painel() {
               <select
                 value={filtroPeriodo}
                 onChange={(e) => setFiltroPeriodo(e.target.value)}
-                className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
               >
-                <option value="">Todos os Períodos</option>
+                <option value="">Todos Períodos</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                   <option key={num} value={`${num}º Período`}>
                     {num}º Período
@@ -183,7 +171,7 @@ export function Painel() {
                   setOrdenarPor('titulo');
                   setOrdemAscendente(!ordemAscendente);
                 }}
-                className="inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-2 py-0 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 Título {ordenarPor === 'titulo' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
               </button>
@@ -192,12 +180,19 @@ export function Painel() {
                   setOrdenarPor('data');
                   setOrdemAscendente(!ordemAscendente);
                 }}
-                className="inline-flex items-center px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-2 py-0 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 Data de Atualização {ordenarPor === 'data' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
               </button>
             </div>
           </div>
+          <button
+            onClick={() => navigate('/novo-plano')}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+          >
+            <PlusCircle className="h-5 w-5 mr-2" />
+            Novo Plano
+          </button>
         </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -233,8 +228,8 @@ export function Painel() {
                 >
                   <div className="absolute top-4 right-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${plano.status === 'finalizado'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
                       }`}>
                       {plano.status === 'finalizado' ? 'Finalizado' : 'Rascunho'}
                     </span>

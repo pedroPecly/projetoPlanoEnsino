@@ -99,8 +99,9 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <Text style={styles.sectionTitle}>1. Informações Gerais</Text>
               <Text style={styles.content}>1.1 Disciplina: {plano.disciplina}</Text>
               <Text style={styles.content}>1.2 Professor: {plano.professor_nome}</Text>
-              <Text style={styles.content}>1.3 Curso: {curso}</Text>
-              <Text style={styles.content}>1.4 Período: {periodo}º periodo</Text>
+              <Text style={styles.content}>1.3 Matrícula SIAPE: {plano.matricula_siape}</Text>
+              <Text style={styles.content}>1.4 Curso: {curso}</Text>
+              <Text style={styles.content}>1.5 Período: {periodo}º período</Text>
             </View>
 
             <View style={styles.section}>

@@ -9,6 +9,7 @@ export function CriarConta() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [matriculaSiape, setMatriculaSiape] = useState(''); // Adicione esta linha
   const [carregando, setCarregando] = useState(false);
 
   async function handleCriarConta(e: React.FormEvent) {
@@ -44,6 +45,7 @@ export function CriarConta() {
             id: authData.user.id,
             nome,
             email,
+            matricula_siape: matriculaSiape, // Adicione esta linha
           },
         ], {
           onConflict: 'id'
@@ -121,6 +123,23 @@ export function CriarConta() {
                   required
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="matricula_siape" className="block text-sm font-medium text-gray-700">
+                Matrícula SIAPE
+              </label>
+              <div className="mt-1">
+                <input
+                  id="matricula_siape"
+                  name="matricula_siape"
+                  type="text"
+                  required
+                  value={matriculaSiape}
+                  onChange={(e) => setMatriculaSiape(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
