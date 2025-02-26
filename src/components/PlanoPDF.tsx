@@ -28,14 +28,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 15,
     padding: 10,
     borderWidth: 1,
     borderColor: '#000',
   },
   sectionTitle: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 8,
     fontWeight: 'bold',
     textAlign: 'center',
     backgroundColor: '#f0f0f0',
@@ -46,19 +46,19 @@ const styles = StyleSheet.create({
     marginTop: -10,
   },
   content: {
-    marginBottom: 10,
+    marginBottom: 8,
     textAlign: 'justify',
   },
   list: {
     marginLeft: 20,
   },
   listItem: {
-    marginBottom: 5,
+    marginBottom: 4,
   },
   table: {
     display: 'flex',
     width: 'auto',
-    marginBottom: 10,
+    marginBottom: 8,
     borderWidth: 1,
     borderColor: '#000',
   },
@@ -94,7 +94,6 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>Relatório de Planos de Ensino</Text>
         <Text style={styles.subtitle}>{curso} - {periodo}</Text>
 
         {planos.map((plano, index) => (
