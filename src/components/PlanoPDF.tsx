@@ -1,43 +1,49 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import type { PlanoEnsino } from '../tipos';
+
+// Registre a fonte Calibri localmente
+Font.register({
+  family: 'Calibri',
+  src: '/src/assets/fonts/Calibri.ttf' // Atualize o caminho conforme necessário
+});
 
 const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontSize: 12,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Calibri',
     lineHeight: 1.5,
-    color: '#333',
+    color: '#000',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   subtitle: {
     fontSize: 18,
     marginBottom: 15,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#34495e',
   },
   section: {
     marginBottom: 20,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#bdc3c7',
-    borderRadius: 5,
+    borderColor: '#000',
   },
   sectionTitle: {
     fontSize: 16,
     marginBottom: 10,
     fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#bdc3c7',
-    paddingBottom: 5,
-    color: '#2980b9',
+    borderBottomColor: '#000',
+    marginHorizontal: -10,
+    marginTop: -10,
   },
   content: {
     marginBottom: 10,
@@ -54,8 +60,7 @@ const styles = StyleSheet.create({
     width: 'auto',
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#bdc3c7',
-    borderRadius: 5,
+    borderColor: '#000',
   },
   tableRow: {
     flexDirection: 'row',
@@ -63,18 +68,19 @@ const styles = StyleSheet.create({
   tableCell: {
     padding: 5,
     borderWidth: 1,
-    borderColor: '#bdc3c7',
+    borderColor: '#000',
     flex: 1,
   },
   tableHeader: {
-    backgroundColor: '#ecf0f1',
     fontWeight: 'bold',
   },
   pageBreak: {
     marginTop: 30,
     marginBottom: 30,
     borderTopWidth: 1,
-    borderTopColor: '#bdc3c7',
+    borderTopColor: '#000',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
   },
 });
 
