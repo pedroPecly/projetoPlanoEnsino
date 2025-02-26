@@ -419,7 +419,6 @@ export function EditarPlano() {
 
             {/* Bibliografia */}
             <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Bibliografia</h2>
               <Bibliografia
                 basica={plano.bibliografia_basica}
                 complementar={plano.bibliografia_complementar}
