@@ -31,7 +31,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#333', // Tom cinza escuro
+    borderStyle: 'solid',
+    borderLeftWidth: 1,
+    borderLeftColor: '#333',
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
   },
   sectionTitle: {
     fontSize: 16,
@@ -41,34 +50,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: '#333', // Tom cinza escuro
     marginHorizontal: -10,
     marginTop: -10,
   },
   content: {
     marginBottom: 8,
     textAlign: 'justify',
+    borderColor: '#333', // Tom cinza escuro
   },
   list: {
     marginLeft: 20,
+    borderColor: '#333', // Tom cinza escuro
   },
   listItem: {
     marginBottom: 4,
+    borderColor: '#333', // Tom cinza escuro
   },
   table: {
     display: 'flex',
     width: 'auto',
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#000',
+    marginBottom: 5,
   },
   tableRow: {
     flexDirection: 'row',
   },
   tableCell: {
     padding: 5,
-    borderWidth: 1,
-    borderColor: '#000',
     flex: 1,
   },
   tableHeader: {
@@ -78,9 +86,42 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
     borderTopWidth: 1,
-    borderTopColor: '#000',
+    borderTopColor: '#333', // Tom cinza escuro
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: '#333', // Tom cinza escuro
+  },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    marginVertical: 0, // Remover qualquer espaço entre as linhas
+    marginHorizontal: -10,
+  },
+  infoTable: {
+    width: '100%',
+    marginBottom: 0, // Remover margem inferior
+  },
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 0, // Remover margem inferior
+    height: 24, // Definir uma altura fixa para garantir espaço suficiente
+  },
+  infoLabelCell: {
+    padding: 2, // Reduzir o padding
+    paddingLeft: 5,
+    paddingRight: 5,
+    width: '40%',
+    fontWeight: 'bold',
+    borderRightWidth: 1, // Adiciona linha vertical
+    borderRightColor: '#333', // Mesma cor das outras bordas
+    display: 'flex',
+    justifyContent: 'center', // Centraliza verticalmente
+  },
+  infoValueCell: {
+    padding: 2, // Reduzir o padding
+    paddingLeft: 5,
+    width: '60%',
+    display: 'flex',
+    justifyContent: 'center', // Centraliza verticalmente
   },
 });
 
@@ -101,40 +142,105 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             {index > 0 && <View style={styles.pageBreak} />}
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>1. Informações Gerais</Text>
-              <Text style={styles.content}>1.1 Disciplina: {plano.disciplina}</Text>
-              <Text style={styles.content}>1.2 Professor: {plano.professor_nome}</Text>
-              <Text style={styles.content}>1.3 Matrícula SIAPE: {plano.matricula_siape}</Text>
-              <Text style={styles.content}>1.4 Curso: {curso}</Text>
-              <Text style={styles.content}>1.5 Período: {periodo}º período</Text>
+              <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Componente Curricular:</Text>
+                  <Text style={styles.infoValueCell}>{plano.disciplina}</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horaria Total:</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_total} horas</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horária presencial:</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_presencial} horas ({plano.carga_horaria_presencial_percentual}%)</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horaria de atividades Teórica:</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_teorica} horas ({plano.carga_horaria_teorica_percentual}%)</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horaria de atividades Prática:</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_pratica} horas ({plano.carga_horaria_pratica_percentual}%)</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horária/Aula Semanal:</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_semanal} horas</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Professor:</Text>
+                  <Text style={styles.infoValueCell}>{plano.professor_nome}</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Matrícula SIAPE:</Text>
+                  <Text style={styles.infoValueCell}>{plano.matricula_siape}</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Curso:</Text>
+                  <Text style={styles.infoValueCell}>{curso}</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              
+              <View style={styles.infoTable}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Período:</Text>
+                  <Text style={styles.infoValueCell}>{periodo}º período</Text>
+                </View>
+              </View>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>2. Carga Horária</Text>
-              <Text style={styles.content}>2.1 Total: {plano.carga_horaria_total} horas</Text>
-              <Text style={styles.content}>2.2 Presencial: {plano.carga_horaria_presencial} horas ({plano.carga_horaria_presencial_percentual}%)</Text>
-              <Text style={styles.content}>2.3 Teórica: {plano.carga_horaria_teorica} horas ({plano.carga_horaria_teorica_percentual}%)</Text>
-              <Text style={styles.content}>2.4 Prática: {plano.carga_horaria_pratica} horas ({plano.carga_horaria_pratica_percentual}%)</Text>
-              <Text style={styles.content}>2.5 Semanal: {plano.carga_horaria_semanal} horas</Text>
+              <Text style={styles.sectionTitle}>2) Ementa</Text>
+              <Text style={styles.content}>2.1 {plano.ementa}</Text>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>3. Ementa</Text>
-              <Text style={styles.content}>3.1 {plano.ementa}</Text>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>4. Objetivos</Text>
-              <Text style={styles.content}>4.1 Geral:</Text>
+              <Text style={styles.sectionTitle}>3) Objetivos</Text>
+              <Text style={styles.content}>3.1 Geral:</Text>
               <Text style={styles.content}>{plano.objetivo_geral}</Text>
-              <Text style={styles.content}>4.2 Específicos:</Text>
+              <Text style={styles.content}>3.2 Específicos:</Text>
               <View style={styles.list}>
                 {plano.objetivos_especificos.map((conteudo, index) => (
                   <View key={index}>
-                    <Text style={styles.listItem}>4.2.{index + 1} {conteudo.titulo}</Text>
+                    <Text style={styles.listItem}>3.2.{index + 1} {conteudo.titulo}</Text>
                     {conteudo.subtopicos.map((sub, subIndex) => (
                       <Text key={subIndex} style={[styles.listItem, { marginLeft: 20 }]}>
-                        4.2.{index + 1}.{subIndex + 1} {sub.titulo}
+                        3.2.{index + 1}.{subIndex + 1} {sub.titulo}
                       </Text>
                     ))}
                   </View>
@@ -143,14 +249,14 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>5. Conteúdo Programático</Text>
+              <Text style={styles.sectionTitle}>4) Conteúdo Programático</Text>
               <View style={styles.list}>
                 {plano.conteudo_programatico.map((conteudo, index) => (
                   <View key={index}>
-                    <Text style={styles.listItem}>5.{index + 1} {conteudo.titulo}</Text>
+                    <Text style={styles.listItem}>4.{index + 1} {conteudo.titulo}</Text>
                     {conteudo.subtopicos.map((sub, subIndex) => (
                       <Text key={subIndex} style={[styles.listItem, { marginLeft: 20 }]}>
-                        5.{index + 1}.{subIndex + 1} {sub.titulo}
+                        4.{index + 1}.{subIndex + 1} {sub.titulo}
                       </Text>
                     ))}
                   </View>
@@ -159,12 +265,12 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>6. Metodologia</Text>
+              <Text style={styles.sectionTitle}>5) Metodologia</Text>
               <Text style={styles.content}>{plano.metodologia}</Text>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>7. Critérios de Avaliação</Text>
+              <Text style={styles.sectionTitle}>6) Critérios de Avaliação</Text>
               <View style={styles.table}>
                 <View style={[styles.tableRow, styles.tableHeader]}>
                   <Text style={styles.tableCell}>Descrição</Text>
@@ -180,20 +286,20 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>8. Bibliografia</Text>
-              <Text style={styles.content}>8.1 Básica:</Text>
+              <Text style={styles.sectionTitle}>7) Bibliografia</Text>
+              <Text style={styles.content}>7.1 Básica:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_basica.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    8.1.{index + 1} {ref}
+                    7.1.{index + 1} {ref}
                   </Text>
                 ))}
               </View>
-              <Text style={styles.content}>8.2 Complementar:</Text>
+              <Text style={styles.content}>7.2 Complementar:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_complementar.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    8.2.{index + 1} {ref}
+                    7.2.{index + 1} {ref}
                   </Text>
                 ))}
               </View>
