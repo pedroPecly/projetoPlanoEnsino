@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Save, ArrowLeft } from 'lucide-react';
+import { Save, ArrowLeft, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export function AlterarDadosUsuario() {
@@ -73,20 +73,18 @@ export function AlterarDadosUsuario() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="max-w-md w-full">
-        <div className="mb-8">
-          <button
-            onClick={() => navigate('/painel')}
-            className="flex items-center text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="h-5 w-5 mr-2" />
-            Voltar ao Painel
-          </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="flex justify-center">
+          <User className="h-12 w-12 text-[#2b9f3f]" />
         </div>
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Alterar Dados do Usuário</h1>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Alterar Dados do Usuário
+        </h2>
+      </div>
 
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSalvar}>
             <div>
               <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
@@ -100,7 +98,7 @@ export function AlterarDadosUsuario() {
                   required
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
                 />
               </div>
             </div>
@@ -117,7 +115,7 @@ export function AlterarDadosUsuario() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
                 />
               </div>
             </div>
@@ -134,7 +132,7 @@ export function AlterarDadosUsuario() {
                   required
                   value={matriculaSiape}
                   onChange={(e) => setMatriculaSiape(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
                 />
               </div>
             </div>
@@ -150,7 +148,7 @@ export function AlterarDadosUsuario() {
                   type="password"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
                 />
               </div>
             </div>
@@ -159,12 +157,26 @@ export function AlterarDadosUsuario() {
               <button
                 type="submit"
                 disabled={carregando}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2b9f3f] disabled:opacity-50"
               >
                 {carregando ? 'Salvando...' : 'Salvar'}
               </button>
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="relative flex justify-center text-sm">
+                <button
+                  onClick={() => navigate('/painel')}
+                  className="flex items-center text-gray-600 hover:text-gray-900"
+                >
+                  <ArrowLeft className="h-5 w-5 mr-2" />
+                  Voltar ao Painel
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

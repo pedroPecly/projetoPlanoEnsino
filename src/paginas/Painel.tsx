@@ -109,19 +109,19 @@ export function Painel() {
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
               <span className="ml-2 text-xl font-semibold text-gray-900">
-                Sistema de Planos de Ensino
+                Planos de Ensino
               </span>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center text-sm text-gray-700">
-                <User className="h-5 w-5 text-gray-400 mr-2" />
+                
                 <span>Olá, {professor?.nome}</span>
               </div>
               <button
                 onClick={() => navigate('/alterar-dados-usuario')}
                 className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
-                <Settings className="h-5 w-5" />
+                <User className="h-5 w-5" />
               </button>
               <button
                 onClick={handleLogout}
