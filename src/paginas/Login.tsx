@@ -44,7 +44,7 @@ export function Login() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <LogIn className="h-12 w-12 text-indigo-600" />
+          <LogIn className="h-12 w-12 text-[#2b9f3f]" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Acesse sua conta
@@ -104,7 +104,7 @@ export function Login() {
               <button
                 type="submit"
                 disabled={carregando}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
                 {carregando ? 'Entrando...' : 'Entrar'}
               </button>

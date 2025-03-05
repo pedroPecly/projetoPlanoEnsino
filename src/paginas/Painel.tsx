@@ -107,7 +107,7 @@ export function Painel() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-indigo-600" />
+              <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
               <span className="ml-2 text-xl font-semibold text-gray-900">
                 Sistema de Planos de Ensino
               </span>
@@ -211,7 +211,7 @@ export function Painel() {
           </div>
           <button
             onClick={() => navigate('/novo-plano')}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35]"
           >
             <PlusCircle className="h-5 w-5 mr-2" />
             Novo Plano
@@ -234,7 +234,7 @@ export function Painel() {
               <div className="mt-6">
                 <button
                   onClick={() => navigate('/novo-plano')}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   <PlusCircle className="h-5 w-5 mr-2" />
                   Criar novo plano
