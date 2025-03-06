@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     padding: 2, // Reduzir o padding
     paddingLeft: 5,
     paddingRight: 5,
-    width: '40%',
+    width: '50%', // Aumentar a largura para dar mais espaço aos nomes dos elementos
     fontWeight: 'bold',
     borderRightWidth: 1, // Adiciona linha vertical
     borderRightColor: '#333', // Mesma cor das outras bordas
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   infoValueCell: {
     padding: 2, // Reduzir o padding
     paddingLeft: 5,
-    width: '60%',
+    width: '50%', // Ajustar a largura para manter a proporção
     display: 'flex',
     justifyContent: 'center', // Centraliza verticalmente
   },

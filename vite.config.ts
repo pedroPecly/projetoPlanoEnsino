@@ -10,5 +10,6 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'lucide-react']
-  }
+  },
+  assetsInclude: ['**/*.ttf'] // Adicione esta linha para incluir fontes TTF
 });
