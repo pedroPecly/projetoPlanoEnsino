@@ -6,10 +6,10 @@ export default defineConfig({
   server: {
     port: 8080,
     strictPort: true,
-    host: true
+    host: true,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'lucide-react']
+    include: ['react', 'react-dom', 'lucide-react'],
   },
-  assetsInclude: ['**/*.ttf'] // Adicione esta linha para incluir fontes TTF
+  assetsInclude: ['**/*.ttf'], // Adicione esta linha para incluir fontes TTF
 });

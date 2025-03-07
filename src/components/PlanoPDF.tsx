@@ -4,7 +4,7 @@ import type { PlanoEnsino } from '../tipos';
 // Registre a fonte Calibri localmente
 Font.register({
   family: 'Calibri',
-  src: '/src/assets/fonts/Calibri.ttf' // Atualize o caminho conforme necessário
+  src: '/src/assets/fonts/Calibri.ttf', // Atualize o caminho conforme necessário
 });
 
 const styles = StyleSheet.create({
