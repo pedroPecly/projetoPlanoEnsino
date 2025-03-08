@@ -8,7 +8,7 @@ interface Props {
   onChange: (conteudos: IConteudoProgramatico[]) => void;
 }
 
-export function ConteudoProgramatico({ conteudos, onChange }: Props) {
+export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
   const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set());
 
   const handleDragEnd = (result: any) => {
@@ -18,7 +18,6 @@ export function ConteudoProgramatico({ conteudos, onChange }: Props) {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update ordem field
     const updatedItems = items.map((item, index) => ({
       ...item,
       ordem: index
@@ -44,6 +43,8 @@ export function ConteudoProgramatico({ conteudos, onChange }: Props) {
       {
         id: newId,
         titulo: '',
+        data_prevista: '',
+        carga_horaria: '',
         subtopicos: [],
         ordem: conteudos.length
       }
@@ -60,8 +61,10 @@ export function ConteudoProgramatico({ conteudos, onChange }: Props) {
             {
               id: crypto.randomUUID(),
               titulo: '',
-              subtopicos: [],
-              ordem: topico.subtopicos.length
+              ordem: topico.subtopicos.length,
+              data_prevista: '',
+              carga_horaria: '',
+              subtopicos: []
             }
           ]
         };
@@ -71,10 +74,10 @@ export function ConteudoProgramatico({ conteudos, onChange }: Props) {
     onChange(newConteudos);
   };
 
-  const updateTopico = (id: string, titulo: string) => {
+  const updateTopico = (id: string, field: string, value: string) => {
     const newConteudos = conteudos.map(topico => {
       if (topico.id === id) {
-        return { ...topico, titulo };
+        return { ...topico, [field]: value };
       }
       return topico;
     });
@@ -115,9 +118,22 @@ export function ConteudoProgramatico({ conteudos, onChange }: Props) {
                           )}
                         </button>
                         <input
+                          type="date"
+                          value={topico.data_prevista || ''}
+                          onChange={(e) => updateTopico(topico.id, 'data_prevista', e.target.value)}
+                          className="w-40 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                        <input
                           type="text"
-                          value={topico.titulo}
-                          onChange={(e) => updateTopico(topico.id, e.target.value)}
+                          value={topico.carga_horaria || ''}
+                          onChange={(e) => updateTopico(topico.id, 'carga_horaria', e.target.value)}
+                          placeholder="Carga horária (ex: 2h/a)"
+                          className="w-32 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                        <input
+                          type="text"
+                          value={topico.titulo || ''}
+                          onChange={(e) => updateTopico(topico.id, 'titulo', e.target.value)}
                           className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                           placeholder="Digite o tópico"
                         />

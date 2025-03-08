@@ -19,8 +19,8 @@ export interface PlanoEnsino {
   periodo_numero: number;
   curso_id: string;
   professor_id: string;
-  professor_nome: string; // Adicione esta linha
-  matricula_siape: string; // Adicione esta linha
+  professor_nome: string;
+  matricula_siape: string;
   disciplina: string;
   carga_horaria_total: number;
   carga_horaria_presencial: number;
@@ -36,7 +36,6 @@ export interface PlanoEnsino {
   objetivos_especificos: ObjetivosEspecificos[];
   conteudo_programatico: ConteudoProgramatico[];
   metodologia: string;
-  criterios_avaliacao: CriterioAvaliacao[];
   recuperacao_aprendizagem: string;
   bibliografia_basica: string[];
   bibliografia_complementar: string[];
@@ -49,7 +48,15 @@ export interface PlanoEnsino {
 export interface ConteudoProgramatico {
   id: string;
   titulo: string;
-  subtopicos: ConteudoProgramatico[];
+  data_prevista: string;
+  carga_horaria: string;
+  subtopicos: Subtopico[];
+  ordem: number;
+}
+
+export interface Subtopico {
+  id: string;
+  titulo: string;
   ordem: number;
 }
 
@@ -59,12 +66,3 @@ export interface ObjetivosEspecificos {
   subtopicos: ObjetivosEspecificos[];
   ordem: number;
 }
-
-export interface CriterioAvaliacao {
-  descricao: string;
-  peso: number;
-}
-
-export const CRITERIOS_AVALIACAO_PADRAO: CriterioAvaliacao[] = [];
-
-export const METODOLOGIA_PADRAO = '';

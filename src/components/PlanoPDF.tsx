@@ -1,10 +1,9 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import type { PlanoEnsino } from '../tipos';
 
-// Registre a fonte Calibri localmente
 Font.register({
   family: 'Calibri',
-  src: '/src/assets/fonts/Calibri.ttf', // Atualize o caminho conforme necessário
+  src: '/src/assets/fonts/Calibri.ttf',
 });
 
 const styles = StyleSheet.create({
@@ -31,16 +30,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#333', // Tom cinza escuro
+    borderColor: '#333',
     borderStyle: 'solid',
-    borderLeftWidth: 1,
-    borderLeftColor: '#333',
-    borderRightWidth: 1,
-    borderRightColor: '#333',
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
   },
   sectionTitle: {
     fontSize: 16,
@@ -50,78 +41,95 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 5,
     borderBottomWidth: 1,
-    borderBottomColor: '#333', // Tom cinza escuro
+    borderBottomColor: '#333',
     marginHorizontal: -10,
     marginTop: -10,
   },
   content: {
     marginBottom: 8,
     textAlign: 'justify',
-    borderColor: '#333', // Tom cinza escuro
+    borderColor: '#333',
   },
   list: {
     marginLeft: 20,
-    borderColor: '#333', // Tom cinza escuro
+    borderColor: '#333',
   },
   listItem: {
     marginBottom: 4,
-    borderColor: '#333', // Tom cinza escuro
+    borderColor: '#333',
   },
   table: {
-    display: 'flex',
-    width: 'auto',
+    width: '100%',
     marginBottom: 5,
   },
   tableRow: {
     flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    minHeight: 25,
+    alignItems: 'center',
+  },
+  tableHeader: {
+    backgroundColor: '#f0f0f0',
+    fontWeight: 'bold',
   },
   tableCell: {
     padding: 5,
-    flex: 1,
+    textAlign: 'left',
   },
-  tableHeader: {
-    fontWeight: 'bold',
+  dataCellSmall: {
+    width: '15%',
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+  },
+  cargaHorariaCellSmall: {
+    width: '15%',
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+  },
+  conteudoCell: {
+    width: '70%',
   },
   pageBreak: {
     marginTop: 30,
     marginBottom: 30,
     borderTopWidth: 1,
-    borderTopColor: '#333', // Tom cinza escuro
+    borderTopColor: '#333',
     borderBottomWidth: 1,
-    borderBottomColor: '#333', // Tom cinza escuro
+    borderBottomColor: '#333',
   },
   divider: {
     borderBottomWidth: 1,
     borderBottomColor: '#333',
-    marginVertical: 0, // Remover qualquer espaço entre as linhas
+    marginVertical: 0,
     marginHorizontal: -10,
   },
   infoTable: {
     width: '100%',
-    marginBottom: 0, // Remover margem inferior
+    marginBottom: 0,
   },
   infoRow: {
     flexDirection: 'row',
-    marginBottom: 0, // Remover margem inferior
-    height: 24, // Definir uma altura fixa para garantir espaço suficiente
+    marginBottom: 0,
+    height: 24,
   },
   infoLabelCell: {
-    padding: 2, // Reduzir o padding
+    padding: 2,
     paddingLeft: 5,
     paddingRight: 5,
-    width: '50%', // Aumentar a largura para dar mais espaço aos nomes dos elementos
+    width: '50%',
     fontWeight: 'bold',
-    borderRightWidth: 1, // Adiciona linha vertical
-    borderRightColor: '#333', // Mesma cor das outras bordas
+    borderRightWidth: 1,
+    borderRightColor: '#333',
     display: 'flex',
-    justifyContent: 'center', // Centraliza verticalmente
+    justifyContent: 'center',
   },
   infoValueCell: {
-    padding: 2, // Reduzir o padding
+    padding: 2,
     paddingLeft: 5,
-    width: '50%', // Ajustar a largura para manter a proporção
+    width: '50%',
     display: 'flex',
-    justifyContent: 'center', // Centraliza verticalmente
+    justifyContent: 'center',
   },
 });
 
@@ -129,6 +137,12 @@ interface PlanoPDFProps {
   planos: PlanoEnsino[];
   curso: string;
   periodo: string;
+}
+
+function formatDate(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('pt-BR');
 }
 
 export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
@@ -250,15 +264,26 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>4) Conteúdo Programático</Text>
-              <View style={styles.list}>
+              <View style={styles.table}>
+                <View style={[styles.tableRow, styles.tableHeader]}>
+                  <Text style={[styles.tableCell, styles.dataCellSmall]}>Data Prevista</Text>
+                  <Text style={[styles.tableCell, styles.cargaHorariaCellSmall]}>Carga Horária</Text>
+                  <Text style={[styles.tableCell, styles.conteudoCell]}>Conteúdo</Text>
+                </View>
                 {plano.conteudo_programatico.map((conteudo, index) => (
                   <View key={index}>
-                    <Text style={styles.listItem}>4.{index + 1} {conteudo.titulo}</Text>
-                    {conteudo.subtopicos.map((sub, subIndex) => (
-                      <Text key={subIndex} style={[styles.listItem, { marginLeft: 20 }]}>
-                        4.{index + 1}.{subIndex + 1} {sub.titulo}
+                    <View style={styles.tableRow}>
+                      <Text style={[styles.tableCell, styles.dataCellSmall]}>{formatDate(conteudo.data_prevista)}</Text>
+                      <Text style={[styles.tableCell, styles.cargaHorariaCellSmall]}>{conteudo.carga_horaria}</Text>
+                      <Text style={[styles.tableCell, styles.conteudoCell]}>
+                        {conteudo.titulo}
+                        {conteudo.subtopicos.map((sub, subIndex) => (
+                          <Text key={subIndex} style={{ marginLeft: 10 }}>
+                            <br /> {sub.titulo}
+                          </Text>
+                        ))}
                       </Text>
-                    ))}
+                    </View>
                   </View>
                 ))}
               </View>
@@ -270,36 +295,20 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>6) Critérios de Avaliação</Text>
-              <View style={styles.table}>
-                <View style={[styles.tableRow, styles.tableHeader]}>
-                  <Text style={styles.tableCell}>Descrição</Text>
-                  <Text style={styles.tableCell}>Peso (%)</Text>
-                </View>
-                {plano.criterios_avaliacao.map((criterio, index) => (
-                  <View key={index} style={styles.tableRow}>
-                    <Text style={styles.tableCell}>{criterio.descricao}</Text>
-                    <Text style={styles.tableCell}>{criterio.peso}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>7) Bibliografia</Text>
-              <Text style={styles.content}>7.1 Básica:</Text>
+              <Text style={styles.sectionTitle}>6) Bibliografia</Text>
+              <Text style={styles.content}>6.1 Básica:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_basica.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    7.1.{index + 1} {ref}
+                    6.1.{index + 1} {ref}
                   </Text>
                 ))}
               </View>
-              <Text style={styles.content}>7.2 Complementar:</Text>
+              <Text style={styles.content}>6.2 Complementar:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_complementar.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    7.2.{index + 1} {ref}
+                    6.2.{index + 1} {ref}
                   </Text>
                 ))}
               </View>
