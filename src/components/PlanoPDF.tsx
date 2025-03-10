@@ -247,7 +247,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 {plano.conteudo_programatico.map((conteudo, index) => (
                   <View key={index} style={[
                     styles.tableRow,
-                    index === plano.conteudo_programatico.length - 1 && { borderBottomWidth: 0 }
+                    index === plano.conteudo_programatico.length - 1 ? { borderBottomWidth: 0 } : {}
                   ]}>
                     <Text style={[styles.tableCell, styles.dataCellSmall]}>
                       {formatDate(conteudo.data_prevista)}
