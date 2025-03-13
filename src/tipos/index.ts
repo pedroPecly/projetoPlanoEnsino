@@ -22,6 +22,7 @@ export interface PlanoEnsino {
   professor_nome: string;
   matricula_siape: string;
   disciplina: string;
+  ano_periodo: string;
   carga_horaria_total: number;
   carga_horaria_presencial: number;
   carga_horaria_presencial_percentual: number;
@@ -50,13 +51,7 @@ export interface ConteudoProgramatico {
   titulo: string;
   data_prevista: string;
   carga_horaria: string;
-  subtopicos: Subtopico[];
-  ordem: number;
-}
-
-export interface Subtopico {
-  id: string;
-  titulo: string;
+  subtopicos: ConteudoProgramatico[];
   ordem: number;
 }
 

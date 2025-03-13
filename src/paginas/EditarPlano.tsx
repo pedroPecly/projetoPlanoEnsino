@@ -5,7 +5,6 @@ import { Save, CheckCircle, ArrowLeft, Trash2, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
-import { CriteriosAvaliacao } from '../components/CriteriosAvaliacao';
 import { Bibliografia } from '../components/Bibliografia';
 import { PlanoPDF } from '../components/PlanoPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -22,6 +21,7 @@ export function EditarPlano() {
   const [professor, setProfessor] = useState<Professor | null>(null);
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     carregarDados();
@@ -68,7 +68,6 @@ export function EditarPlano() {
         ...planoData,
         conteudo_programatico: planoData.conteudo_programatico ? JSON.parse(planoData.conteudo_programatico) : [],
         objetivos_especificos: planoData.objetivos_especificos ? JSON.parse(planoData.objetivos_especificos) : [],
-        criterios_avaliacao: planoData.criterios_avaliacao ? JSON.parse(planoData.criterios_avaliacao) : [],
         bibliografia_basica: planoData.bibliografia_basica ? JSON.parse(planoData.bibliografia_basica) : [''],
         bibliografia_complementar: planoData.bibliografia_complementar ? JSON.parse(planoData.bibliografia_complementar) : ['']
       };
@@ -132,10 +131,6 @@ export function EditarPlano() {
     setPlano(prev => prev ? ({ ...prev, conteudo_programatico: conteudos }) : null);
   }
 
-  function handleCriteriosAvaliacaoChange(criterios: { descricao: string; peso: number }[]) {
-    setPlano(prev => prev ? ({ ...prev, criterios_avaliacao: criterios }) : null);
-  }
-
   function handleBibliografiaChange(tipo: 'basica' | 'complementar', referencias: string[]) {
     setPlano(prev => prev ? ({
       ...prev,
@@ -155,7 +150,6 @@ export function EditarPlano() {
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
           conteudo_programatico: JSON.stringify(plano.conteudo_programatico),
-          criterios_avaliacao: JSON.stringify(plano.criterios_avaliacao),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
           finalizado: status === 'finalizado'
@@ -270,6 +264,26 @@ export function EditarPlano() {
           )}
 
           <div className="space-y-6">
+            {/* Ano/Período */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+              <div className="mt-1 flex space-x-4">
+                <select
+                  name="ano_periodo"
+                  value={plano.ano_periodo}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                  {[currentYear - 1, currentYear, currentYear + 1].map(year => (
+                    <React.Fragment key={year}>
+                      <option value={`${year}/1`}>{year}/1</option>
+                      <option value={`${year}/2`}>{year}/2</option>
+                    </React.Fragment>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             {/* Informações Básicas */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
@@ -310,7 +324,7 @@ export function EditarPlano() {
               <input
                 type="text"
                 name="disciplina"
-                value={plano.disciplina || ''}
+                value={plano.disciplina}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
@@ -321,7 +335,7 @@ export function EditarPlano() {
               <input
                 type="text"
                 name="titulo"
-                value={plano.titulo || ''}
+                value={plano.titulo}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
@@ -349,7 +363,7 @@ export function EditarPlano() {
               <label className="block text-sm font-medium text-gray-700">Ementa</label>
               <textarea
                 name="ementa"
-                value={plano.ementa || ''}
+                value={plano.ementa}
                 onChange={handleChange}
                 rows={4}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
@@ -361,11 +375,12 @@ export function EditarPlano() {
               <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
               <textarea
                 name="objetivo_geral"
-                value={plano.objetivo_geral || ''}
+                value={plano.objetivo_geral}
                 onChange={handleChange}
                 rows={3}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
+              {/* Conteúdo Programático */}
               <div>
                 <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos especificos</h2>
                 <ObjetivosEspecificos
@@ -389,30 +404,9 @@ export function EditarPlano() {
               <label className="block text-sm font-medium text-gray-700">Metodologia</label>
               <textarea
                 name="metodologia"
-                value={plano.metodologia || ''}
+                value={plano.metodologia}
                 onChange={handleChange}
                 rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-
-            {/* Critérios de Avaliação */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Critérios de Avaliação</h2>
-              <CriteriosAvaliacao
-                criterios={plano.criterios_avaliacao}
-                onChange={handleCriteriosAvaliacaoChange}
-              />
-            </div>
-
-            {/* Recuperação da Aprendizagem */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Recuperação da Aprendizagem</label>
-              <textarea
-                name="recuperacao_aprendizagem"
-                value={plano.recuperacao_aprendizagem || ''}
-                onChange={handleChange}
-                rows={4}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>

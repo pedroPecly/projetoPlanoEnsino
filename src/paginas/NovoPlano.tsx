@@ -5,7 +5,6 @@ import { Save, CheckCircle, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
-import { CriteriosAvaliacao } from '../components/CriteriosAvaliacao';
 import { Bibliografia } from '../components/Bibliografia';
 import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 import type { Curso } from '../tipos';
@@ -14,12 +13,14 @@ export function NovoPlano() {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState(false);
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const currentYear = new Date().getFullYear();
   const [plano, setPlano] = useState<{
     titulo: string;
     periodo: string;
     periodo_numero: number;
     curso_id: string;
     disciplina: string;
+    ano_periodo: string;
     carga_horaria_total: number;
     carga_horaria_presencial: number;
     carga_horaria_presencial_percentual: number;
@@ -34,8 +35,6 @@ export function NovoPlano() {
     objetivos_especificos: any[];
     conteudo_programatico: any[];
     metodologia: string;
-    criterios_avaliacao: { descricao: string; peso: number }[];
-    recuperacao_aprendizagem: string;
     bibliografia_basica: string[];
     bibliografia_complementar: string[];
   }>({
@@ -44,6 +43,7 @@ export function NovoPlano() {
     periodo_numero: 1,
     curso_id: '',
     disciplina: '',
+    ano_periodo: `${currentYear}/1`,
     carga_horaria_total: 0,
     carga_horaria_presencial: 0,
     carga_horaria_presencial_percentual: 0,
@@ -58,8 +58,6 @@ export function NovoPlano() {
     objetivos_especificos: [],
     conteudo_programatico: [],
     metodologia: '',
-    criterios_avaliacao: [],
-    recuperacao_aprendizagem: '',
     bibliografia_basica: [''],
     bibliografia_complementar: [''],
   });
@@ -154,10 +152,6 @@ export function NovoPlano() {
     setPlano(prev => ({ ...prev, conteudo_programatico: conteudos }));
   }
 
-  function handleCriteriosAvaliacaoChange(criterios: { descricao: string; peso: number }[]) {
-    setPlano(prev => ({ ...prev, criterios_avaliacao: criterios }));
-  }
-
   function handleBibliografiaChange(tipo: 'basica' | 'complementar', referencias: string[]) {
     setPlano(prev => ({
       ...prev,
@@ -188,7 +182,6 @@ export function NovoPlano() {
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
           conteudo_programatico: JSON.stringify(plano.conteudo_programatico),
-          criterios_avaliacao: JSON.stringify(plano.criterios_avaliacao),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
           finalizado: status === 'finalizado'
@@ -223,6 +216,26 @@ export function NovoPlano() {
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Novo Plano de Ensino</h1>
 
           <div className="space-y-6">
+            {/* Ano/Período */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+              <div className="mt-1 flex space-x-4">
+                <select
+                  name="ano_periodo"
+                  value={plano.ano_periodo}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                  {[currentYear - 1, currentYear, currentYear + 1].map(year => (
+                    <React.Fragment key={year}>
+                      <option value={`${year}/1`}>{year}/1</option>
+                      <option value={`${year}/2`}>{year}/2</option>
+                    </React.Fragment>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             {/* Informações Básicas */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
@@ -350,31 +363,10 @@ export function NovoPlano() {
               />
             </div>
 
-            {/* Critérios de Avaliação */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Critérios de Avaliação</h2>
-              <CriteriosAvaliacao
-                criterios={plano.criterios_avaliacao}
-                onChange={handleCriteriosAvaliacaoChange}
-              />
-            </div>
-
-            {/* Recuperação da Aprendizagem */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Recuperação da Aprendizagem</label>
-              <textarea
-                name="recuperacao_aprendizagem"
-                value={plano.recuperacao_aprendizagem}
-                onChange={handleChange}
-                rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
-
             {/* Bibliografia */}
             <div>
               <Bibliografia
-                basica={plano.bibliografia_basica}
+                basica={plano.bibliografia_basica} basica={plano.bibliografia_basica}
                 complementar={plano.bibliografia_complementar}
                 onChange={handleBibliografiaChange}
               />
