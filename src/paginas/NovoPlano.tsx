@@ -366,7 +366,7 @@ export function NovoPlano() {
             {/* Bibliografia */}
             <div>
               <Bibliografia
-                basica={plano.bibliografia_basica} basica={plano.bibliografia_basica}
+                basica={plano.bibliografia_basica}
                 complementar={plano.bibliografia_complementar}
                 onChange={handleBibliografiaChange}
               />
