@@ -32,6 +32,12 @@ export interface PlanoEnsino {
   carga_horaria_pratica_percentual: number;
   carga_horaria_semanal: number;
   carga_horaria_semanal_percentual: number;
+  carga_horaria_distancia?: number;
+  justificativa_modalidade?: string;
+  atividades_extensao?: string;
+  recursos_utilizados: any[];
+  visitas_tecnicas: any[];
+  cronograma: any[];
   ementa: string;
   objetivo_geral: string;
   objetivos_especificos: ObjetivosEspecificos[];
@@ -60,4 +66,30 @@ export interface ObjetivosEspecificos {
   titulo: string;
   subtopicos: ObjetivosEspecificos[];
   ordem: number;
+}
+
+export interface VisitaTecnica {
+  id: string;
+  local: string;
+  data_prevista: string;
+  materiais_necessarios: string[];
+  observacoes?: string;
+}
+
+export interface RecursoUtilizado {
+  id: string;
+  tipo: 'fisico' | 'material' | 'tecnologia';
+  descricao: string;
+  quantidade?: number;
+  observacoes?: string;
+}
+
+export interface CronogramaItem {
+  id: string;
+  semana: number;
+  data_inicio: string;
+  data_fim: string;
+  atividades: string[];
+  recursos: string[];
+  avaliacao?: string;
 }

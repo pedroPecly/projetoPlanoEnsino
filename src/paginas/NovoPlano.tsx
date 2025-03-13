@@ -5,6 +5,9 @@ import { Save, CheckCircle, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
+import { Cronograma } from '../components/Cronograma';
+import { RecursosUtilizados } from '../components/RecursosUtilizados';
+import { VisitasTecnicas } from '../components/VisitasTecnicas';
 import { Bibliografia } from '../components/Bibliografia';
 import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 import type { Curso } from '../tipos';
@@ -30,10 +33,17 @@ export function NovoPlano() {
     carga_horaria_pratica_percentual: number;
     carga_horaria_semanal: number;
     carga_horaria_semanal_percentual: number;
+    carga_horaria_distancia?: number;
+    carga_horaria_distancia_percentual?: number;
+    justificativa_modalidade?: string;
+    atividades_extensao?: string;
     ementa: string;
     objetivo_geral: string;
     objetivos_especificos: any[];
     conteudo_programatico: any[];
+    cronograma: any[];
+    recursos_utilizados: any[];
+    visitas_tecnicas: any[];
     metodologia: string;
     bibliografia_basica: string[];
     bibliografia_complementar: string[];
@@ -53,10 +63,17 @@ export function NovoPlano() {
     carga_horaria_pratica_percentual: 0,
     carga_horaria_semanal: 0,
     carga_horaria_semanal_percentual: 0,
+    carga_horaria_distancia: 0,
+    carga_horaria_distancia_percentual: 0,
+    justificativa_modalidade: '',
+    atividades_extensao: '',
     ementa: '',
     objetivo_geral: '',
     objetivos_especificos: [],
     conteudo_programatico: [],
+    cronograma: [],
+    recursos_utilizados: [],
+    visitas_tecnicas: [],
     metodologia: '',
     bibliografia_basica: [''],
     bibliografia_complementar: [''],
@@ -140,6 +157,8 @@ export function NovoPlano() {
     carga_horaria_pratica_percentual: number;
     carga_horaria_semanal: number;
     carga_horaria_semanal_percentual: number;
+    carga_horaria_distancia?: number;
+    carga_horaria_distancia_percentual?: number;
   }) {
     setPlano(prev => ({ ...prev, ...values }));
   }
@@ -150,6 +169,18 @@ export function NovoPlano() {
 
   function handleConteudoProgramaticoChange(conteudos: any[]) {
     setPlano(prev => ({ ...prev, conteudo_programatico: conteudos }));
+  }
+
+  function handleCronogramaChange(cronograma: any[]) {
+    setPlano(prev => ({ ...prev, cronograma: cronograma }));
+  }
+
+  function handleRecursosUtilizadosChange(recursos: any[]) {
+    setPlano(prev => ({ ...prev, recursos_utilizados: recursos })); 
+  }
+
+  function handleVisitasTecnicasChange(visitas: any[]) {
+    setPlano(prev => ({ ...prev, visitas_tecnicas: visitas }));
   }
 
   function handleBibliografiaChange(tipo: 'basica' | 'complementar', referencias: string[]) {
@@ -182,6 +213,9 @@ export function NovoPlano() {
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
           conteudo_programatico: JSON.stringify(plano.conteudo_programatico),
+          cronograma: JSON.stringify(plano.cronograma),
+          recursos_utilizados: JSON.stringify(plano.recursos_utilizados),
+          visitas_tecnicas: JSON.stringify(plano.visitas_tecnicas),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
           finalizado: status === 'finalizado'
@@ -212,31 +246,31 @@ export function NovoPlano() {
           </button>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Novo Plano de Ensino</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Novo Plano de Ensino</h1>
 
-          <div className="space-y-6">
-            {/* Ano/Período */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
-              <div className="mt-1 flex space-x-4">
-                <select
-                  name="ano_periodo"
-                  value={plano.ano_periodo}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                  {[currentYear - 1, currentYear, currentYear + 1].map(year => (
-                    <React.Fragment key={year}>
-                      <option value={`${year}/1`}>{year}/1</option>
-                      <option value={`${year}/2`}>{year}/2</option>
-                    </React.Fragment>
-                  ))}
-                </select>
-              </div>
+        <div className="space-y-6">
+          {/* Ano/Período */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+            <div className="mt-1 flex space-x-4">
+              <select
+                name="ano_periodo"
+                value={plano.ano_periodo}
+                onChange={handleChange}
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              >
+                {[currentYear - 1, currentYear, currentYear + 1].map(year => (
+                  <React.Fragment key={year}>
+                    <option value={`${year}/1`}>{year}/1</option>
+                    <option value={`${year}/2`}>{year}/2</option>
+                  </React.Fragment>
+                ))}
+              </select>
             </div>
+          </div>
 
-            {/* Informações Básicas */}
+          {/* Informações Básicas */}
+          <div className="bg-white shadow rounded-lg p-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Curso</label>
@@ -292,105 +326,133 @@ export function NovoPlano() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
+          </div>
 
-            {/* Carga Horária */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Carga Horária</h2>
-              <CargaHoraria
-                carga_horaria_total={plano.carga_horaria_total}
-                carga_horaria_presencial={plano.carga_horaria_presencial}
-                carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
-                carga_horaria_teorica={plano.carga_horaria_teorica}
-                carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
-                carga_horaria_pratica={plano.carga_horaria_pratica}
-                carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
-                carga_horaria_semanal={plano.carga_horaria_semanal}
-                carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
-                onChange={handleCargaHorariaChange}
-              />
-            </div>
+          {/* Carga Horária */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Carga Horária</h2>
+            <CargaHoraria
+              carga_horaria_total={plano.carga_horaria_total}
+              carga_horaria_presencial={plano.carga_horaria_presencial}
+              carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
+              carga_horaria_teorica={plano.carga_horaria_teorica}
+              carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
+              carga_horaria_pratica={plano.carga_horaria_pratica}
+              carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
+              carga_horaria_semanal={plano.carga_horaria_semanal}
+              carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
+              carga_horaria_distancia={plano.carga_horaria_distancia}
+              carga_horaria_distancia_percentual={plano.carga_horaria_distancia_percentual}
+              onChange={handleCargaHorariaChange}
+            />
+          </div>
 
-            {/* Ementa */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Ementa</label>
-              <textarea
-                name="ementa"
-                value={plano.ementa}
-                onChange={handleChange}
-                rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
+          {/* Ementa */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Ementa</label>
+            <textarea
+              name="ementa"
+              value={plano.ementa}
+              onChange={handleChange}
+              rows={4}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
 
-            {/* Objetivos */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
-              <textarea
-                name="objetivo_geral"
-                value={plano.objetivo_geral}
-                onChange={handleChange}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              {/* Conteúdo Programático */}
-              <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos especificos</h2>
-                <ObjetivosEspecificos
-                  conteudos={plano.objetivos_especificos}
-                  onChange={handleObjetivosEspecificosChange}
-                />
-              </div>
-            </div>
+          {/* Objetivos */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
+            <textarea
+              name="objetivo_geral"
+              value={plano.objetivo_geral}
+              onChange={handleChange}
+              rows={3}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
 
-            {/* Conteúdo Programático */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo Programático</h2>
-              <ConteudoProgramatico
-                conteudos={plano.conteudo_programatico}
-                onChange={handleConteudoProgramaticoChange}
-              />
-            </div>
+          {/* Objetivos Específicos */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos Específicos</h2>
+            <ObjetivosEspecificos
+              conteudos={plano.objetivos_especificos}
+              onChange={handleObjetivosEspecificosChange}
+            />
+          </div>
 
-            {/* Metodologia */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Metodologia</label>
-              <textarea
-                name="metodologia"
-                value={plano.metodologia}
-                onChange={handleChange}
-                rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
+          {/* Conteúdo Programático */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo Programático</h2>
+            <ConteudoProgramatico
+              conteudos={plano.conteudo_programatico}
+              onChange={handleConteudoProgramaticoChange}
+            />
+          </div>
 
-            {/* Bibliografia */}
-            <div>
-              <Bibliografia
-                basica={plano.bibliografia_basica}
-                complementar={plano.bibliografia_complementar}
-                onChange={handleBibliografiaChange}
-              />
-            </div>
+          {/* Cronograma */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Cronograma</h2>
+            <Cronograma
+              cronograma={plano.cronograma}
+              onChange={handleCronogramaChange}
+            />
+          </div>
 
-            {/* Botões de Ação */}
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => salvarPlano('rascunho')}
-                disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <Save className="h-5 w-5 mr-2" />
-                Salvar Rascunho
-              </button>
-              <button
-                onClick={() => salvarPlano('finalizado')}
-                disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <CheckCircle className="h-5 w-5 mr-2" />
-                Finalizar Plano
-              </button>
-            </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Recursos Utilizados</h2>
+            <RecursosUtilizados
+              recursos={plano.recursos_utilizados}
+              onChange={handleRecursosUtilizadosChange}
+            />
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas Técnicas</h2>
+            <VisitasTecnicas
+              visitas={plano.visitas_tecnicas}
+              onChange={handleVisitasTecnicasChange}
+            />
+          </div>
+
+          {/* Metodologia */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Metodologia</label>
+            <textarea
+              name="metodologia"
+              value={plano.metodologia}
+              onChange={handleChange}
+              rows={6}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
+
+          {/* Bibliografia */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <Bibliografia
+              basica={plano.bibliografia_basica}
+              complementar={plano.bibliografia_complementar}
+              onChange={handleBibliografiaChange}
+            />
+          </div>
+
+          {/* Botões de Ação */}
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => salvarPlano('rascunho')}
+              disabled={carregando}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <Save className="h-5 w-5 mr-2" />
+              Salvar Rascunho
+            </button>
+            <button
+              onClick={() => salvarPlano('finalizado')}
+              disabled={carregando}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <CheckCircle className="h-5 w-5 mr-2" />
+              Finalizar Plano
+            </button>
           </div>
         </div>
       </div>

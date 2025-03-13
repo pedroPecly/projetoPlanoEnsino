@@ -61,10 +61,10 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
             {
               id: crypto.randomUUID(),
               titulo: '',
+              ordem: topico.subtopicos.length,
               data_prevista: '',
               carga_horaria: '',
-              subtopicos: [],
-              ordem: topico.subtopicos.length
+              subtopicos: []
             }
           ]
         };
@@ -157,49 +157,6 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                         <div className="ml-8 mt-2 space-y-2">
                           {topico.subtopicos.map((subtopico, index) => (
                             <div key={subtopico.id} className="flex items-center gap-2">
-                              <input
-                                type="date"
-                                value={subtopico.data_prevista || ''}
-                                onChange={(e) => {
-                                  const newConteudos = conteudos.map(t => {
-                                    if (t.id === topico.id) {
-                                      return {
-                                        ...t,
-                                        subtopicos: t.subtopicos.map(s => 
-                                          s.id === subtopico.id 
-                                            ? { ...s, data_prevista: e.target.value }
-                                            : s
-                                        )
-                                      };
-                                    }
-                                    return t;
-                                  });
-                                  onChange(newConteudos);
-                                }}
-                                className="w-40 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
-                              <input
-                                type="text"
-                                value={subtopico.carga_horaria || ''}
-                                onChange={(e) => {
-                                  const newConteudos = conteudos.map(t => {
-                                    if (t.id === topico.id) {
-                                      return {
-                                        ...t,
-                                        subtopicos: t.subtopicos.map(s => 
-                                          s.id === subtopico.id 
-                                            ? { ...s, carga_horaria: e.target.value }
-                                            : s
-                                        )
-                                      };
-                                    }
-                                    return t;
-                                  });
-                                  onChange(newConteudos);
-                                }}
-                                placeholder="Carga horária (ex: 2h/a)"
-                                className="w-32 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                              />
                               <input
                                 type="text"
                                 value={subtopico.titulo || ''}

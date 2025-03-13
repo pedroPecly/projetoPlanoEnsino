@@ -5,6 +5,9 @@ import { Save, CheckCircle, ArrowLeft, Trash2, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
+import { Cronograma } from '../components/Cronograma';
+import { RecursosUtilizados } from '../components/RecursosUtilizados';
+import { VisitasTecnicas } from '../components/VisitasTecnicas';
 import { Bibliografia } from '../components/Bibliografia';
 import { PlanoPDF } from '../components/PlanoPDF';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -67,6 +70,9 @@ export function EditarPlano() {
       const parsedPlano = {
         ...planoData,
         conteudo_programatico: planoData.conteudo_programatico ? JSON.parse(planoData.conteudo_programatico) : [],
+        cronograma: planoData.cronograma ? JSON.parse(planoData.cronograma) : [],
+        recursos_utilizados: planoData.recursos_utilizados ? JSON.parse(planoData.recursos_utilizados) : [],
+        visitas_tecnicas: planoData.visitas_tecnicas ? JSON.parse(planoData.visitas_tecnicas) : [],
         objetivos_especificos: planoData.objetivos_especificos ? JSON.parse(planoData.objetivos_especificos) : [],
         bibliografia_basica: planoData.bibliografia_basica ? JSON.parse(planoData.bibliografia_basica) : [''],
         bibliografia_complementar: planoData.bibliografia_complementar ? JSON.parse(planoData.bibliografia_complementar) : ['']
@@ -131,6 +137,18 @@ export function EditarPlano() {
     setPlano(prev => prev ? ({ ...prev, conteudo_programatico: conteudos }) : null);
   }
 
+  function handleCronogramaChange(cronograma: any[]) {
+    setPlano(prev => prev ? ({ ...prev, cronograma }) : null);
+  }
+
+  function handleRecursosUtilizadosChange(recursos: any[]) {
+    setPlano(prev => prev ? ({ ...prev, recursos_utilizados: recursos }) : null);
+  }
+
+  function handleVisitasTecnicasChange(visitas: any[]) { 
+    setPlano(prev => prev ? ({ ...prev, visitas_tecnicas: visitas }) : null);
+  }
+
   function handleBibliografiaChange(tipo: 'basica' | 'complementar', referencias: string[]) {
     setPlano(prev => prev ? ({
       ...prev,
@@ -150,6 +168,9 @@ export function EditarPlano() {
           periodo: `${plano.periodo_numero}º Período`,
           objetivos_especificos: JSON.stringify(plano.objetivos_especificos),
           conteudo_programatico: JSON.stringify(plano.conteudo_programatico),
+          cronograma: JSON.stringify(plano.cronograma),
+          recursos_utilizados: JSON.stringify(plano.recursos_utilizados),
+          visitas_tecnicas: JSON.stringify(plano.visitas_tecnicas),
           bibliografia_basica: JSON.stringify(plano.bibliografia_basica),
           bibliografia_complementar: JSON.stringify(plano.bibliografia_complementar),
           finalizado: status === 'finalizado'
@@ -209,82 +230,82 @@ export function EditarPlano() {
           </button>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Editar Plano de Ensino</h1>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Editar Plano de Ensino</h1>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
+            >
+              <Trash2 className="h-5 w-5 mr-2" />
+              Excluir Plano
+            </button>
+            {plano.status === 'finalizado' && (
+              <PDFDownloadLink
+                document={<PlanoPDF planos={[plano]} curso={cursos.find(curso => curso.id === plano.curso_id)?.nome || ''} periodo={String(plano.periodo_numero)} />}
+                fileName={`PlanoEnsino_${plano.titulo}.pdf`}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
-                <Trash2 className="h-5 w-5 mr-2" />
-                Excluir Plano
-              </button>
-              {plano.status === 'finalizado' && (
-                <PDFDownloadLink
-                  document={<PlanoPDF planos={[plano]} curso={cursos.find(curso => curso.id === plano.curso_id)?.nome || ''} periodo={String(plano.periodo_numero)} />}
-                  fileName={`PlanoEnsino_${plano.titulo}.pdf`}
+                <FileText className="h-5 w-5 mr-2" />
+                Exportar PDF
+              </PDFDownloadLink>
+            )}
+          </div>
+        </div>
+
+        {/* Modal de confirmação de exclusão */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Confirmar exclusão
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Tem certeza que deseja excluir este plano de ensino? Esta ação não pode ser desfeita.
+              </p>
+              <div className="flex justify-end space-x-4">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
                   className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  disabled={excluindo}
                 >
-                  <FileText className="h-5 w-5 mr-2" />
-                  Exportar PDF
-                </PDFDownloadLink>
-              )}
+                  Cancelar
+                </button>
+                <button
+                  onClick={excluirPlano}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
+                  disabled={excluindo}
+                >
+                  {excluindo ? 'Excluindo...' : 'Confirmar exclusão'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-6">
+          {/* Ano/Período */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+            <div className="mt-1 flex space-x-4">
+              <select
+                name="ano_periodo"
+                value={plano.ano_periodo}
+                onChange={handleChange}
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              >
+                {[currentYear - 1, currentYear, currentYear + 1].map(year => (
+                  <React.Fragment key={year}>
+                    <option value={`${year}/1`}>{year}/1</option>
+                    <option value={`${year}/2`}>{year}/2</option>
+                  </React.Fragment>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Modal de confirmação de exclusão */}
-          {showDeleteConfirm && (
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Confirmar exclusão
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Tem certeza que deseja excluir este plano de ensino? Esta ação não pode ser desfeita.
-                </p>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    onClick={() => setShowDeleteConfirm(false)}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    disabled={excluindo}
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={excluirPlano}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                    disabled={excluindo}
-                  >
-                    {excluindo ? 'Excluindo...' : 'Confirmar exclusão'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-6">
-            {/* Ano/Período */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
-              <div className="mt-1 flex space-x-4">
-                <select
-                  name="ano_periodo"
-                  value={plano.ano_periodo}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                  {[currentYear - 1, currentYear, currentYear + 1].map(year => (
-                    <React.Fragment key={year}>
-                      <option value={`${year}/1`}>{year}/1</option>
-                      <option value={`${year}/2`}>{year}/2</option>
-                    </React.Fragment>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Informações Básicas */}
+          {/* Informações Básicas */}
+          <div className="bg-white shadow rounded-lg p-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Curso</label>
@@ -340,105 +361,131 @@ export function EditarPlano() {
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
+          </div>
 
-            {/* Carga Horária */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Carga Horária</h2>
-              <CargaHoraria
-                carga_horaria_total={plano.carga_horaria_total}
-                carga_horaria_presencial={plano.carga_horaria_presencial}
-                carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
-                carga_horaria_teorica={plano.carga_horaria_teorica}
-                carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
-                carga_horaria_pratica={plano.carga_horaria_pratica}
-                carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
-                carga_horaria_semanal={plano.carga_horaria_semanal}
-                carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
-                onChange={handleCargaHorariaChange}
-              />
-            </div>
+          {/* Carga Horária */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Carga Horária</h2>
+            <CargaHoraria
+              carga_horaria_total={plano.carga_horaria_total}
+              carga_horaria_presencial={plano.carga_horaria_presencial}
+              carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
+              carga_horaria_teorica={plano.carga_horaria_teorica}
+              carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
+              carga_horaria_pratica={plano.carga_horaria_pratica}
+              carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
+              carga_horaria_semanal={plano.carga_horaria_semanal}
+              carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
+              onChange={handleCargaHorariaChange}
+            />
+          </div>
 
-            {/* Ementa */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Ementa</label>
-              <textarea
-                name="ementa"
-                value={plano.ementa}
-                onChange={handleChange}
-                rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
+          {/* Ementa */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Ementa</label>
+            <textarea
+              name="ementa"
+              value={plano.ementa}
+              onChange={handleChange}
+              rows={4}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
 
-            {/* Objetivos */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
-              <textarea
-                name="objetivo_geral"
-                value={plano.objetivo_geral}
-                onChange={handleChange}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-              {/* Conteúdo Programático */}
-              <div>
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos especificos</h2>
-                <ObjetivosEspecificos
-                  conteudos={plano.objetivos_especificos}
-                  onChange={handleObjetivosEspecificosChange}
-                />
-              </div>
-            </div>
+          {/* Objetivos */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
+            <textarea
+              name="objetivo_geral"
+              value={plano.objetivo_geral}
+              onChange={handleChange}
+              rows={3}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
 
-            {/* Conteúdo Programático */}
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo Programático</h2>
-              <ConteudoProgramatico
-                conteudos={plano.conteudo_programatico}
-                onChange={handleConteudoProgramaticoChange}
-              />
-            </div>
+          {/* Objetivos Específicos */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos Específicos</h2>
+            <ObjetivosEspecificos
+              conteudos={plano.objetivos_especificos}
+              onChange={handleObjetivosEspecificosChange}
+            />
+          </div>
 
-            {/* Metodologia */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Metodologia</label>
-              <textarea
-                name="metodologia"
-                value={plano.metodologia}
-                onChange={handleChange}
-                rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
-            </div>
+          {/* Conteúdo Programático */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo Programático</h2>
+            <ConteudoProgramatico
+              conteudos={plano.conteudo_programatico}
+              onChange={handleConteudoProgramaticoChange}
+            />
+          </div>
 
-            {/* Bibliografia */}
-            <div>
-              <Bibliografia
-                basica={plano.bibliografia_basica}
-                complementar={plano.bibliografia_complementar}
-                onChange={handleBibliografiaChange}
-              />
-            </div>
+          {/* Cronograma */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Cronograma</h2>
+            <Cronograma
+              cronograma={plano.cronograma}
+              onChange={handleCronogramaChange}
+            />
+          </div>
 
-            {/* Botões de Ação */}
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => salvarPlano('rascunho')}
-                disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <Save className="h-5 w-5 mr-2" />
-                Salvar Rascunho
-              </button>
-              <button
-                onClick={() => salvarPlano('finalizado')}
-                disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <CheckCircle className="h-5 w-5 mr-2" />
-                Finalizar Plano
-              </button>
-            </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Recursos Utilizados</h2>
+            <RecursosUtilizados
+              recursos={plano.recursos_utilizados}
+              onChange={handleRecursosUtilizadosChange}
+            />
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas Técnicas</h2>
+            <VisitasTecnicas
+              visitas={plano.visitas_tecnicas}
+              onChange={handleVisitasTecnicasChange}
+            />
+          </div>
+
+          {/* Metodologia */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <label className="block text-sm font-medium text-gray-700">Metodologia</label>
+            <textarea
+              name="metodologia"
+              value={plano.metodologia}
+              onChange={handleChange}
+              rows={6}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
+
+          {/* Bibliografia */}
+          <div className="bg-white shadow rounded-lg p-6">
+            <Bibliografia
+              basica={plano.bibliografia_basica}
+              complementar={plano.bibliografia_complementar}
+              onChange={handleBibliografiaChange}
+            />
+          </div>
+
+          {/* Botões de Ação */}
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={() => salvarPlano('rascunho')}
+              disabled={carregando}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <Save className="h-5 w-5 mr-2" />
+              Salvar Rascunho
+            </button>
+            <button
+              onClick={() => salvarPlano('finalizado')}
+              disabled={carregando}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <CheckCircle className="h-5 w-5 mr-2" />
+              Finalizar Plano
+            </button>
           </div>
         </div>
       </div>
