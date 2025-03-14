@@ -44,7 +44,6 @@ export interface PlanoEnsino {
   objetivos_especificos: ObjetivosEspecificos[];
   conteudo_programatico: ConteudoProgramatico[];
   metodologia: string;
-  recuperacao_aprendizagem: string;
   bibliografia_basica: string[];
   bibliografia_complementar: string[];
   status: 'rascunho' | 'finalizado';
