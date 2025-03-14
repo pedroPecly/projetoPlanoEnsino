@@ -33,6 +33,7 @@ export interface PlanoEnsino {
   carga_horaria_semanal: number;
   carga_horaria_semanal_percentual: number;
   carga_horaria_distancia?: number;
+  carga_horaria_distancia_percentual?: number;
   justificativa_modalidade?: string;
   atividades_extensao?: string;
   recursos_utilizados: any[];

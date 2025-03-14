@@ -155,6 +155,14 @@ function formatDate(dateString: string): string {
   return date.toLocaleDateString('pt-BR');
 }
 
+function formatValue(value: any): string {
+  return value ? value.toString() : 'N/A';
+}
+
+function formatComplexValue(...values: any[]): string {
+  return values.some(value => !value) ? 'N/A' : values.join(' ');
+}
+
 export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
   return (
     <Document>
@@ -171,64 +179,68 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <View style={styles.infoTable}>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Componente Curricular:</Text>
-                  <Text style={styles.infoValueCell}>{plano.disciplina}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.disciplina)}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria Total:</Text>
-                  <Text style={styles.infoValueCell}>{plano.carga_horaria_total} horas</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_total, 'h/a 100%')}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horária presencial:</Text>
-                  <Text style={styles.infoValueCell}>{plano.carga_horaria_presencial} horas ({plano.carga_horaria_presencial_percentual}%)</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_presencial, 'h/a', plano.carga_horaria_presencial_percentual + '%')}</Text>
+                </View>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Carga horária a distancia:</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_distancia, 'h/a', plano.carga_horaria_distancia_percentual + '%')}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria de atividades Teórica:</Text>
-                  <Text style={styles.infoValueCell}>{plano.carga_horaria_teorica} horas ({plano.carga_horaria_teorica_percentual}%)</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_teorica, 'h/a', plano.carga_horaria_teorica_percentual + '%')}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria de atividades Prática:</Text>
-                  <Text style={styles.infoValueCell}>{plano.carga_horaria_pratica} horas ({plano.carga_horaria_pratica_percentual}%)</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_pratica, 'h/a', plano.carga_horaria_pratica_percentual + '%')}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horária/Aula Semanal:</Text>
-                  <Text style={styles.infoValueCell}>{plano.carga_horaria_semanal} horas</Text>
+                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_semanal, 'h/a')}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Professor:</Text>
-                  <Text style={styles.infoValueCell}>{plano.professor_nome}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.professor_nome)}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Matrícula SIAPE:</Text>
-                  <Text style={styles.infoValueCell}>{plano.matricula_siape}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.matricula_siape)}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Curso:</Text>
-                  <Text style={styles.infoValueCell}>{curso}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(curso)}</Text>
                 </View>
                 <View style={styles.lastInfoRow}>
                   <Text style={styles.infoLabelCell}>Período:</Text>
-                  <Text style={styles.infoValueCell}>{periodo}º período</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(periodo)}º período</Text>
                 </View>
               </View>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>2) Ementa</Text>
-              <Text style={styles.content}>2.1 {plano.ementa}</Text>
+              <Text style={styles.content}>2.1 {formatValue(plano.ementa)}</Text>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>3) Objetivos</Text>
               <Text style={styles.content}>3.1 Geral:</Text>
-              <Text style={styles.content}>{plano.objetivo_geral}</Text>
+              <Text style={styles.content}>{formatValue(plano.objetivo_geral)}</Text>
               <Text style={styles.content}>3.2 Específicos:</Text>
               <View style={styles.list}>
                 {plano.objetivos_especificos.map((conteudo, index) => (
                   <View key={index}>
-                    <Text style={styles.listItem}>3.2.{index + 1} {conteudo.titulo}</Text>
+                    <Text style={styles.listItem}>3.2.{index + 1} {formatValue(conteudo.titulo)}</Text>
                     {conteudo.subtopicos.map((sub, subIndex) => (
                       <Text key={subIndex} style={[styles.listItem, { marginLeft: 20 }]}>
-                        3.2.{index + 1}.{subIndex + 1} {sub.titulo}
+                        3.2.{index + 1}.{subIndex + 1} {formatValue(sub.titulo)}
                       </Text>
                     ))}
                   </View>
@@ -253,13 +265,13 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                       {formatDate(conteudo.data_prevista)}
                     </Text>
                     <Text style={[styles.tableCell, styles.cargaHorariaCellSmall]}>
-                      {conteudo.carga_horaria}
+                      {formatValue(conteudo.carga_horaria)}
                     </Text>
                     <View style={[styles.tableCellLast, styles.conteudoCell]}>
-                      <Text>{conteudo.titulo}</Text>
+                      <Text>{formatValue(conteudo.titulo)}</Text>
                       {conteudo.subtopicos.map((sub, subIndex) => (
                         <Text key={subIndex} style={styles.subtopico}>
-                          - {sub.titulo}
+                          - {formatValue(sub.titulo)}
                         </Text>
                       ))}
                     </View>
@@ -270,7 +282,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>5) Metodologia</Text>
-              <Text style={styles.content}>{plano.metodologia}</Text>
+              <Text style={styles.content}>{formatValue(plano.metodologia)}</Text>
             </View>
 
             <View style={styles.section}>
@@ -279,7 +291,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <View style={styles.list}>
                 {plano.bibliografia_basica.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    6.1.{index + 1} {ref}
+                    6.1.{index + 1} {formatValue(ref)}
                   </Text>
                 ))}
               </View>
@@ -287,7 +299,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <View style={styles.list}>
                 {plano.bibliografia_complementar.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    6.2.{index + 1} {ref}
+                    6.2.{index + 1} {formatValue(ref)}
                   </Text>
                 ))}
               </View>
