@@ -141,6 +141,54 @@ const styles = StyleSheet.create({
     minHeight: 24,
     borderBottomWidth: 0,
   },
+  cronogramaTable: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#333',
+    marginTop: 5,
+  },
+  cronogramaHeader: {
+    backgroundColor: '#f0f0f0',
+    fontWeight: 'bold',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  cronogramaRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    minHeight: 35,
+  },
+  cronogramaCell: {
+    padding: 5,
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+  },
+  visitaTable: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#333',
+    marginTop: 5,
+  },
+  visitaHeader: {
+    backgroundColor: '#f0f0f0',
+    fontWeight: 'bold',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  visitaRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    minHeight: 35,
+  },
+  visitaCell: {
+    padding: 5,
+    borderRightWidth: 1,
+    borderRightColor: '#333',
+  },
 });
 
 interface PlanoPDFProps {
@@ -157,6 +205,10 @@ function formatDate(dateString: string): string {
 
 function formatValue(value: any): string {
   return value ? value.toString() : 'N/A';
+}
+
+function formatNumber(value: number): string {
+  return value ? value.toFixed(2) : 'N/A';
 }
 
 function formatComplexValue(...values: any[]): string {
@@ -178,32 +230,36 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               
               <View style={styles.infoTable}>
                 <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>Ano/Período:</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.ano_periodo)}</Text>
+                </View>
+                <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Componente Curricular:</Text>
                   <Text style={styles.infoValueCell}>{formatValue(plano.disciplina)}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria Total:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_total, 'h/a 100%')}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_total)} h/a 100%</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horária presencial:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_presencial, 'h/a', plano.carga_horaria_presencial_percentual + '%')}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_presencial)} h/a {formatNumber(plano.carga_horaria_presencial_percentual)}%</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horária a distancia:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_distancia, 'h/a', plano.carga_horaria_distancia_percentual + '%')}</Text>
+                  <Text style={styles.infoValueCell}>{plano.carga_horaria_distancia ? `${plano.carga_horaria_distancia} h/a ${formatNumber(plano.carga_horaria_distancia_percentual || 0)}%` : 'N/A'}</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria de atividades Teórica:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_teorica, 'h/a', plano.carga_horaria_teorica_percentual + '%')}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_teorica)} h/a {formatNumber(plano.carga_horaria_teorica_percentual)}%</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria de atividades Prática:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_pratica, 'h/a', plano.carga_horaria_pratica_percentual + '%')}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_pratica)} h/a {formatNumber(plano.carga_horaria_pratica_percentual)}%</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horária/Aula Semanal:</Text>
-                  <Text style={styles.infoValueCell}>{formatComplexValue(plano.carga_horaria_semanal, 'h/a')}</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_semanal)} h/a</Text>
                 </View>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Professor:</Text>
@@ -250,31 +306,15 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>4) Conteúdo Programático</Text>
-              <View style={styles.table}>
-                <View style={[styles.tableRow, styles.tableHeader]}>
-                  <Text style={[styles.tableCell, styles.dataCellSmall]}>Data Prevista</Text>
-                  <Text style={[styles.tableCell, styles.cargaHorariaCellSmall]}>Carga Horária</Text>
-                  <Text style={[styles.tableCellLast, styles.conteudoCell]}>Conteúdo</Text>
-                </View>
+              <View style={styles.list}>
                 {plano.conteudo_programatico.map((conteudo, index) => (
-                  <View key={index} style={[
-                    styles.tableRow,
-                    index === plano.conteudo_programatico.length - 1 ? { borderBottomWidth: 0 } : {}
-                  ]}>
-                    <Text style={[styles.tableCell, styles.dataCellSmall]}>
-                      {formatDate(conteudo.data_prevista)}
-                    </Text>
-                    <Text style={[styles.tableCell, styles.cargaHorariaCellSmall]}>
-                      {formatValue(conteudo.carga_horaria)}
-                    </Text>
-                    <View style={[styles.tableCellLast, styles.conteudoCell]}>
-                      <Text>{formatValue(conteudo.titulo)}</Text>
-                      {conteudo.subtopicos.map((sub, subIndex) => (
-                        <Text key={subIndex} style={styles.subtopico}>
-                          - {formatValue(sub.titulo)}
-                        </Text>
-                      ))}
-                    </View>
+                  <View key={index}>
+                    <Text style={styles.listItem}>4.{index + 1} {formatValue(conteudo.titulo)}</Text>
+                    {conteudo.subtopicos.map((sub, subIndex) => (
+                      <Text key={subIndex} style={[styles.listItem, { marginLeft: 20 }]}>
+                        4.{index + 1}.{subIndex + 1} {formatValue(sub.titulo)}
+                      </Text>
+                    ))}
                   </View>
                 ))}
               </View>
@@ -285,21 +325,134 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <Text style={styles.content}>{formatValue(plano.metodologia)}</Text>
             </View>
 
+            {plano.justificativa_modalidade && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>6) Justificativa da Modalidade</Text>
+                <Text style={styles.content}>{formatValue(plano.justificativa_modalidade)}</Text>
+              </View>
+            )}
+
+            {plano.atividades_extensao && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>7) Atividades de Extensão</Text>
+                <Text style={styles.content}>{formatValue(plano.atividades_extensao)}</Text>
+              </View>
+            )}
+
+            {plano.recursos_utilizados.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>8) Recursos Utilizados</Text>
+                <View style={styles.list}>
+                  {plano.recursos_utilizados.map((recurso, index) => (
+                    <View key={index}>
+                      <Text style={styles.listItem}>
+                        8.{index + 1} {recurso.tipo.charAt(0).toUpperCase() + recurso.tipo.slice(1)}: {recurso.descricao}
+                        {recurso.quantidade && ` (Quantidade: ${recurso.quantidade})`}
+                        {recurso.observacoes && ` - ${recurso.observacoes}`}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {plano.visitas_tecnicas.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
+                <View style={styles.visitaTable}>
+                  <View style={styles.visitaHeader}>
+                    <View style={[styles.visitaCell, { width: '30%' }]}>
+                      <Text>Local</Text>
+                    </View>
+                    <View style={[styles.visitaCell, { width: '20%' }]}>
+                      <Text>Data Prevista</Text>
+                    </View>
+                    <View style={[styles.visitaCell, { width: '30%' }]}>
+                      <Text>Materiais Necessários</Text>
+                    </View>
+                    <View style={[styles.visitaCell, { width: '20%', borderRightWidth: 0 }]}>
+                      <Text>Observações</Text>
+                    </View>
+                  </View>
+                  {plano.visitas_tecnicas.map((visita, index) => (
+                    <View key={index} style={styles.visitaRow}>
+                      <View style={[styles.visitaCell, { width: '30%' }]}>
+                        <Text>{visita.local}</Text>
+                      </View>
+                      <View style={[styles.visitaCell, { width: '20%' }]}>
+                        <Text>{formatDate(visita.data_prevista)}</Text>
+                      </View>
+                      <View style={[styles.visitaCell, { width: '30%' }]}>
+                        <Text>{visita.materiais_necessarios.join(', ')}</Text>
+                      </View>
+                      <View style={[styles.visitaCell, { width: '20%', borderRightWidth: 0 }]}>
+                        <Text>{visita.observacoes || 'N/A'}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {plano.cronograma.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>10) Cronograma</Text>
+                <View style={styles.cronogramaTable}>
+                  <View style={styles.cronogramaHeader}>
+                    <View style={[styles.cronogramaCell, { width: '10%' }]}>
+                      <Text>Semana</Text>
+                    </View>
+                    <View style={[styles.cronogramaCell, { width: '20%' }]}>
+                      <Text>Período</Text>
+                    </View>
+                    <View style={[styles.cronogramaCell, { width: '30%' }]}>
+                      <Text>Atividades</Text>
+                    </View>
+                    <View style={[styles.cronogramaCell, { width: '20%' }]}>
+                      <Text>Recursos</Text>
+                    </View>
+                    <View style={[styles.cronogramaCell, { width: '20%', borderRightWidth: 0 }]}>
+                      <Text>Avaliação</Text>
+                    </View>
+                  </View>
+                  {plano.cronograma.map((semana, index) => (
+                    <View key={index} style={styles.cronogramaRow}>
+                      <View style={[styles.cronogramaCell, { width: '10%' }]}>
+                        <Text>{semana.semana}</Text>
+                      </View>
+                      <View style={[styles.cronogramaCell, { width: '20%' }]}>
+                        <Text>{formatDate(semana.data_inicio)} a {formatDate(semana.data_fim)}</Text>
+                      </View>
+                      <View style={[styles.cronogramaCell, { width: '30%' }]}>
+                        <Text>{semana.atividades.join(', ')}</Text>
+                      </View>
+                      <View style={[styles.cronogramaCell, { width: '20%' }]}>
+                        <Text>{semana.recursos.join(', ')}</Text>
+                      </View>
+                      <View style={[styles.cronogramaCell, { width: '20%', borderRightWidth: 0 }]}>
+                        <Text>{semana.avaliacao || 'N/A'}</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>6) Bibliografia</Text>
-              <Text style={styles.content}>6.1 Básica:</Text>
+              <Text style={styles.sectionTitle}>11) Bibliografia</Text>
+              <Text style={styles.content}>11.1 Básica:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_basica.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    6.1.{index + 1} {formatValue(ref)}
+                    11.1.{index + 1} {formatValue(ref)}
                   </Text>
                 ))}
               </View>
-              <Text style={styles.content}>6.2 Complementar:</Text>
+              <Text style={styles.content}>11.2 Complementar:</Text>
               <View style={styles.list}>
                 {plano.bibliografia_complementar.map((ref, index) => (
                   <Text key={index} style={styles.listItem}>
-                    6.2.{index + 1} {formatValue(ref)}
+                    11.2.{index + 1} {formatValue(ref)}
                   </Text>
                 ))}
               </View>
