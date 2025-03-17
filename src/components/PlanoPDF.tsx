@@ -189,10 +189,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#333',
     marginTop: -10,
-    marginHorizontal: -10,
+    marginLeft: -10,
+    marginRight: -11,
   },
   visitaRow: {
-    marginHorizontal: -10,
+    marginHorizontal: -11,
     flexDirection: 'row',
     borderTopWidth: 1,
     minHeight: 35,
@@ -389,25 +390,25 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
                 <View>
                   <View style={styles.visitaHeader}>
-                    <View style={[styles.visitaCell, { width: '20%' }]}>
+                    <View style={[styles.visitaCell, { width: '55%' }]}>
                       <Text>Local</Text>
                     </View>
                     <View style={[styles.visitaCell, { width: '20%' }]}>
                       <Text>Data Prevista</Text>
                     </View>
-                    <View style={[styles.visitaCell, { width: '60%' }]}>
+                    <View style={[styles.visitaCell, { width: '25%' }]}>
                       <Text>Materiais Necessários</Text>
                     </View>
                   </View>
                   {plano.visitas_tecnicas.map((visita, index) => (
                     <View key={index} style={styles.visitaRow}>
-                      <View style={[styles.visitaCell, { width: '20%' }]}>
+                      <View style={[styles.visitaCell, { width: '55%' }]}>
                         <Text>{visita.local}</Text>
                       </View>
                       <View style={[styles.visitaCell, { width: '20%' }]}>
                         <Text>{formatDate(visita.data_prevista)}</Text>
                       </View>
-                      <View style={[styles.visitaCell, { width: '60%' }]}>
+                      <View style={[styles.visitaCell, { width: '25%' }]}>
                         <Text>{visita.materiais_necessarios.join(', ')}</Text>
                       </View>
                     </View>
