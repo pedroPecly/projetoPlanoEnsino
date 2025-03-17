@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Save, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Save, CheckCircle, ArrowLeft, LogOut, User, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
@@ -10,11 +10,12 @@ import { RecursosUtilizados } from '../components/RecursosUtilizados';
 import { VisitasTecnicas } from '../components/VisitasTecnicas';
 import { Bibliografia } from '../components/Bibliografia';
 import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
-import type { Curso } from '../tipos';
+import type { Curso, Professor } from '../tipos';
 
 export function NovoPlano() {
   const navigate = useNavigate();
-  const [carregando, setCarregando] = useState(false);
+  const [professor, setProfessor] = useState<Professor | null>(null);
+  const [carregando, setCarregando] = useState(true);
   const [cursos, setCursos] = useState<Curso[]>([]);
   const currentYear = new Date().getFullYear();
   const [plano, setPlano] = useState<{
@@ -114,10 +115,14 @@ export function NovoPlano() {
           toast.error('Erro ao verificar dados do professor');
           navigate('/login');
         }
+      } else {
+        setProfessor(professor);
       }
     } catch (error) {
       console.error('Erro ao verificar autenticação:', error);
       navigate('/login');
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -176,7 +181,7 @@ export function NovoPlano() {
   }
 
   function handleRecursosUtilizadosChange(recursos: any[]) {
-    setPlano(prev => ({ ...prev, recursos_utilizados: recursos })); 
+    setPlano(prev => ({ ...prev, recursos_utilizados: recursos }));
   }
 
   function handleVisitasTecnicasChange(visitas: any[]) {
@@ -188,6 +193,11 @@ export function NovoPlano() {
       ...prev,
       [`bibliografia_${tipo}`]: referencias
     }));
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate('/login');
   }
 
   async function salvarPlano(status: 'rascunho' | 'finalizado') {
@@ -233,8 +243,47 @@ export function NovoPlano() {
     }
   }
 
+  if (carregando) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">Carregando...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
+              <span className="ml-2 text-xl font-semibold text-gray-900">
+                Planos de Ensino
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center text-sm text-gray-700">
+
+                <span>Olá, {professor?.nome}</span>
+              </div>
+              <button
+                onClick={() => navigate('/alterar-dados-usuario')}
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <User className="h-5 w-5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <LogOut className="h-5 w-5 mr-2" />
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center">
           <button

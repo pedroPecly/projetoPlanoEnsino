@@ -15,8 +15,7 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
         id: crypto.randomUUID(),
         local: '',
         data_prevista: '',
-        materiais_necessarios: [''],
-        observacoes: ''
+        materiais_necessarios: ['']
       }
     ]);
   };
@@ -123,17 +122,6 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
               <Plus className="h-4 w-4 mr-1" />
               Adicionar Material
             </button>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Observações</label>
-            <textarea
-              value={visita.observacoes}
-              onChange={(e) => updateVisita(visita.id, 'observacoes', e.target.value)}
-              rows={2}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              placeholder="Observações adicionais (opcional)"
-            />
           </div>
         </div>
       ))}

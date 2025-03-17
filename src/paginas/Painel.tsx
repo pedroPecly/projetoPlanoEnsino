@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { PlusCircle, LogOut, BookOpen, User, ArrowUp, ArrowDown, Settings } from 'lucide-react';
+import { PlusCircle, LogOut, BookOpen, User, ArrowUp, ArrowDown } from 'lucide-react';
 import type { PlanoEnsino, Professor, Curso } from '../tipos';
 import toast from 'react-hot-toast';
 

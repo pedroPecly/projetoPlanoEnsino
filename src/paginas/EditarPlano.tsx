@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Save, CheckCircle, ArrowLeft, Trash2, FileText } from 'lucide-react';
+import { Save, CheckCircle, ArrowLeft, Trash2, FileText, LogOut, User, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { CargaHoraria } from '../components/CargaHoraria';
 import { ConteudoProgramatico } from '../components/ConteudoProgramatico';
@@ -19,7 +19,6 @@ export function EditarPlano() {
   const { id } = useParams();
   const [carregando, setCarregando] = useState(true);
   const [excluindo, setExcluindo] = useState(false);
-  const [semPermissao, setSemPermissao] = useState(false);
   const [plano, setPlano] = useState<PlanoEnsino | null>(null);
   const [professor, setProfessor] = useState<Professor | null>(null);
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -145,7 +144,7 @@ export function EditarPlano() {
     setPlano(prev => prev ? ({ ...prev, recursos_utilizados: recursos }) : null);
   }
 
-  function handleVisitasTecnicasChange(visitas: any[]) { 
+  function handleVisitasTecnicasChange(visitas: any[]) {
     setPlano(prev => prev ? ({ ...prev, visitas_tecnicas: visitas }) : null);
   }
 
@@ -154,6 +153,11 @@ export function EditarPlano() {
       ...prev,
       [`bibliografia_${tipo}`]: referencias
     }) : null);
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate('/login');
   }
 
   async function salvarPlano(status?: 'rascunho' | 'finalizado') {
@@ -195,30 +199,41 @@ export function EditarPlano() {
     </div>;
   }
 
-  if (semPermissao) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Acesso Negado</h2>
-          <p className="text-gray-600 mb-6">
-            Você não tem permissão para editar este plano de ensino.
-          </p>
-          <button
-            onClick={() => navigate('/painel')}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2b9f3f] hover:bg-[#248a35]"
-          >
-            <ArrowLeft className="h-5 w-5 mr-2" />
-            Voltar ao Painel
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   if (!plano) return null;
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
+              <span className="ml-2 text-xl font-semibold text-gray-900">
+                Planos de Ensino
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center text-sm text-gray-700">
+
+                <span>Olá, {professor?.nome}</span>
+              </div>
+              <button
+                onClick={() => navigate('/alterar-dados-usuario')}
+                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <User className="h-5 w-5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <LogOut className="h-5 w-5 mr-2" />
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
           <button
