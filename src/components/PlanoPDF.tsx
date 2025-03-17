@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#333',
     minHeight: 24,
+    marginHorizontal: -10,
   },
   infoLabelCell: {
     padding: 5,
@@ -211,8 +212,22 @@ function formatNumber(value: number): string {
   return value ? value.toFixed(2) : 'N/A';
 }
 
-function formatComplexValue(...values: any[]): string {
-  return values.some(value => !value) ? 'N/A' : values.join(' ');
+function formatCronogramaContent(semana: any): string {
+  const parts = [];
+
+  if (semana.atividades?.length) {
+    parts.push(semana.atividades.join('; '));
+  }
+
+  if (semana.recursos?.length) {
+    parts.push(`Recursos: ${semana.recursos.join('; ')}`);
+  }
+
+  if (semana.avaliacao) {
+    parts.push(`Avaliação: ${semana.avaliacao}`);
+  }
+
+  return parts.join('\n');
 }
 
 export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
@@ -227,8 +242,8 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
-              
-              <View style={styles.infoTable}>
+
+              <View /*style={styles.infoTable}*/>
                 <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Ano/Período:</Text>
                   <Text style={styles.infoValueCell}>{formatValue(plano.ano_periodo)}</Text>
@@ -399,38 +414,20 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 <Text style={styles.sectionTitle}>10) Cronograma</Text>
                 <View style={styles.cronogramaTable}>
                   <View style={styles.cronogramaHeader}>
-                    <View style={[styles.cronogramaCell, { width: '10%' }]}>
-                      <Text>Semana</Text>
+                    <View style={[styles.cronogramaCell, { width: '13%' }]}>
+                      <Text>Data</Text>
                     </View>
-                    <View style={[styles.cronogramaCell, { width: '20%' }]}>
-                      <Text>Período</Text>
-                    </View>
-                    <View style={[styles.cronogramaCell, { width: '30%' }]}>
-                      <Text>Atividades</Text>
-                    </View>
-                    <View style={[styles.cronogramaCell, { width: '20%' }]}>
-                      <Text>Recursos</Text>
-                    </View>
-                    <View style={[styles.cronogramaCell, { width: '20%', borderRightWidth: 0 }]}>
-                      <Text>Avaliação</Text>
+                    <View style={[styles.cronogramaCell, { width: '87%', borderRightWidth: 0 }]}>
+                      <Text>Conteúdo / Atividade docente e/ou discente</Text>
                     </View>
                   </View>
                   {plano.cronograma.map((semana, index) => (
                     <View key={index} style={styles.cronogramaRow}>
-                      <View style={[styles.cronogramaCell, { width: '10%' }]}>
-                        <Text>{semana.semana}</Text>
-                      </View>
-                      <View style={[styles.cronogramaCell, { width: '20%' }]}>
+                      <View style={[styles.cronogramaCell, { width: '13%' }]}>
                         <Text>{formatDate(semana.data_inicio)} a {formatDate(semana.data_fim)}</Text>
                       </View>
-                      <View style={[styles.cronogramaCell, { width: '30%' }]}>
-                        <Text>{semana.atividades.join(', ')}</Text>
-                      </View>
-                      <View style={[styles.cronogramaCell, { width: '20%' }]}>
-                        <Text>{semana.recursos.join(', ')}</Text>
-                      </View>
-                      <View style={[styles.cronogramaCell, { width: '20%', borderRightWidth: 0 }]}>
-                        <Text>{semana.avaliacao || 'N/A'}</Text>
+                      <View style={[styles.cronogramaCell, { width: '87%', borderRightWidth: 0 }]}>
+                        <Text>{formatCronogramaContent(semana)}</Text>
                       </View>
                     </View>
                   ))}
