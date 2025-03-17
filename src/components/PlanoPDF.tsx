@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
-    minHeight: 24,
+    //minHeight: 24,
     marginHorizontal: -10,
   },
   infoLabelCell: {
@@ -139,8 +139,16 @@ const styles = StyleSheet.create({
   },
   lastInfoRow: {
     flexDirection: 'row',
-    minHeight: 24,
-    borderBottomWidth: 0,
+    //minHeight: 24,
+    marginHorizontal: -10,
+    marginBottom: -10,
+  },
+  FirstInfoRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+    marginTop: -10,
+    marginHorizontal: -10,
   },
   cronogramaTable: {
     width: '100%',
@@ -152,14 +160,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     fontWeight: 'bold',
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderTopWidth: 0.5,
+    marginHorizontal: -10,
+    marginTop: -10,
   },
   cronogramaRow: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    //borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: '#333',
     minHeight: 35,
+    marginHorizontal: -10,
+    marginBottom: -10,
   },
   cronogramaCell: {
     padding: 5,
@@ -176,14 +188,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     fontWeight: 'bold',
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderTopWidth: 1,
+    borderColor: '#333',
+    marginTop: -10,
+    marginHorizontal: -10,
   },
   visitaRow: {
+    marginHorizontal: -10,
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderTopWidth: 1,
     minHeight: 35,
+    marginBottom: -11,
   },
   visitaCell: {
     padding: 5,
@@ -244,7 +259,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
 
               <View /*style={styles.infoTable}*/>
-                <View style={styles.infoRow}>
+                <View style={styles.FirstInfoRow}>
                   <Text style={styles.infoLabelCell}>Ano/Período:</Text>
                   <Text style={styles.infoValueCell}>{formatValue(plano.ano_periodo)}</Text>
                 </View>
@@ -374,7 +389,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             {plano.visitas_tecnicas.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
-                <View style={styles.visitaTable}>
+                <View /*style={styles.visitaTable}*/>
                   <View style={styles.visitaHeader}>
                     <View style={[styles.visitaCell, { width: '30%' }]}>
                       <Text>Local</Text>
@@ -412,7 +427,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             {plano.cronograma.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>10) Cronograma</Text>
-                <View style={styles.cronogramaTable}>
+                <View /*style={styles.cronogramaTable}*/>
                   <View style={styles.cronogramaHeader}>
                     <View style={[styles.cronogramaCell, { width: '13%' }]}>
                       <Text>Data</Text>
