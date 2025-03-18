@@ -137,7 +137,7 @@ export function Painel() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mb-4 flex flex-wrap items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center space-x-4">
             <div className="flex items-center space-x-2">
               <label className="block text-sm font-medium text-gray-700">Filtros</label>
               <select
@@ -242,7 +242,7 @@ export function Painel() {
               </div>
             </div>
           ) : (
-            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {planosFiltrados.map((plano) => (
                 <div
                   key={plano.id}
