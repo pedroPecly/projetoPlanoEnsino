@@ -15,8 +15,7 @@ export function RecursosUtilizados({ recursos = [], onChange }: Props) {
         id: crypto.randomUUID(),
         tipo: 'fisico',
         descricao: '',
-        quantidade: 1,
-        observacoes: ''
+        quantidade: 1
       }
     ]);
   };
@@ -67,17 +66,6 @@ export function RecursosUtilizados({ recursos = [], onChange }: Props) {
               onChange={(e) => updateRecurso(recurso.id, 'quantidade', parseInt(e.target.value))}
               min="1"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Observações</label>
-            <input
-              type="text"
-              value={recurso.observacoes}
-              onChange={(e) => updateRecurso(recurso.id, 'observacoes', e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              placeholder="Observações adicionais (opcional)"
             />
           </div>
 

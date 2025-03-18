@@ -377,7 +377,6 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                       <Text style={styles.listItem}>
                         8.{index + 1} {recurso.tipo.charAt(0).toUpperCase() + recurso.tipo.slice(1)}: {recurso.descricao}
                         {recurso.quantidade && ` (Quantidade: ${recurso.quantidade})`}
-                        {recurso.observacoes && ` - ${recurso.observacoes}`}
                       </Text>
                     </View>
                   ))}
@@ -390,25 +389,25 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
                 <View>
                   <View style={styles.visitaHeader}>
-                    <View style={[styles.visitaCell, { width: '55%' }]}>
+                    <View style={[styles.visitaCell, { width: '45%' }]}>
                       <Text>Local</Text>
                     </View>
                     <View style={[styles.visitaCell, { width: '20%' }]}>
                       <Text>Data Prevista</Text>
                     </View>
-                    <View style={[styles.visitaCell, { width: '25%' }]}>
+                    <View style={[styles.visitaCell, { width: '35%' }]}>
                       <Text>Materiais Necessários</Text>
                     </View>
                   </View>
                   {plano.visitas_tecnicas.map((visita, index) => (
                     <View key={index} style={styles.visitaRow}>
-                      <View style={[styles.visitaCell, { width: '55%' }]}>
+                      <View style={[styles.visitaCell, { width: '45%' }]}>
                         <Text>{visita.local}</Text>
                       </View>
                       <View style={[styles.visitaCell, { width: '20%' }]}>
                         <Text>{formatDate(visita.data_prevista)}</Text>
                       </View>
-                      <View style={[styles.visitaCell, { width: '25%' }]}>
+                      <View style={[styles.visitaCell, { width: '35%' }]}>
                         <Text>{visita.materiais_necessarios.join(', ')}</Text>
                       </View>
                     </View>
