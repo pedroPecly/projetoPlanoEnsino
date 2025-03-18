@@ -58,13 +58,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     borderColor: '#333',
   },
-  table: {
-    width: '100%',
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: '#333',
-    borderStyle: 'solid',
-  },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -109,12 +102,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#333',
   },
-  infoTable: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#333',
-    marginBottom: 0,
-  },
   infoRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -148,12 +135,6 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginHorizontal: -10,
   },
-  cronogramaTable: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#333',
-    marginTop: 5,
-  },
   cronogramaHeader: {
     backgroundColor: '#f0f0f0',
     fontWeight: 'bold',
@@ -175,12 +156,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRightWidth: 1,
     borderRightColor: '#333',
-  },
-  visitaTable: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#333',
-    marginTop: 5,
   },
   visitaHeader: {
     backgroundColor: '#f0f0f0',
@@ -256,7 +231,6 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
-
               <View>
                 <View style={styles.FirstInfoRow}>
                   <Text style={styles.infoLabelCell}>Ano/Período:</Text>
