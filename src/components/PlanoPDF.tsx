@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
-    marginTop: -10,
+    marginTop: -9,
     marginHorizontal: -10,
   },
   cronogramaHeader: {
@@ -168,11 +168,12 @@ const styles = StyleSheet.create({
     marginRight: -11,
   },
   visitaRow: {
-    marginHorizontal: -11,
     flexDirection: 'row',
     borderTopWidth: 1,
     minHeight: 35,
-    marginBottom: -11,
+    marginBottom: -10,
+    marginLeft: -10,
+    marginRight: -11,
   },
   visitaCell: {
     padding: 5,

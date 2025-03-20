@@ -258,7 +258,7 @@ export function EditarPlano() {
             {plano.status === 'finalizado' && (
               <PDFDownloadLink
                 document={<PlanoPDF planos={[plano]} curso={cursos.find(curso => curso.id === plano.curso_id)?.nome || ''} periodo={String(plano.periodo_numero)} />}
-                fileName={`PlanoEnsino_${plano.titulo}.pdf`}
+                fileName={`${plano.disciplina}.pdf`}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <FileText className="h-5 w-5 mr-2" />
