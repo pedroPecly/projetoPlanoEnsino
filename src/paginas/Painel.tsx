@@ -156,7 +156,7 @@ export function Painel() {
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64"
             />
             {menuAberto && (
-              <div className="absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-200 transform origin-top">
+              <div className="absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-200 transform origin-top z-50">
                 <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                   <div className="px-4 py-2">
                     <label className="block text-sm font-medium text-gray-700">Filtros</label>
