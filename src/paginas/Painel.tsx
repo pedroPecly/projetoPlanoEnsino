@@ -16,6 +16,8 @@ export function Painel() {
   const [filtroStatus, setFiltroStatus] = useState<string>('');
   const [ordenarPor, setOrdenarPor] = useState<string>('titulo');
   const [ordemAscendente, setOrdemAscendente] = useState<boolean>(true);
+  const [menuAberto, setMenuAberto] = useState<boolean>(false);
+  const [termoPesquisa, setTermoPesquisa] = useState<string>('');
 
   useEffect(() => {
     async function carregarDados() {
@@ -80,7 +82,10 @@ export function Painel() {
       const filtroCursoValido = filtroCurso ? plano.curso_id === filtroCurso : true;
       const filtroPeriodoValido = filtroPeriodo ? plano.periodo === filtroPeriodo : true;
       const filtroStatusValido = filtroStatus ? plano.status === filtroStatus : true;
-      return filtroCursoValido && filtroPeriodoValido && filtroStatusValido;
+      const pesquisaValida = plano.titulo.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
+                             plano.disciplina.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
+                             cursos[plano.curso_id]?.nome.toLowerCase().includes(termoPesquisa.toLowerCase());
+      return filtroCursoValido && filtroPeriodoValido && filtroStatusValido && pesquisaValida;
     })
     .sort((a, b) => {
       if (ordenarPor === 'titulo') {
@@ -114,7 +119,6 @@ export function Painel() {
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center text-sm text-gray-700">
-                
                 <span>Olá, {professor?.nome}</span>
               </div>
               <button
@@ -137,88 +141,107 @@ export function Painel() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="mb-4 flex flex-wrap items-center justify-between">
-          <div className="flex flex-wrap items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <label className="block text-sm font-medium text-gray-700">Filtros</label>
-              <select
-                value={filtroCurso}
-                onChange={(e) => setFiltroCurso(e.target.value)}
-                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
-              >
-                <option value="">Todos Cursos</option>
-                {Object.values(cursos).map(curso => (
-                  <option key={curso.id} value={curso.id}>
-                    {curso.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <select
-                value={filtroPeriodo}
-                onChange={(e) => setFiltroPeriodo(e.target.value)}
-                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
-              >
-                <option value="">Todos Períodos</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-                  <option key={num} value={`${num}º Período`}>
-                    {num}º Período
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <select
-                value={filtroStatus}
-                onChange={(e) => setFiltroStatus(e.target.value)}
-                className="mt-1 block w-32 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
-              >
-                <option value="">Todos status</option>
-                <option value="rascunho">Rascunho</option>
-                <option value="finalizado">Finalizado</option>
-              </select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <label className="block text-sm font-medium text-gray-700">Ordenar</label>
-              <button
-                onClick={() => {
-                  setOrdenarPor('titulo');
-                  setOrdemAscendente(!ordemAscendente);
-                }}
-                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Título {ordenarPor === 'titulo' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
-              </button>
-              <button
-                onClick={() => {
-                  setOrdenarPor('data');
-                  setOrdemAscendente(!ordemAscendente);
-                }}
-                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Data de Atualização {ordenarPor === 'data' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
-              </button>
-              <button
-                onClick={() => {
-                  setOrdenarPor('disciplina');
-                  setOrdemAscendente(!ordemAscendente);
-                }}
-                className="inline-flex items-center px-2 py-1 mt-1 h-6 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              >
-                Disciplina {ordenarPor === 'disciplina' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
-              </button>
-            </div>
+          <div className="relative flex items-center space-x-2">
+            <button
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+              onClick={() => setMenuAberto(!menuAberto)}
+            >
+              Filtros e Ordenação
+            </button>
+            <input
+              type="text"
+              value={termoPesquisa}
+              onChange={(e) => setTermoPesquisa(e.target.value)}
+              placeholder="Pesquisar..."
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64"
+            />
+            {menuAberto && (
+              <div className="absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-200 transform origin-top">
+                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                  <div className="px-4 py-2">
+                    <label className="block text-sm font-medium text-gray-700">Filtros</label>
+                    <select
+                      value={filtroCurso}
+                      onChange={(e) => setFiltroCurso(e.target.value)}
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                    >
+                      <option value="">Todos Cursos</option>
+                      {Object.values(cursos).map(curso => (
+                        <option key={curso.id} value={curso.id}>
+                          {curso.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="px-4 py-2">
+                    <select
+                      value={filtroPeriodo}
+                      onChange={(e) => setFiltroPeriodo(e.target.value)}
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                    >
+                      <option value="">Todos Períodos</option>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                        <option key={num} value={`${num}º Período`}>
+                          {num}º Período
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="px-4 py-2">
+                    <select
+                      value={filtroStatus}
+                      onChange={(e) => setFiltroStatus(e.target.value)}
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                    >
+                      <option value="">Todos status</option>
+                      <option value="rascunho">Rascunho</option>
+                      <option value="finalizado">Finalizado</option>
+                    </select>
+                  </div>
+                  <div className="px-4 py-2">
+                    <label className="block text-sm font-medium text-gray-700">Ordenar</label>
+                    <button
+                      onClick={() => {
+                        setOrdenarPor('titulo');
+                        setOrdemAscendente(!ordemAscendente);
+                      }}
+                      className="inline-flex items-center px-2 py-1 mt-1 w-full border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                    >
+                      Título {ordenarPor === 'titulo' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setOrdenarPor('data');
+                        setOrdemAscendente(!ordemAscendente);
+                      }}
+                      className="inline-flex items-center px-2 py-1 mt-1 w-full border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                    >
+                      Data de Atualização {ordenarPor === 'data' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setOrdenarPor('disciplina');
+                        setOrdemAscendente(!ordemAscendente);
+                      }}
+                      className="inline-flex items-center px-2 py-1 mt-1 w-full border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                    >
+                      Disciplina {ordenarPor === 'disciplina' && (ordemAscendente ? <ArrowUp className="ml-1 h-4 w-4" /> : <ArrowDown className="ml-1 h-4 w-4" />)}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <button
             onClick={() => navigate('/novo-plano')}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35]"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
           >
             <PlusCircle className="h-5 w-5 mr-2" />
             Novo Plano
           </button>
         </div>
 
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className={`bg-white shadow rounded-lg overflow-hidden transition-all duration-200 ${menuAberto ? 'mt-64' : ''}`}>
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-medium text-gray-900">Meus Planos de Ensino</h2>
           </div>
@@ -234,7 +257,7 @@ export function Painel() {
               <div className="mt-6">
                 <button
                   onClick={() => navigate('/novo-plano')}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
                 >
                   <PlusCircle className="h-5 w-5 mr-2" />
                   Criar novo plano
@@ -242,7 +265,7 @@ export function Painel() {
               </div>
             </div>
           ) : (
-            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition duration-200">
               {planosFiltrados.map((plano) => (
                 <div
                   key={plano.id}
