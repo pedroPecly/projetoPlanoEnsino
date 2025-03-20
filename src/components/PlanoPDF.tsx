@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subtitle: {
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 11,
+    marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -57,37 +57,6 @@ const styles = StyleSheet.create({
   listItem: {
     marginBottom: 4,
     borderColor: '#333',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    minHeight: 25,
-    alignItems: 'stretch',
-  },
-  tableHeader: {
-    backgroundColor: '#f0f0f0',
-    fontWeight: 'bold',
-  },
-  tableCell: {
-    padding: 5,
-    textAlign: 'left',
-    borderRightWidth: 1,
-    borderRightColor: '#333',
-  },
-  tableCellLast: {
-    padding: 5,
-    textAlign: 'left',
-    borderRightWidth: 0,
-  },
-  dataCellSmall: {
-    width: '15%',
-  },
-  cargaHorariaCellSmall: {
-    width: '15%',
-  },
-  conteudoCell: {
-    width: '70%',
   },
   subtopico: {
     marginLeft: 20,
@@ -224,12 +193,11 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.subtitle}>{curso} - {periodo}</Text>
-
+        
         {planos.map((plano, index) => (
           <View key={plano.id}>
+            <Text style={styles.subtitle}>{plano.ano_periodo}</Text>
             {index > 0 && <View style={styles.pageBreak} />}
-
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
               <View>
