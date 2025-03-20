@@ -146,7 +146,7 @@ export function Painel() {
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
               onClick={() => setMenuAberto(!menuAberto)}
             >
-              Filtros e Ordenação
+              Filtros e Ordenação {(menuAberto ? <ArrowDown className="ml-1 h-4 w-4" /> : <ArrowUp className="ml-1 h-4 w-4" />)}
             </button>
             <input
               type="text"
