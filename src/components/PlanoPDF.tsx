@@ -8,17 +8,11 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    fontSize: 12,
+    padding: 70,
+    fontSize: 11,
     fontFamily: 'Calibri',
     lineHeight: 1.5,
     color: '#000',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 11,
@@ -34,7 +28,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 11,
     marginBottom: 8,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -79,7 +73,7 @@ const styles = StyleSheet.create({
   },
   infoLabelCell: {
     padding: 5,
-    width: '50%',
+    width: '65%',
     fontWeight: 'bold',
     borderRightWidth: 1,
     borderRightColor: '#333',
@@ -88,7 +82,7 @@ const styles = StyleSheet.create({
   },
   infoValueCell: {
     padding: 5,
-    width: '50%',
+    width: '35%',
     display: 'flex',
     justifyContent: 'center',
   },
