@@ -250,7 +250,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>2) Ementa</Text>
-              <Text style={styles.content}>2.1 {formatValue(plano.ementa)}</Text>
+              <Text style={styles.content}>{formatValue(plano.ementa)}</Text>
             </View>
 
             <View style={styles.section}>
@@ -273,7 +273,7 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>4) Conteúdo Programático</Text>
+              <Text style={styles.sectionTitle}>4) Conteúdo</Text>
               <View style={styles.list}>
                 {plano.conteudo_programatico.map((conteudo, index) => (
                   <View key={index}>
