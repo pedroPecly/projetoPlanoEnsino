@@ -196,16 +196,12 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
         
         {planos.map((plano, index) => (
           <View key={plano.id}>
-            <Text style={styles.subtitle}>{plano.ano_periodo}</Text>
+            <Text style={styles.subtitle}>Ano {plano.ano_periodo}</Text>
             {index > 0 && <View style={styles.pageBreak} />}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
               <View>
                 <View style={styles.FirstInfoRow}>
-                  <Text style={styles.infoLabelCell}>Ano/Período:</Text>
-                  <Text style={styles.infoValueCell}>{formatValue(plano.ano_periodo)}</Text>
-                </View>
-                <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Componente Curricular:</Text>
                   <Text style={styles.infoValueCell}>{formatValue(plano.disciplina)}</Text>
                 </View>
