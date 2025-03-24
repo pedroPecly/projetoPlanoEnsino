@@ -153,7 +153,7 @@ export function Painel() {
               value={termoPesquisa}
               onChange={(e) => setTermoPesquisa(e.target.value)}
               placeholder="Pesquisar..."
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64 focus:outline-none "
             />
             {menuAberto && (
               <div className="absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-200 transform origin-top z-50">
