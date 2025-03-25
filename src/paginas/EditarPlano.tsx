@@ -315,7 +315,7 @@ export function EditarPlano() {
 
           <div className="flex-1 space-y-6">
             <div id="ano-periodo" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Ano/Período</h2>
               <div className="mt-1 flex space-x-4">
                 <select
                   name="ano_periodo"
@@ -408,7 +408,7 @@ export function EditarPlano() {
             </div>
 
             <div id="ementa" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Ementa</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Ementa</h2>
               <textarea
                 name="ementa"
                 value={plano.ementa}
@@ -419,7 +419,7 @@ export function EditarPlano() {
             </div>
 
             <div id="objetivo-geral" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivo Geral</h2>
               <textarea
                 name="objetivo_geral"
                 value={plano.objetivo_geral}
@@ -470,7 +470,7 @@ export function EditarPlano() {
             </div>
 
             <div id="metodologia" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Metodologia</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
               <textarea
                 name="metodologia"
                 value={plano.metodologia}
