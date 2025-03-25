@@ -319,13 +319,13 @@ export function NovoPlano() {
 
           <div className="flex-1 space-y-6">
             <div id="ano-periodo" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Ano/Período</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Ano/Período</h2>
               <div className="mt-1 flex space-x-4">
                 <select
                   name="ano_periodo"
                   value={plano.ano_periodo}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="block w-full rounded-md border-gray-400 shadow-sm focus:outline-none hover:bg-gray-50"
                 >
                   {[currentYear - 1, currentYear, currentYear + 1].map(year => (
                     <React.Fragment key={year}>
@@ -345,7 +345,7 @@ export function NovoPlano() {
                     name="curso_id"
                     value={plano.curso_id}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {cursos.map(curso => (
                       <option key={curso.id} value={curso.id}>
@@ -361,7 +361,7 @@ export function NovoPlano() {
                     name="periodo_numero"
                     value={plano.periodo_numero}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                       <option key={num} value={num}>
@@ -379,7 +379,7 @@ export function NovoPlano() {
                   name="disciplina"
                   value={plano.disciplina}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
 
@@ -390,7 +390,7 @@ export function NovoPlano() {
                   name="titulo"
                   value={plano.titulo}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
             </div>
@@ -414,24 +414,24 @@ export function NovoPlano() {
             </div>
 
             <div id="ementa" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Ementa</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Ementa</h2>
               <textarea
                 name="ementa"
                 value={plano.ementa}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
             <div id="objetivo-geral" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Objetivo Geral</label>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivo geral</h2>
               <textarea
                 name="objetivo_geral"
                 value={plano.objetivo_geral}
                 onChange={handleChange}
                 rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -476,13 +476,13 @@ export function NovoPlano() {
             </div>
 
             <div id="metodologia" className="bg-white shadow rounded-lg p-6">
-              <label className="block text-sm font-medium text-gray-700">Metodologia</label>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
               <textarea
                 name="metodologia"
                 value={plano.metodologia}
                 onChange={handleChange}
                 rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -498,7 +498,7 @@ export function NovoPlano() {
               <button
                 onClick={() => salvarPlano('rascunho')}
                 disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <Save className="h-5 w-5 mr-2" />
                 Salvar Rascunho
@@ -506,7 +506,7 @@ export function NovoPlano() {
               <button
                 onClick={() => salvarPlano('finalizado')}
                 disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <CheckCircle className="h-5 w-5 mr-2" />
                 Finalizar Plano

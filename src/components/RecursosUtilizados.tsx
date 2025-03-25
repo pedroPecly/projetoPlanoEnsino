@@ -39,7 +39,7 @@ export function RecursosUtilizados({ recursos = [], onChange }: Props) {
             <select
               value={recurso.tipo}
               onChange={(e) => updateRecurso(recurso.id, 'tipo', e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
             >
               <option value="fisico">Físico</option>
               <option value="material">Material</option>
@@ -53,7 +53,7 @@ export function RecursosUtilizados({ recursos = [], onChange }: Props) {
               type="text"
               value={recurso.descricao}
               onChange={(e) => updateRecurso(recurso.id, 'descricao', e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               placeholder="Descreva o recurso"
             />
           </div>
@@ -65,7 +65,7 @@ export function RecursosUtilizados({ recursos = [], onChange }: Props) {
               value={recurso.quantidade}
               onChange={(e) => updateRecurso(recurso.id, 'quantidade', parseInt(e.target.value))}
               min="1"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
             />
           </div>
 

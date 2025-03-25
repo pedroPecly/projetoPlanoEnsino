@@ -121,20 +121,20 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                           type="date"
                           value={topico.data_prevista || ''}
                           onChange={(e) => updateTopico(topico.id, 'data_prevista', e.target.value)}
-                          className="w-40 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="w-40 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                         />
                         <input
                           type="text"
                           value={topico.carga_horaria || ''}
                           onChange={(e) => updateTopico(topico.id, 'carga_horaria', e.target.value)}
                           placeholder="Carga horária (ex: 2h/a)"
-                          className="w-32 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="w-32 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                         />
                         <input
                           type="text"
                           value={topico.titulo || ''}
                           onChange={(e) => updateTopico(topico.id, 'titulo', e.target.value)}
-                          className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="flex-1 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                           placeholder="Digite o tópico"
                         />
                         <button
@@ -176,7 +176,7 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                                   });
                                   onChange(newConteudos);
                                 }}
-                                className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                className="flex-1 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                                 placeholder="Digite o subtópico"
                               />
                               <button

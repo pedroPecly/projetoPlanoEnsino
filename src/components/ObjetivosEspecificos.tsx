@@ -118,7 +118,7 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
                           type="text"
                           value={topico.titulo}
                           onChange={(e) => updateTopico(topico.id, e.target.value)}
-                          className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                          className="flex-1 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                           placeholder="Digite o tópico"
                         />
                         <button
@@ -160,7 +160,7 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
                                   });
                                   onChange(newConteudos);
                                 }}
-                                className="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                className="flex-1 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
                                 placeholder="Digite o subtópico"
                               />
                               <button

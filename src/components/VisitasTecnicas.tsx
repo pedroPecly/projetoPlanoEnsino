@@ -79,7 +79,7 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
                 type="text"
                 value={visita.local}
                 onChange={(e) => updateVisita(visita.id, 'local', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 placeholder="Local da visita"
               />
             </div>
@@ -89,7 +89,7 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
                 type="date"
                 value={visita.data_prevista}
                 onChange={(e) => updateVisita(visita.id, 'data_prevista', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
                   type="text"
                   value={material}
                   onChange={(e) => updateMaterial(visita.id, index, e.target.value)}
-                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   placeholder="Descreva o material necessário"
                 />
                 <button

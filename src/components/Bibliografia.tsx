@@ -35,7 +35,7 @@ export function Bibliografia({ basica, complementar, onChange }: Props) {
                 type="text"
                 value={referencia}
                 onChange={(e) => updateReferencia('basica', index, e.target.value)}
-                className="flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                className="flex-1 rounded-md border-gray-300 focus:outline-none hover:bg-gray-50"
                 placeholder="Digite a referência bibliográfica"
               />
               <button
@@ -67,7 +67,7 @@ export function Bibliografia({ basica, complementar, onChange }: Props) {
                 type="text"
                 value={referencia}
                 onChange={(e) => updateReferencia('complementar', index, e.target.value)}
-                className="flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                className="flex-1 rounded-md border-gray-300 focus:outline-none hover:bg-gray-50"
                 placeholder="Digite a referência bibliográfica"
               />
               <button

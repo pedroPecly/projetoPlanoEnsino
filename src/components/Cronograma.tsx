@@ -97,7 +97,7 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
                 type="date"
                 value={item.data_inicio}
                 onChange={(e) => updateItem(item.id, 'data_inicio', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
             <div>
@@ -106,7 +106,7 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
                 type="date"
                 value={item.data_fim}
                 onChange={(e) => updateItem(item.id, 'data_fim', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
           </div>
@@ -119,7 +119,7 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
                   type="text"
                   value={atividade}
                   onChange={(e) => updateAtividade(item.id, index, e.target.value)}
-                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   placeholder="Descreva a atividade"
                 />
                 <button
@@ -149,7 +149,7 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
                   type="text"
                   value={recurso}
                   onChange={(e) => updateRecurso(item.id, index, e.target.value)}
-                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   placeholder="Descreva o recurso necessário"
                 />
                 <button
@@ -177,7 +177,7 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
               value={item.avaliacao}
               onChange={(e) => updateItem(item.id, 'avaliacao', e.target.value)}
               rows={2}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               placeholder="Descreva a avaliação para esta semana (opcional)"
             />
           </div>

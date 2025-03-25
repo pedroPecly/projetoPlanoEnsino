@@ -321,7 +321,7 @@ export function EditarPlano() {
                   name="ano_periodo"
                   value={plano.ano_periodo}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 >
                   {[currentYear - 1, currentYear, currentYear + 1].map(year => (
                     <React.Fragment key={year}>
@@ -341,7 +341,7 @@ export function EditarPlano() {
                     name="curso_id"
                     value={plano.curso_id}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {cursos.map(curso => (
                       <option key={curso.id} value={curso.id}>
@@ -357,7 +357,7 @@ export function EditarPlano() {
                     name="periodo_numero"
                     value={plano.periodo_numero}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                       <option key={num} value={num}>
@@ -375,7 +375,7 @@ export function EditarPlano() {
                   name="disciplina"
                   value={plano.disciplina}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
 
@@ -386,7 +386,7 @@ export function EditarPlano() {
                   name="titulo"
                   value={plano.titulo}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
             </div>
@@ -414,7 +414,7 @@ export function EditarPlano() {
                 value={plano.ementa}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -425,7 +425,7 @@ export function EditarPlano() {
                 value={plano.objetivo_geral}
                 onChange={handleChange}
                 rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -476,7 +476,7 @@ export function EditarPlano() {
                 value={plano.metodologia}
                 onChange={handleChange}
                 rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 

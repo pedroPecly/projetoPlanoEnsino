@@ -86,7 +86,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_total"
           value={values.carga_horaria_total}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
       </div>
       <div>
@@ -96,7 +96,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_presencial"
           value={values.carga_horaria_presencial}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
         <span className="text-sm text-gray-500">{values.carga_horaria_presencial_percentual.toFixed(2)}%</span>
       </div>
@@ -107,7 +107,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_teorica"
           value={values.carga_horaria_teorica}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
         <span className="text-sm text-gray-500">{values.carga_horaria_teorica_percentual.toFixed(2)}%</span>
       </div>
@@ -118,7 +118,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_pratica"
           value={values.carga_horaria_pratica}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
         <span className="text-sm text-gray-500">{values.carga_horaria_pratica_percentual.toFixed(2)}%</span>
       </div>
@@ -129,7 +129,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_semanal"
           value={values.carga_horaria_semanal}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
         <span className="text-sm text-gray-500">{values.carga_horaria_semanal_percentual.toFixed(2)}%</span>
       </div>
@@ -140,7 +140,7 @@ export const CargaHoraria: React.FC<CargaHorariaProps> = ({
           name="carga_horaria_distancia"
           value={values.carga_horaria_distancia}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
         />
         <span className="text-sm text-gray-500">{values.carga_horaria_distancia_percentual.toFixed(2)}%</span>
       </div>
