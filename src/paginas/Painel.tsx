@@ -163,7 +163,7 @@ export function Painel() {
                     <select
                       value={filtroCurso}
                       onChange={(e) => setFiltroCurso(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50 text-sm font-medium text-gray-700"
                     >
                       <option value="">Todos Cursos</option>
                       {Object.values(cursos).map(curso => (
@@ -177,7 +177,7 @@ export function Painel() {
                     <select
                       value={filtroPeriodo}
                       onChange={(e) => setFiltroPeriodo(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50 text-sm font-medium text-gray-700"
                     >
                       <option value="">Todos Períodos</option>
                       {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
@@ -191,7 +191,7 @@ export function Painel() {
                     <select
                       value={filtroStatus}
                       onChange={(e) => setFiltroStatus(e.target.value)}
-                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm font-medium text-gray-700"
+                      className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50 text-sm font-medium text-gray-700"
                     >
                       <option value="">Todos status</option>
                       <option value="rascunho">Rascunho</option>
