@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { PlusCircle, LogOut, BookOpen, User, ArrowUp, ArrowDown } from 'lucide-react';
+import { PlusCircle, LogOut, BookOpen, User, ArrowUp, ArrowDown, Upload } from 'lucide-react';
 import type { PlanoEnsino, Professor, Curso } from '../tipos';
 import toast from 'react-hot-toast';
+import { ImportPlano } from '../components/ImportPlano';
 
 export function Painel() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export function Painel() {
   const [ordemAscendente, setOrdemAscendente] = useState<boolean>(true);
   const [menuAberto, setMenuAberto] = useState<boolean>(false);
   const [termoPesquisa, setTermoPesquisa] = useState<string>('');
+  const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
     async function carregarDados() {
@@ -83,8 +85,8 @@ export function Painel() {
       const filtroPeriodoValido = filtroPeriodo ? plano.periodo === filtroPeriodo : true;
       const filtroStatusValido = filtroStatus ? plano.status === filtroStatus : true;
       const pesquisaValida = plano.titulo.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
-                             plano.disciplina.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
-                             cursos[plano.curso_id]?.nome.toLowerCase().includes(termoPesquisa.toLowerCase());
+        plano.disciplina.toLowerCase().includes(termoPesquisa.toLowerCase()) ||
+        cursos[plano.curso_id]?.nome.toLowerCase().includes(termoPesquisa.toLowerCase());
       return filtroCursoValido && filtroPeriodoValido && filtroStatusValido && pesquisaValida;
     })
     .sort((a, b) => {
@@ -232,13 +234,22 @@ export function Painel() {
               </div>
             )}
           </div>
-          <button
-            onClick={() => navigate('/novo-plano')}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
-          >
-            <PlusCircle className="h-5 w-5 mr-2" />
-            Novo Plano
-          </button>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+            >
+              <Upload className="h-5 w-5 mr-2" />
+              Importar PDF
+            </button>
+            <button
+              onClick={() => navigate('/novo-plano')}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
+            >
+              <PlusCircle className="h-5 w-5 mr-2" />
+              Novo Plano
+            </button>
+          </div>
         </div>
 
         <div className={`bg-white shadow rounded-lg overflow-hidden transition-all duration-200 ${menuAberto ? 'mt-64' : ''}`}>
@@ -302,6 +313,9 @@ export function Painel() {
             </div>
           )}
         </div>
+        {showImportModal && (
+          <ImportPlano onClose={() => setShowImportModal(false)} />
+        )}
       </main>
     </div>
   );
