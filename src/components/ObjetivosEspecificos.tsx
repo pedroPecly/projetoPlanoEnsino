@@ -9,7 +9,9 @@ interface Props {
 }
 
 export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
-  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set());
+  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(
+    new Set(conteudos.filter(topico => topico.subtopicos.length > 0).map(topico => topico.id))
+  );
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -84,6 +86,11 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
   const removeTopico = (id: string) => {
     onChange(conteudos.filter(topico => topico.id !== id));
   };
+
+  React.useEffect(() => {
+    // Atualiza os itens expandidos caso os conteúdos mudem
+    setExpandedItems(new Set(conteudos.filter(topico => topico.subtopicos.length > 0).map(topico => topico.id)));
+  }, [conteudos]);
 
   return (
     <div className="space-y-4">
