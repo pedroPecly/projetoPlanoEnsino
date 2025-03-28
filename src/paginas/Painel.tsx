@@ -299,6 +299,9 @@ export function Painel() {
                       Disciplina: {plano.disciplina}
                     </p>
                     <p className="text-sm text-gray-500">
+                      abreviatura: {plano.abreviatura || 'N/A'}
+                    </p>
+                    <p className="text-sm text-gray-500">
                       Período: {plano.periodo}
                     </p>
                     <p className="text-sm text-gray-500">

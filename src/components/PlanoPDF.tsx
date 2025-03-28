@@ -200,6 +200,10 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                   <Text style={styles.infoValueCell}>{formatValue(plano.disciplina)}</Text>
                 </View>
                 <View style={styles.infoRow}>
+                  <Text style={styles.infoLabelCell}>abreviatura:</Text>
+                  <Text style={styles.infoValueCell}>{formatValue(plano.abreviatura)}</Text>
+                </View>
+                <View style={styles.infoRow}>
                   <Text style={styles.infoLabelCell}>Carga horaria Total:</Text>
                   <Text style={styles.infoValueCell}>{formatValue(plano.carga_horaria_total)} h/a 100%</Text>
                 </View>

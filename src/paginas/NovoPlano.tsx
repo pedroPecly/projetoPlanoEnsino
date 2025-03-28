@@ -40,6 +40,7 @@ export function NovoPlano() {
     periodo_numero: number;
     curso_id: string;
     disciplina: string;
+    abreviatura: string;
     ano_periodo: string;
     carga_horaria_total: number;
     carga_horaria_presencial: number;
@@ -70,6 +71,7 @@ export function NovoPlano() {
     periodo_numero: 1,
     curso_id: '',
     disciplina: '',
+    abreviatura: '',
     ano_periodo: `${currentYear}/1`,
     carga_horaria_total: 0,
     carga_horaria_presencial: 0,
@@ -382,7 +384,16 @@ export function NovoPlano() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
-
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Abreviatura</label>
+                <input
+                  type="text"
+                  name="abreviatura"
+                  value={plano.abreviatura}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Título do Plano</label>
                 <input

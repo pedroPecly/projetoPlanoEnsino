@@ -378,6 +378,16 @@ export function EditarPlano() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Abreviatura</label>
+                <input
+                  type="text"
+                  name="abreviatura"
+                  value={plano.abreviatura}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                />
+              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">Título do Plano</label>

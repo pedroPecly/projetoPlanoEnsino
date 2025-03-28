@@ -15,6 +15,7 @@ export interface Curso {
 export interface PlanoEnsino {
   id: string;
   titulo: string;
+  abreviatura: string;
   periodo: string;
   periodo_numero: number;
   curso_id: string;
