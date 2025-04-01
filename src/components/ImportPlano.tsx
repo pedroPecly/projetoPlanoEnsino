@@ -42,7 +42,7 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
   // Helper function to extract numbered items
   const extractNumberedItems = (content: string, prefix: string): string[] => {
     const items: string[] = [];
-    const regex = new RegExp(`${prefix}\\d+[.)]\\s*([^\\d.][^\\n]*(?:\\n(?!\\d)[^\\n]*)*)`,'g');
+    const regex = new RegExp(`${prefix}\\s*\\d+[.)]\\s*([^\\d.][^\\n]*(?:\\n(?!\\d)[^\\n]*)*)`,'g');
     let match;
     
     while ((match = regex.exec(content)) !== null) {
@@ -75,19 +75,25 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
       carga_horaria_distancia_percentual: 0
     };
 
-    const totalMatch = content.match(/Carga hor[aá]ria Total:\s*(\d+)/i);
-    const presencialMatch = content.match(/Carga hor[aá]ria presencial:\s*(\d+)/i);
-    const teoricaMatch = content.match(/Carga hor[aá]ria.*Te[óo]rica:\s*(\d+)/i);
-    const praticaMatch = content.match(/Carga hor[aá]ria.*Pr[áa]tica:\s*(\d+)/i);
-    const semanalMatch = content.match(/Carga hor[aá]ria.*Semanal:\s*(\d+)/i);
-    const distanciaMatch = content.match(/Carga hor[aá]ria.*[àa] dist[âa]ncia:\s*(\d+)/i);
+    // Extract numbers only from the text
+    const extractNumber = (text: string): number => {
+      const match = text.match(/\d+/);
+      return match ? parseInt(match[0]) : 0;
+    };
 
-    values.carga_horaria_total = totalMatch ? parseInt(totalMatch[1]) : 0;
-    values.carga_horaria_presencial = presencialMatch ? parseInt(presencialMatch[1]) : values.carga_horaria_total;
-    values.carga_horaria_teorica = teoricaMatch ? parseInt(teoricaMatch[1]) : values.carga_horaria_total;
-    values.carga_horaria_pratica = praticaMatch ? parseInt(praticaMatch[1]) : 0;
-    values.carga_horaria_semanal = semanalMatch ? parseInt(semanalMatch[1]) : Math.ceil(values.carga_horaria_total / 20);
-    values.carga_horaria_distancia = distanciaMatch ? parseInt(distanciaMatch[1]) : 0;
+    const totalMatch = content.match(/Carga\s+hor[aá]ria\s+Total:\s*(\d+)/i);
+    const presencialMatch = content.match(/Carga\s+hor[aá]ria\s+presencial:\s*(\d+)/i);
+    const teoricaMatch = content.match(/Carga\s+hor[aá]ria.*Te[óo]rica:\s*(\d+)/i);
+    const praticaMatch = content.match(/Carga\s+hor[aá]ria.*Pr[áa]tica:\s*(\d+)/i);
+    const semanalMatch = content.match(/Carga\s+hor[aá]ria.*Semanal:\s*(\d+)/i);
+    const distanciaMatch = content.match(/Carga\s+hor[aá]ria.*[àa]\s+dist[âa]ncia:\s*(\d+)/i);
+
+    values.carga_horaria_total = totalMatch ? extractNumber(totalMatch[1]) : 0;
+    values.carga_horaria_presencial = presencialMatch ? extractNumber(presencialMatch[1]) : values.carga_horaria_total;
+    values.carga_horaria_teorica = teoricaMatch ? extractNumber(teoricaMatch[1]) : values.carga_horaria_total;
+    values.carga_horaria_pratica = praticaMatch ? extractNumber(praticaMatch[1]) : 0;
+    values.carga_horaria_semanal = semanalMatch ? extractNumber(semanalMatch[1]) : Math.ceil(values.carga_horaria_total / 20);
+    values.carga_horaria_distancia = distanciaMatch ? extractNumber(distanciaMatch[1]) : 0;
 
     // Calculate percentages
     const total = values.carga_horaria_total || 1;
@@ -100,9 +106,55 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
     return values;
   };
 
+  // Helper function to extract disciplina
+  const extractDisciplina = (content: string): string => {
+    const match = content.match(/Componente\s+Curricular:\s*([^\n]+)/);
+    return match ? match[1].trim() : '';
+  };
+
+  // Helper function to extract curso
+  const extractCurso = (content: string): string => {
+    const match = content.match(/Curso:\s*([^\n]+)/);
+    return match ? match[1].trim() : '';
+  };
+
+  // Helper function to extract ementa
+  const extractEmenta = (content: string): string => {
+    const ementa = extractBetween(content, '2\\)\\s*Ementa', '3\\)');
+    return truncateText(ementa);
+  };
+
+  // Helper function to extract objetivos específicos with structure
+  const extractObjetivosEspecificos = (content: string): any[] => {
+    const objetivosSection = extractBetween(content, '3\\.2\\s*Espec[íi]ficos:', '4\\)');
+    const objetivos = objetivosSection.split(/\d+\.\s+/).filter(Boolean);
+    
+    return objetivos.map((obj, index) => ({
+      id: crypto.randomUUID(),
+      titulo: truncateText(obj.trim()),
+      subtopicos: [],
+      ordem: index
+    }));
+  };
+
+  // Helper function to extract conteúdo programático with structure
+  const extractConteudoProgramatico = (content: string): any[] => {
+    const conteudoSection = extractBetween(content, '4\\)\\s*Conte[úu]do', '5\\)');
+    const conteudos = conteudoSection.split(/\d+\.\s+/).filter(Boolean);
+    
+    return conteudos.map((cont, index) => ({
+      id: crypto.randomUUID(),
+      titulo: truncateText(cont.trim()),
+      data_prevista: '',
+      carga_horaria: '',
+      subtopicos: [],
+      ordem: index
+    }));
+  };
+
   // Helper function to extract cronograma items
   const extractCronograma = (content: string): any[] => {
-    const cronogramaSection = extractBetween(content, '10\\) Cronograma', '11\\)');
+    const cronogramaSection = extractBetween(content, '10\\)\\s*Cronograma', '11\\)');
     const items = [];
     const weekPattern = /Semana\s*(\d+)[:\s]*(.*?)(?=Semana|$)/gs;
     let match;
@@ -124,9 +176,9 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
 
   // Helper function to extract recursos utilizados
   const extractRecursos = (content: string): any[] => {
-    const recursosSection = extractBetween(content, '8\\) Recursos Utilizados', '9\\)');
-    return recursosSection.split('\n')
-      .filter(line => line.trim())
+    const recursosSection = extractBetween(content, '8\\)\\s*Recursos\\s+Utilizados', '9\\)');
+    return recursosSection.split(/\d+\.\s+/)
+      .filter(Boolean)
       .map(recurso => ({
         id: crypto.randomUUID(),
         tipo: 'material',
@@ -137,9 +189,9 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
 
   // Helper function to extract visitas técnicas
   const extractVisitas = (content: string): any[] => {
-    const visitasSection = extractBetween(content, '9\\) Visitas T[ée]cnicas', '10\\)');
-    return visitasSection.split('\n')
-      .filter(line => line.trim())
+    const visitasSection = extractBetween(content, '9\\)\\s*Visitas\\s+T[ée]cnicas', '10\\)');
+    return visitasSection.split(/\d+\.\s+/)
+      .filter(Boolean)
       .map(visita => ({
         id: crypto.randomUUID(),
         local: truncateText(visita.trim()),
@@ -148,66 +200,34 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
       }));
   };
 
-  // Helper function to extract objetivos específicos with structure
-  const extractObjetivosEspecificos = (content: string): any[] => {
-    const objetivos = extractNumberedItems(content, '3\\.2\\.');
-    return objetivos.map((obj, index) => ({
-      id: crypto.randomUUID(),
-      titulo: truncateText(obj),
-      subtopicos: [],
-      ordem: index
-    }));
-  };
-
-  // Helper function to extract conteúdo programático with structure
-  const extractConteudoProgramatico = (content: string): any[] => {
-    const conteudos = extractNumberedItems(content, '4\\.');
-    return conteudos.map((cont, index) => ({
-      id: crypto.randomUUID(),
-      titulo: truncateText(cont),
-      data_prevista: '',
-      carga_horaria: '',
-      subtopicos: [],
-      ordem: index
-    }));
-  };
-
   const parseContent = (content: string) => {
-    // Extract basic information
-    const disciplinaMatch = content.match(/Componente Curricular:\s*([^\n]+)/);
-    const professorMatch = content.match(/Professor:\s*([^\n]+)/);
-    const siapeMatch = content.match(/Matr[íi]cula SIAPE:\s*([^\n]+)/i);
+    const disciplina = extractDisciplina(content);
+    const ementa = extractEmenta(content);
+    const objetivoGeral = extractBetween(content, '3\\.1\\s*Geral:', '3\\.2');
+    const metodologia = extractBetween(content, '5\\)\\s*Metodologia', '6\\)');
+    const justificativaModalidade = extractBetween(content, '6\\)\\s*Justificativa\\s+da\\s+Modalidade', '7\\)');
+    const atividadesExtensao = extractBetween(content, '7\\)\\s*Atividades\\s+de\\s+Extens[ãa]o', '8\\)');
+    const bibliografiaBasica = extractNumberedItems(content, '11\\.1\\.').map(ref => truncateText(ref));
+    const bibliografiaComplementar = extractNumberedItems(content, '11\\.2\\.').map(ref => truncateText(ref));
     const periodoMatch = content.match(/Per[íi]odo:\s*(\d+)/i);
     
-    const sections = {
-      disciplina: disciplinaMatch ? truncateText(disciplinaMatch[1].trim()) : '',
-      professor_nome: professorMatch ? truncateText(professorMatch[1].trim()) : '',
-      matricula_siape: siapeMatch ? truncateText(siapeMatch[1].trim()) : '',
+    return {
+      disciplina: truncateText(disciplina),
+      ementa: truncateText(ementa),
+      objetivo_geral: truncateText(objetivoGeral),
+      metodologia: truncateText(metodologia),
+      justificativa_modalidade: truncateText(justificativaModalidade),
+      atividades_extensao: truncateText(atividadesExtensao),
       periodo_numero: periodoMatch ? parseInt(periodoMatch[1]) : 1,
-      
-      // Extract main sections
-      ementa: truncateText(extractBetween(content, '2\\) Ementa', '3\\)'), 255),
-      objetivo_geral: truncateText(extractBetween(content, '3\\.1 Geral:', '3\\.2'), 255),
-      metodologia: truncateText(extractBetween(content, '5\\) Metodologia', '6\\)'), 255),
-      justificativa_modalidade: truncateText(extractBetween(content, '6\\) Justificativa da Modalidade', '7\\)'), 255),
-      atividades_extensao: truncateText(extractBetween(content, '7\\) Atividades de Extens[ãa]o', '8\\)'), 255),
-      
-      // Extract structured data
       objetivos_especificos: extractObjetivosEspecificos(content),
       conteudo_programatico: extractConteudoProgramatico(content),
       cronograma: extractCronograma(content),
       recursos_utilizados: extractRecursos(content),
       visitas_tecnicas: extractVisitas(content),
-      
-      // Extract bibliografia
-      bibliografia_basica: extractNumberedItems(content, '11\\.1\\.').map(ref => truncateText(ref)),
-      bibliografia_complementar: extractNumberedItems(content, '11\\.2\\.').map(ref => truncateText(ref)),
-      
-      // Extract carga horária
+      bibliografia_basica: bibliografiaBasica,
+      bibliografia_complementar: bibliografiaComplementar,
       ...extractCargaHoraria(content)
     };
-
-    return sections;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -239,8 +259,23 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
         .eq('id', user.id)
         .single();
 
-      // Get first available course if professor doesn't have one assigned
+      // Get curso_id based on the extracted curso name
       let cursoId = professor?.curso_id;
+      const cursoName = extractCurso(content);
+      
+      if (cursoName) {
+        const { data: cursoData } = await supabase
+          .from('cursos')
+          .select('id')
+          .ilike('nome', `%${cursoName}%`)
+          .maybeSingle();
+        
+        if (cursoData?.id) {
+          cursoId = cursoData.id;
+        }
+      }
+
+      // If still no curso_id, get first available course
       if (!cursoId) {
         const { data: cursos } = await supabase
           .from('cursos')
