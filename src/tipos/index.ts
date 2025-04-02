@@ -2,6 +2,7 @@ export interface Professor {
   id: string;
   nome: string;
   email: string;
+  admin: boolean;
   created_at: string;
   matricula_siape: string;
 }
@@ -35,8 +36,6 @@ export interface PlanoEnsino {
   carga_horaria_semanal_percentual: number;
   carga_horaria_distancia?: number;
   carga_horaria_distancia_percentual?: number;
-  justificativa_modalidade?: string;
-  atividades_extensao?: string;
   recursos_utilizados: any[];
   visitas_tecnicas: any[];
   cronograma: any[];

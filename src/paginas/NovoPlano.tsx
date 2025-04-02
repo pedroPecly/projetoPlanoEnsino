@@ -53,8 +53,6 @@ export function NovoPlano() {
     carga_horaria_semanal_percentual: number;
     carga_horaria_distancia?: number;
     carga_horaria_distancia_percentual?: number;
-    justificativa_modalidade?: string;
-    atividades_extensao?: string;
     ementa: string;
     objetivo_geral: string;
     objetivos_especificos: any[];
@@ -84,8 +82,6 @@ export function NovoPlano() {
     carga_horaria_semanal_percentual: 0,
     carga_horaria_distancia: 0,
     carga_horaria_distancia_percentual: 0,
-    justificativa_modalidade: '',
-    atividades_extensao: '',
     ementa: '',
     objetivo_geral: '',
     objetivos_especificos: [],
