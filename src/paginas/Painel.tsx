@@ -298,9 +298,9 @@ export function Painel() {
                     <p className="text-sm text-gray-500">
                       Disciplina: {plano.disciplina}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    {/*<p className="text-sm text-gray-500">
                       abreviatura: {plano.abreviatura || 'N/A'}
-                    </p>
+                    </p>*/}
                     <p className="text-sm text-gray-500">
                       Período: {plano.periodo}
                     </p>
@@ -309,6 +309,9 @@ export function Painel() {
                     </p>
                     <p className="text-sm text-gray-500">
                       Atualizado em: {new Date(plano.atualizado_em).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Ano/periodo: {plano.ano_periodo}
                     </p>
                   </div>
                 </div>
