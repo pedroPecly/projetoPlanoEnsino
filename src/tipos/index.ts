@@ -40,6 +40,8 @@ export interface PlanoEnsino {
   visitas_tecnicas: any[];
   cronograma: any[];
   ementa: string;
+  atividades_extensao: string;
+  justificativa_modalidade: string;
   objetivo_geral: string;
   objetivos_especificos: ObjetivosEspecificos[];
   conteudo_programatico: ConteudoProgramatico[];

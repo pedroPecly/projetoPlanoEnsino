@@ -16,16 +16,16 @@ import type { Curso, Professor } from '../tipos';
 const summaryItems = [
   { id: '1', label: 'Ano/Período', target: 'ano-periodo' },
   { id: '2', label: 'Informações Básicas', target: 'info-basicas' },
-  { id: '3', label: 'Carga Horária', target: 'carga-horaria' },
-  { id: '4', label: 'Ementa', target: 'ementa' },
-  { id: '5', label: 'Objetivo Geral', target: 'objetivo-geral' },
-  { id: '6', label: 'Objetivos Específicos', target: 'objetivos-especificos' },
-  { id: '7', label: 'Conteúdo Programático', target: 'conteudo-programatico' },
-  { id: '8', label: 'Cronograma', target: 'cronograma' },
-  { id: '9', label: 'Recursos Utilizados', target: 'recursos' },
-  { id: '10', label: 'Visitas Técnicas', target: 'visitas' },
-  { id: '11', label: 'Metodologia', target: 'metodologia' },
-  { id: '12', label: 'Bibliografia', target: 'bibliografia' },
+  { id: '3', label: 'Ementa', target: 'ementa' },
+  { id: '4', label: 'Objetivo', target: 'objetivo-geral' },
+  { id: '5', label: 'Conteúdo Programático', target: 'conteudo-programatico' },
+  { id: '6', label: 'Cronograma', target: 'cronograma' },
+  { id: '7', label: 'Recursos Utilizados', target: 'recursos' },
+  { id: '8', label: 'Visitas Técnicas', target: 'visitas' },
+  { id: '9', label: 'Metodologia', target: 'metodologia' },
+  { id: '10', label: 'Bibliografia', target: 'bibliografia' },
+  { id: '11', label: 'Atividades de Extensão', target: 'atividades_extensao' },
+  { id: '12', label: 'Justificativa Modalidade', target: 'justificativa_modalidade' },
 ];
 
 export function NovoPlano() {
@@ -54,6 +54,8 @@ export function NovoPlano() {
     carga_horaria_distancia?: number;
     carga_horaria_distancia_percentual?: number;
     ementa: string;
+    atividades_extensao: string;
+    justificativa_modalidade: string;
     objetivo_geral: string;
     objetivos_especificos: any[];
     conteudo_programatico: any[];
@@ -83,6 +85,8 @@ export function NovoPlano() {
     carga_horaria_distancia: 0,
     carga_horaria_distancia_percentual: 0,
     ementa: '',
+    atividades_extensao: '',
+    justificativa_modalidade: '',
     objetivo_geral: '',
     objetivos_especificos: [],
     conteudo_programatico: [],
@@ -323,7 +327,7 @@ export function NovoPlano() {
                   name="ano_periodo"
                   value={plano.ano_periodo}
                   onChange={handleChange}
-                  className="block w-full rounded-md border-gray-400 shadow-sm focus:outline-none hover:bg-gray-50"
+                  className="block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
                 >
                   {[currentYear - 1, currentYear, currentYear + 1].map(year => (
                     <React.Fragment key={year}>
@@ -336,14 +340,14 @@ export function NovoPlano() {
             </div>
 
             <div id="info-basicas" className="bg-white shadow rounded-lg p-6">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Curso</label>
                   <select
                     name="curso_id"
                     value={plano.curso_id}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {cursos.map(curso => (
                       <option key={curso.id} value={curso.id}>
@@ -359,7 +363,7 @@ export function NovoPlano() {
                     name="periodo_numero"
                     value={plano.periodo_numero}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                       <option key={num} value={num}>
@@ -370,54 +374,56 @@ export function NovoPlano() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Disciplina</label>
-                <input
-                  type="text"
-                  name="disciplina"
-                  value={plano.disciplina}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Disciplina</label>
+                  <input
+                    type="text"
+                    name="disciplina"
+                    value={plano.disciplina}
+                    onChange={handleChange}
+                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Abreviatura</label>
+                  <input
+                    type="text"
+                    name="abreviatura"
+                    value={plano.abreviatura}
+                    onChange={handleChange}
+                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Abreviatura</label>
-                <input
-                  type="text"
-                  name="abreviatura"
-                  value={plano.abreviatura}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
-                />
-              </div>
-              <div>
+
+              <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700">Título do Plano</label>
                 <input
                   type="text"
                   name="titulo"
                   value={plano.titulo}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                  className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
                 />
               </div>
-            </div>
 
-            <div id="carga-horaria" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Carga Horária</h2>
-              <CargaHoraria
-                carga_horaria_total={plano.carga_horaria_total}
-                carga_horaria_presencial={plano.carga_horaria_presencial}
-                carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
-                carga_horaria_teorica={plano.carga_horaria_teorica}
-                carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
-                carga_horaria_pratica={plano.carga_horaria_pratica}
-                carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
-                carga_horaria_semanal={plano.carga_horaria_semanal}
-                carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
-                carga_horaria_distancia={plano.carga_horaria_distancia}
-                carga_horaria_distancia_percentual={plano.carga_horaria_distancia_percentual}
-                onChange={handleCargaHorariaChange}
-              />
+              <div className="mt-6">
+                <CargaHoraria
+                  carga_horaria_total={plano.carga_horaria_total}
+                  carga_horaria_presencial={plano.carga_horaria_presencial}
+                  carga_horaria_presencial_percentual={plano.carga_horaria_presencial_percentual}
+                  carga_horaria_teorica={plano.carga_horaria_teorica}
+                  carga_horaria_teorica_percentual={plano.carga_horaria_teorica_percentual}
+                  carga_horaria_pratica={plano.carga_horaria_pratica}
+                  carga_horaria_pratica_percentual={plano.carga_horaria_pratica_percentual}
+                  carga_horaria_semanal={plano.carga_horaria_semanal}
+                  carga_horaria_semanal_percentual={plano.carga_horaria_semanal_percentual}
+                  carga_horaria_distancia={plano.carga_horaria_distancia}
+                  carga_horaria_distancia_percentual={plano.carga_horaria_distancia_percentual}
+                  onChange={handleCargaHorariaChange}
+                />
+              </div>
             </div>
 
             <div id="ementa" className="bg-white shadow rounded-lg p-6">
@@ -427,7 +433,7 @@ export function NovoPlano() {
                 value={plano.ementa}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -438,11 +444,8 @@ export function NovoPlano() {
                 value={plano.objetivo_geral}
                 onChange={handleChange}
                 rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
               />
-            </div>
-
-            <div id="objetivos-especificos" className="bg-white shadow rounded-lg p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos Específicos</h2>
               <ObjetivosEspecificos
                 conteudos={plano.objetivos_especificos}
@@ -483,13 +486,13 @@ export function NovoPlano() {
             </div>
 
             <div id="metodologia" className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
               <textarea
                 name="metodologia"
                 value={plano.metodologia}
                 onChange={handleChange}
                 rows={6}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -498,6 +501,28 @@ export function NovoPlano() {
                 basica={plano.bibliografia_basica}
                 complementar={plano.bibliografia_complementar}
                 onChange={handleBibliografiaChange}
+              />
+            </div>
+
+            <div id="atividades_extensao" className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">atividade de extensão</h2>
+              <textarea
+                name="atividades_extensao"
+                value={plano.atividades_extensao}
+                onChange={handleChange}
+                rows={5}
+                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+              />
+            </div>
+
+            <div id="justificativa_modalidade" className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Justificativa de Modalidade</h2>
+              <textarea
+                name="justificativa_modalidade"
+                value={plano.justificativa_modalidade}
+                onChange={handleChange}
+                rows={5}
+                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
 
@@ -513,7 +538,7 @@ export function NovoPlano() {
               <button
                 onClick={() => salvarPlano('finalizado')}
                 disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <CheckCircle className="h-5 w-5 mr-2" />
                 Finalizar Plano
