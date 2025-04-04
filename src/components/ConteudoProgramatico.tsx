@@ -45,8 +45,8 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
       {
         id: newId,
         titulo: '',
-        data_prevista: '',
-        carga_horaria: '',
+        /*data_prevista: '',
+        carga_horaria: '',*/
         subtopicos: [],
         ordem: conteudos.length
       }
@@ -64,8 +64,8 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
               id: crypto.randomUUID(),
               titulo: '',
               ordem: topico.subtopicos.length,
-              data_prevista: '',
-              carga_horaria: '',
+              /*data_prevista: '',
+              carga_horaria: '',*/
               subtopicos: []
             }
           ]
@@ -124,7 +124,7 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                             <ChevronRight className="h-5 w-5" />
                           )}
                         </button>
-                        <input
+                        {/*<input
                           type="date"
                           value={topico.data_prevista || ''}
                           onChange={(e) => updateTopico(topico.id, 'data_prevista', e.target.value)}
@@ -136,7 +136,7 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                           onChange={(e) => updateTopico(topico.id, 'carga_horaria', e.target.value)}
                           placeholder="Carga horária (ex: 2h/a)"
                           className="w-32 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
-                        />
+                        />*/}
                         <input
                           type="text"
                           value={topico.titulo || ''}

@@ -18,7 +18,7 @@ const summaryItems = [
   { id: '2', label: 'Informações Básicas', target: 'info-basicas' },
   { id: '3', label: 'Ementa', target: 'ementa' },
   { id: '4', label: 'Objetivo', target: 'objetivo-geral' },
-  { id: '5', label: 'Conteúdo Programático', target: 'conteudo-programatico' },
+  { id: '5', label: 'Conteúdo', target: 'conteudo-programatico' },
   { id: '6', label: 'Metodologia', target: 'metodologia' },
   { id: '7', label: 'Atividades de Extensão', target: 'atividades_extensao' },
   { id: '8', label: 'Justificativa Modalidade', target: 'justificativa_modalidade' },
@@ -455,7 +455,7 @@ export function NovoPlano() {
             </div>
 
             <div id="conteudo-programatico" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo Programático</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo</h2>
               <ConteudoProgramatico
                 conteudos={plano.conteudo_programatico}
                 onChange={handleConteudoProgramaticoChange}

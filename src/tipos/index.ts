@@ -57,8 +57,8 @@ export interface PlanoEnsino {
 export interface ConteudoProgramatico {
   id: string;
   titulo: string;
-  data_prevista: string;
-  carga_horaria: string;
+  /*data_prevista: string;
+  carga_horaria: string;*/
   subtopicos: ConteudoProgramatico[];
   ordem: number;
 }

@@ -176,28 +176,28 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
   const extractDisciplinaAndAbreviatura = (content: string): { disciplina: string; abreviatura: string } => {
     try {
       const patterns = [
-        /Componente\s+Curricular:?\s*([^:]+?)(?:\s+abreviatura:?\s*([^:\n]+)|$)/i,
-        /Disciplina:?\s*([^:]+?)(?:\s+abreviatura:?\s*([^:\n]+)|$)/i
+        /Componente\s+Curricular:?\s*([^:]+?)(?:\s+abreviatura:?\s*([a-zA-Z0-9]+)|$)/i,
+        /Disciplina:?\s*([^:]+?)(?:\s+abreviatura:?\s*([a-zA-Z0-9]+)|$)/i
       ];
-
+  
       for (const pattern of patterns) {
         const match = content.match(pattern);
         if (match) {
           return {
-            disciplina: match[1]?.trim() || 'Nova Disciplina',
+            disciplina: match[1]?.trim() || '',
             abreviatura: match[2]?.trim() || ''
           };
         }
       }
-
+  
       return {
-        disciplina: 'Nova Disciplina',
+        disciplina: '',
         abreviatura: ''
       };
     } catch (error) {
       console.error('Error in extractDisciplinaAndAbreviatura:', error);
       return {
-        disciplina: 'Nova Disciplina',
+        disciplina: '',
         abreviatura: ''
       };
     }
