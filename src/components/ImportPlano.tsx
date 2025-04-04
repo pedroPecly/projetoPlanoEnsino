@@ -25,209 +25,376 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
     for (let i = 1; i <= numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item: any) => item.str).join(' ');
+      const pageText = textContent.items
+        .map((item: any) => item.str)
+        .join(' ')
+        .replace(/\s+/g, ' '); // Normalize whitespace
       fullText += pageText + '\n';
     }
     
     return fullText;
   };
 
-  // Helper function to extract text between patterns
+  // Helper function to extract text between patterns with better pattern matching
   const extractBetween = (content: string, startPattern: string, endPattern: string): string => {
-    const regex = new RegExp(`${startPattern}([\\s\\S]*?)${endPattern}`);
-    const match = content.match(regex);
-    return match ? match[1].trim() : '';
+    try {
+      const regex = new RegExp(`${startPattern}\\s*([\\s\\S]*?)(?=${endPattern}|$)`, 'i');
+      const match = content.match(regex);
+      return match ? match[1].trim() : '';
+    } catch (error) {
+      console.error('Error in extractBetween:', error);
+      return '';
+    }
   };
 
-  // Helper function to extract numbered items
-  const extractNumberedItems = (content: string, prefix: string): string[] => {
-    const items: string[] = [];
-    const regex = new RegExp(`${prefix}\\s*\\d+[.)]\\s*([^\\d.][^\\n]*(?:\\n(?!\\d)[^\\n]*)*)`,'g');
-    let match;
-    
-    while ((match = regex.exec(content)) !== null) {
-      if (match[1].trim()) {
-        items.push(match[1].trim());
+  // Helper function to extract numbered items with subtopics
+  const extractNumberedItemsWithSubtopics = (content: string, mainPattern: string): any[] => {
+    try {
+      const items: any[] = [];
+      // Match main topics with format like "1. Topic" or "1) Topic"
+      const mainTopicRegex = new RegExp(`(?:^|\\n)\\s*(\\d+)[.)]\\s*([^\\n]+)`, 'gm');
+      let mainMatch;
+      
+      while ((mainMatch = mainTopicRegex.exec(content)) !== null) {
+        const mainNumber = mainMatch[1];
+        const mainContent = mainMatch[2].trim();
+        
+        // Find subtopics that start with the main number
+        const subtopicRegex = new RegExp(`(?:^|\\n)\\s*${mainNumber}\\.(\\d+)[.)]\\s*([^\\n]+)`, 'gm');
+        const subtopics = [];
+        let subtopicMatch;
+        
+        while ((subtopicMatch = subtopicRegex.exec(content)) !== null) {
+          subtopics.push({
+            id: crypto.randomUUID(),
+            titulo: subtopicMatch[2].trim(),
+            subtopicos: [],
+            ordem: parseInt(subtopicMatch[1]) - 1
+          });
+        }
+
+        items.push({
+          id: crypto.randomUUID(),
+          titulo: mainContent,
+          subtopicos: subtopics,
+          ordem: parseInt(mainNumber) - 1
+        });
       }
+      
+      return items;
+    } catch (error) {
+      console.error('Error in extractNumberedItemsWithSubtopics:', error);
+      return [];
     }
-    
-    return items;
   };
 
-  // Helper function to truncate text
-  const truncateText = (text: string, maxLength: number = 255): string => {
-    return text.substring(0, maxLength);
+  // Helper function to parse date string with better format handling
+  const parseDate = (dateStr: string): string => {
+    try {
+      const dateRegex = /(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/;
+      const match = dateStr.match(dateRegex);
+      if (match) {
+        const [_, day, month, year] = match;
+        const fullYear = year.length === 2 ? '20' + year : year;
+        const formattedMonth = month.padStart(2, '0');
+        const formattedDay = day.padStart(2, '0');
+        return `${fullYear}-${formattedMonth}-${formattedDay}`;
+      }
+      return '';
+    } catch (error) {
+      console.error('Error in parseDate:', error);
+      return '';
+    }
   };
 
-  // Helper function to extract carga horária values
+  // Helper function to extract carga horária values with better pattern matching
   const extractCargaHoraria = (content: string): any => {
-    const values = {
-      carga_horaria_total: 0,
-      carga_horaria_presencial: 0,
-      carga_horaria_presencial_percentual: 0,
-      carga_horaria_teorica: 0,
-      carga_horaria_teorica_percentual: 0,
-      carga_horaria_pratica: 0,
-      carga_horaria_pratica_percentual: 0,
-      carga_horaria_semanal: 0,
-      carga_horaria_semanal_percentual: 0,
-      carga_horaria_distancia: 0,
-      carga_horaria_distancia_percentual: 0
-    };
+    try {
+      const values = {
+        carga_horaria_total: 60,
+        carga_horaria_presencial: 48,
+        carga_horaria_presencial_percentual: 80,
+        carga_horaria_teorica: 30,
+        carga_horaria_teorica_percentual: 50,
+        carga_horaria_pratica: 30,
+        carga_horaria_pratica_percentual: 50,
+        carga_horaria_semanal: 4,
+        carga_horaria_semanal_percentual: 0,
+        carga_horaria_distancia: 12,
+        carga_horaria_distancia_percentual: 20
+      };
 
-    // Extract numbers only from the text
-    const extractNumber = (text: string): number => {
-      const match = text.match(/\d+/);
-      return match ? parseInt(match[0]) : 0;
-    };
+      const extractNumber = (text: string): number => {
+        const match = text.match(/\d+/);
+        return match ? parseInt(match[0]) : 0;
+      };
 
-    const totalMatch = content.match(/Carga\s+hor[aá]ria\s+Total:\s*(\d+)/i);
-    const presencialMatch = content.match(/Carga\s+hor[aá]ria\s+presencial:\s*(\d+)/i);
-    const teoricaMatch = content.match(/Carga\s+hor[aá]ria.*Te[óo]rica:\s*(\d+)/i);
-    const praticaMatch = content.match(/Carga\s+hor[aá]ria.*Pr[áa]tica:\s*(\d+)/i);
-    const semanalMatch = content.match(/Carga\s+hor[aá]ria.*Semanal:\s*(\d+)/i);
-    const distanciaMatch = content.match(/Carga\s+hor[aá]ria.*[àa]\s+dist[âa]ncia:\s*(\d+)/i);
+      // Try to find values in the content
+      const totalMatch = content.match(/Carga\s+hor[aá]ria\s+[Tt]otal:?\s*(\d+)/i);
+      const presencialMatch = content.match(/Carga\s+hor[aá]ria\s+[Pp]resencial:?\s*(\d+)/i);
+      const teoricaMatch = content.match(/Carga\s+hor[aá]ria\s*[Tt]e[óo]rica:?\s*(\d+)/i);
+      const praticaMatch = content.match(/Carga\s+hor[aá]ria\s*[Pp]r[áa]tica:?\s*(\d+)/i);
+      const semanalMatch = content.match(/Carga\s+hor[aá]ria\s*[Ss]emanal:?\s*(\d+)/i);
+      const distanciaMatch = content.match(/Carga\s+hor[aá]ria\s*[àa]\s*[Dd]ist[âa]ncia:?\s*(\d+)/i);
 
-    values.carga_horaria_total = totalMatch ? extractNumber(totalMatch[1]) : 0;
-    values.carga_horaria_presencial = presencialMatch ? extractNumber(presencialMatch[1]) : values.carga_horaria_total;
-    values.carga_horaria_teorica = teoricaMatch ? extractNumber(teoricaMatch[1]) : values.carga_horaria_total;
-    values.carga_horaria_pratica = praticaMatch ? extractNumber(praticaMatch[1]) : 0;
-    values.carga_horaria_semanal = semanalMatch ? extractNumber(semanalMatch[1]) : Math.ceil(values.carga_horaria_total / 20);
-    values.carga_horaria_distancia = distanciaMatch ? extractNumber(distanciaMatch[1]) : 0;
+      // Update values if found in content
+      if (totalMatch) values.carga_horaria_total = extractNumber(totalMatch[1]);
+      if (presencialMatch) values.carga_horaria_presencial = extractNumber(presencialMatch[1]);
+      if (teoricaMatch) values.carga_horaria_teorica = extractNumber(teoricaMatch[1]);
+      if (praticaMatch) values.carga_horaria_pratica = extractNumber(praticaMatch[1]);
+      if (semanalMatch) values.carga_horaria_semanal = extractNumber(semanalMatch[1]);
+      if (distanciaMatch) values.carga_horaria_distancia = extractNumber(distanciaMatch[1]);
 
-    // Calculate percentages
-    const total = values.carga_horaria_total || 1;
-    values.carga_horaria_presencial_percentual = (values.carga_horaria_presencial / total) * 100;
-    values.carga_horaria_teorica_percentual = (values.carga_horaria_teorica / total) * 100;
-    values.carga_horaria_pratica_percentual = (values.carga_horaria_pratica / total) * 100;
-    values.carga_horaria_semanal_percentual = (values.carga_horaria_semanal / total) * 100;
-    values.carga_horaria_distancia_percentual = (values.carga_horaria_distancia / total) * 100;
+      // Calculate percentages
+      const total = values.carga_horaria_total || 60;
+      values.carga_horaria_presencial_percentual = Math.round((values.carga_horaria_presencial / total) * 100);
+      values.carga_horaria_teorica_percentual = Math.round((values.carga_horaria_teorica / total) * 100);
+      values.carga_horaria_pratica_percentual = Math.round((values.carga_horaria_pratica / total) * 100);
+      values.carga_horaria_semanal_percentual = Math.round((values.carga_horaria_semanal / total) * 100);
+      values.carga_horaria_distancia_percentual = Math.round((values.carga_horaria_distancia / total) * 100);
 
-    return values;
-  };
-
-  // Helper function to extract disciplina
-  const extractDisciplina = (content: string): string => {
-    const match = content.match(/Componente\s+Curricular:\s*([^\n]+)/);
-    return match ? match[1].trim() : '';
-  };
-
-  // Helper function to extract curso
-  const extractCurso = (content: string): string => {
-    const match = content.match(/Curso:\s*([^\n]+)/);
-    return match ? match[1].trim() : '';
-  };
-
-  // Helper function to extract ementa
-  const extractEmenta = (content: string): string => {
-    const ementa = extractBetween(content, '2\\)\\s*Ementa', '3\\)');
-    return truncateText(ementa);
-  };
-
-  // Helper function to extract objetivos específicos with structure
-  const extractObjetivosEspecificos = (content: string): any[] => {
-    const objetivosSection = extractBetween(content, '3\\.2\\s*Espec[íi]ficos:', '4\\)');
-    const objetivos = objetivosSection.split(/\d+\.\s+/).filter(Boolean);
-    
-    return objetivos.map((obj, index) => ({
-      id: crypto.randomUUID(),
-      titulo: truncateText(obj.trim()),
-      subtopicos: [],
-      ordem: index
-    }));
-  };
-
-  // Helper function to extract conteúdo programático with structure
-  const extractConteudoProgramatico = (content: string): any[] => {
-    const conteudoSection = extractBetween(content, '4\\)\\s*Conte[úu]do', '5\\)');
-    const conteudos = conteudoSection.split(/\d+\.\s+/).filter(Boolean);
-    
-    return conteudos.map((cont, index) => ({
-      id: crypto.randomUUID(),
-      titulo: truncateText(cont.trim()),
-      data_prevista: '',
-      carga_horaria: '',
-      subtopicos: [],
-      ordem: index
-    }));
-  };
-
-  // Helper function to extract cronograma items
-  const extractCronograma = (content: string): any[] => {
-    const cronogramaSection = extractBetween(content, '10\\)\\s*Cronograma', '11\\)');
-    const items = [];
-    const weekPattern = /Semana\s*(\d+)[:\s]*(.*?)(?=Semana|$)/gs;
-    let match;
-
-    while ((match = weekPattern.exec(cronogramaSection)) !== null) {
-      items.push({
-        id: crypto.randomUUID(),
-        semana: parseInt(match[1]),
-        data_inicio: '',
-        data_fim: '',
-        atividades: [match[2].trim()],
-        recursos: [''],
-        avaliacao: ''
-      });
+      return values;
+    } catch (error) {
+      console.error('Error in extractCargaHoraria:', error);
+      return {
+        carga_horaria_total: 60,
+        carga_horaria_presencial: 48,
+        carga_horaria_presencial_percentual: 80,
+        carga_horaria_teorica: 30,
+        carga_horaria_teorica_percentual: 50,
+        carga_horaria_pratica: 30,
+        carga_horaria_pratica_percentual: 50,
+        carga_horaria_semanal: 4,
+        carga_horaria_semanal_percentual: 0,
+        carga_horaria_distancia: 12,
+        carga_horaria_distancia_percentual: 20
+      };
     }
-
-    return items;
   };
 
-  // Helper function to extract recursos utilizados
+  // Helper function to extract disciplina and abreviatura
+  const extractDisciplinaAndAbreviatura = (content: string): { disciplina: string; abreviatura: string } => {
+    try {
+      const patterns = [
+        /Componente\s+Curricular:?\s*([^:]+?)(?:\s+abreviatura:?\s*([^:\n]+)|$)/i,
+        /Disciplina:?\s*([^:]+?)(?:\s+abreviatura:?\s*([^:\n]+)|$)/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = content.match(pattern);
+        if (match) {
+          return {
+            disciplina: match[1]?.trim() || 'Nova Disciplina',
+            abreviatura: match[2]?.trim() || ''
+          };
+        }
+      }
+
+      return {
+        disciplina: 'Nova Disciplina',
+        abreviatura: ''
+      };
+    } catch (error) {
+      console.error('Error in extractDisciplinaAndAbreviatura:', error);
+      return {
+        disciplina: 'Nova Disciplina',
+        abreviatura: ''
+      };
+    }
+  };
+
+  // Helper function to extract objetivos específicos with proper structure
+  const extractObjetivosEspecificos = (content: string): any[] => {
+    try {
+      const objetivosSection = extractBetween(content, '(?:3\\.2|III\\.2)\\s*Espec[íi]ficos', '(?:4|IV)\\)');
+      const items: any[] = [];
+      
+      // Match main objectives (3.2.1, 3.2.2, etc)
+      const mainObjectivePattern = /(?:3\.2\.|III\.2\.)(\d+)\s*([^.]+?)(?=(?:3\.2\.|III\.2\.|\d+\.\d+\.|$))/g;
+      let mainMatch;
+      
+      while ((mainMatch = mainObjectivePattern.exec(objetivosSection)) !== null) {
+        const mainNumber = mainMatch[1];
+        const mainContent = mainMatch[2].trim();
+        
+        // Find subtopics for this main objective
+        const subtopicPattern = new RegExp(`(?:3\\.2\\.|III\\.2\\.)${mainNumber}\\.(\\d+)\\s*([^.]+?)(?=(?:3\\.2\\.|III\\.2\\.\\d+|\\d+\\.\\d+\\.|$))`, 'g');
+        const subtopics = [];
+        let subtopicMatch;
+        
+        // Reset lastIndex to start searching from beginning of section
+        subtopicPattern.lastIndex = 0;
+        
+        while ((subtopicMatch = subtopicPattern.exec(objetivosSection)) !== null) {
+          subtopics.push({
+            id: crypto.randomUUID(),
+            titulo: subtopicMatch[2].trim(),
+            subtopicos: [],
+            ordem: parseInt(subtopicMatch[1]) - 1
+          });
+        }
+
+        items.push({
+          id: crypto.randomUUID(),
+          titulo: mainContent,
+          subtopicos: subtopics,
+          ordem: parseInt(mainNumber) - 1
+        });
+      }
+      
+      return items;
+    } catch (error) {
+      console.error('Error in extractObjetivosEspecificos:', error);
+      return [];
+    }
+  };
+
+  // Helper function to extract curso with better pattern matching
+  const extractCurso = (content: string): string => {
+    try {
+      const patterns = [
+        /Curso:?\s*([^:\n]+?)(?=\s*(?:Per[íi]odo|Disciplina|$))/i,
+        /Graduação\s+em:?\s*([^:\n]+?)(?=\s*(?:Per[íi]odo|Disciplina|$))/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = content.match(pattern);
+        if (match && match[1].trim()) {
+          return match[1].trim();
+        }
+      }
+
+      return '';
+    } catch (error) {
+      console.error('Error in extractCurso:', error);
+      return '';
+    }
+  };
+
+  // Helper function to extract recursos utilizados with better pattern matching
   const extractRecursos = (content: string): any[] => {
-    const recursosSection = extractBetween(content, '8\\)\\s*Recursos\\s+Utilizados', '9\\)');
-    return recursosSection.split(/\d+\.\s+/)
-      .filter(Boolean)
-      .map(recurso => ({
-        id: crypto.randomUUID(),
-        tipo: 'material',
-        descricao: truncateText(recurso.trim()),
-        quantidade: 1
-      }));
+    try {
+      const recursosSection = extractBetween(content, '(?:8|VIII)\\)\\s*Recursos\\s+Utilizados', '(?:9|IX)\\)');
+      return recursosSection
+        .split(/(?:\d+\.|[-•])/)
+        .map(item => item.trim())
+        .filter(Boolean)
+        .map(recurso => ({
+          id: crypto.randomUUID(),
+          tipo: 'material',
+          descricao: recurso,
+          quantidade: 1
+        }));
+    } catch (error) {
+      console.error('Error in extractRecursos:', error);
+      return [];
+    }
   };
 
-  // Helper function to extract visitas técnicas
+  // Helper function to extract visitas técnicas with better pattern matching
   const extractVisitas = (content: string): any[] => {
-    const visitasSection = extractBetween(content, '9\\)\\s*Visitas\\s+T[ée]cnicas', '10\\)');
-    return visitasSection.split(/\d+\.\s+/)
-      .filter(Boolean)
-      .map(visita => ({
-        id: crypto.randomUUID(),
-        local: truncateText(visita.trim()),
-        data_prevista: '',
-        materiais_necessarios: ['']
-      }));
+    try {
+      const visitasSection = extractBetween(content, '(?:9|IX)\\)\\s*Visitas\\s+T[ée]cnicas', '(?:10|X)\\)');
+      const visitaPattern = /(?:\d+\.|[-•])\s*([^]*?)(?=(?:\d+\.|[-•]|$))/g;
+      const items = [];
+      let match;
+
+      while ((match = visitaPattern.exec(visitasSection)) !== null) {
+        const visitaContent = match[1].trim();
+        const dateMatch = visitaContent.match(/(\d{1,2}\/\d{1,2}\/\d{2,4})/);
+        const materiaisMatch = visitaContent.match(/Materiais[^:]*:\s*([^]*?)(?=Data|$)/i);
+
+        items.push({
+          id: crypto.randomUUID(),
+          local: visitaContent.split('\n')[0],
+          data_prevista: dateMatch ? parseDate(dateMatch[1]) : '',
+          materiais_necessarios: materiaisMatch 
+            ? materiaisMatch[1].split(/[,;]/).map(m => m.trim()).filter(Boolean)
+            : ['']
+        });
+      }
+
+      return items;
+    } catch (error) {
+      console.error('Error in extractVisitas:', error);
+      return [];
+    }
+  };
+
+  // Helper function to extract cronograma items with better date handling
+  const extractCronograma = (content: string): any[] => {
+    try {
+      const cronogramaSection = extractBetween(content, '(?:10|X)\\)\\s*Cronograma', '(?:11|XI)\\)');
+      const items = [];
+      const weekPattern = /Semana\s*(\d+)(?:\s*[-:]\s*)?(?:(\d{1,2}\/\d{1,2}\/\d{2,4})\s*(?:a|até|e)\s*(\d{1,2}\/\d{1,2}\/\d{2,4}))?\s*([\s\S]*?)(?=(?:Semana|$))/gi;
+      let match;
+
+      while ((match = weekPattern.exec(cronogramaSection)) !== null) {
+        const [_, weekNum, startDate, endDate, content] = match;
+        
+        const contentLines = content.split(/[\n\r]+/).filter(line => line.trim());
+        const activities = contentLines
+          .filter(line => !line.toLowerCase().includes('recurso'))
+          .map(line => line.trim())
+          .filter(Boolean);
+
+        const resources = contentLines
+          .filter(line => line.toLowerCase().includes('recurso'))
+          .map(line => line.trim())
+          .filter(Boolean);
+
+        items.push({
+          id: crypto.randomUUID(),
+          semana: parseInt(weekNum) || items.length + 1,
+          data_inicio: startDate ? parseDate(startDate) : '',
+          data_fim: endDate ? parseDate(endDate) : '',
+          atividades: activities.length > 0 ? activities : [''],
+          recursos: resources.length > 0 ? resources : [''],
+          avaliacao: ''
+        });
+      }
+
+      return items;
+    } catch (error) {
+      console.error('Error in extractCronograma:', error);
+      return [];
+    }
   };
 
   const parseContent = (content: string) => {
-    const disciplina = extractDisciplina(content);
-    const ementa = extractEmenta(content);
-    const objetivoGeral = extractBetween(content, '3\\.1\\s*Geral:', '3\\.2');
-    const metodologia = extractBetween(content, '5\\)\\s*Metodologia', '6\\)');
-    const justificativaModalidade = extractBetween(content, '6\\)\\s*Justificativa\\s+da\\s+Modalidade', '7\\)');
-    const atividadesExtensao = extractBetween(content, '7\\)\\s*Atividades\\s+de\\s+Extens[ãa]o', '8\\)');
-    const bibliografiaBasica = extractNumberedItems(content, '11\\.1\\.').map(ref => truncateText(ref));
-    const bibliografiaComplementar = extractNumberedItems(content, '11\\.2\\.').map(ref => truncateText(ref));
-    const periodoMatch = content.match(/Per[íi]odo:\s*(\d+)/i);
-    
-    return {
-      disciplina: truncateText(disciplina),
-      ementa: truncateText(ementa),
-      objetivo_geral: truncateText(objetivoGeral),
-      metodologia: truncateText(metodologia),
-      justificativa_modalidade: truncateText(justificativaModalidade),
-      atividades_extensao: truncateText(atividadesExtensao),
-      periodo_numero: periodoMatch ? parseInt(periodoMatch[1]) : 1,
-      objetivos_especificos: extractObjetivosEspecificos(content),
-      conteudo_programatico: extractConteudoProgramatico(content),
-      cronograma: extractCronograma(content),
-      recursos_utilizados: extractRecursos(content),
-      visitas_tecnicas: extractVisitas(content),
-      bibliografia_basica: bibliografiaBasica,
-      bibliografia_complementar: bibliografiaComplementar,
-      ...extractCargaHoraria(content)
-    };
+    try {
+      const { disciplina, abreviatura } = extractDisciplinaAndAbreviatura(content);
+      const ementa = extractBetween(content, '(?:2|II)\\)\\s*Ementa', '(?:3|III)\\)');
+      const objetivoGeral = extractBetween(content, '(?:3\\.1|III\\.1)\\s*Geral', '(?:3\\.2|III\\.2)');
+      const metodologia = extractBetween(content, '(?:5|V)\\)\\s*Metodologia', '(?:6|VI)\\)');
+      const justificativaModalidade = extractBetween(content, '(?:6|VI)\\)\\s*Justificativa\\s+da\\s+Modalidade', '(?:7|VII)\\)');
+      const atividadesExtensao = extractBetween(content, '(?:7|VII)\\)\\s*Atividades\\s+de\\s+Extens[ãa]o', '(?:8|VIII)\\)');
+      const bibliografiaBasica = extractNumberedItemsWithSubtopics(content, '11\\.1\\.').map(item => item.titulo);
+      const bibliografiaComplementar = extractNumberedItemsWithSubtopics(content, '11\\.2\\.').map(item => item.titulo);
+      const periodoMatch = content.match(/Per[íi]odo:?\s*(\d+)/i);
+      
+      return {
+        disciplina,
+        abreviatura,
+        ementa: ementa || '',
+        objetivo_geral: objetivoGeral || '',
+        metodologia: metodologia || '',
+        justificativa_modalidade: justificativaModalidade || '',
+        atividades_extensao: atividadesExtensao || '',
+        periodo_numero: periodoMatch ? parseInt(periodoMatch[1]) : 1,
+        objetivos_especificos: extractObjetivosEspecificos(content),
+        conteudo_programatico: extractNumberedItemsWithSubtopics(content, '4\\.'),
+        cronograma: extractCronograma(content),
+        recursos_utilizados: extractRecursos(content),
+        visitas_tecnicas: extractVisitas(content),
+        bibliografia_basica: bibliografiaBasica.length > 0 ? bibliografiaBasica : [''],
+        bibliografia_complementar: bibliografiaComplementar.length > 0 ? bibliografiaComplementar : [''],
+        ...extractCargaHoraria(content)
+      };
+    } catch (error) {
+      console.error('Error in parseContent:', error);
+      throw new Error('Erro ao processar o conteúdo do PDF. Formato inválido.');
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -248,6 +415,11 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
       const content = await extractTextContent(pdf);
+      
+      if (!content.trim()) {
+        throw new Error('PDF vazio ou ilegível');
+      }
+
       const parsedData = parseContent(content);
 
       const { data: { user } } = await supabase.auth.getUser();
@@ -294,12 +466,11 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
       const semester = currentMonth < 6 ? 1 : 2;
 
       const titulo = file.name.replace('.pdf', '');
-      const truncatedTitulo = truncateText(titulo);
 
       const planoData = {
         ...parsedData,
         professor_id: user.id,
-        titulo: truncatedTitulo,
+        titulo: titulo,
         ano_periodo: `${currentYear}/${semester}`,
         status: 'rascunho',
         finalizado: false,
@@ -324,9 +495,9 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
 
       toast.success('Plano importado com sucesso!');
       navigate(`/editar-plano/${data.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao importar PDF:', error);
-      toast.error('Erro ao importar o plano. Verifique se o arquivo está no formato correto.');
+      toast.error(error.message || 'Erro ao importar o plano. Verifique se o arquivo está no formato correto.');
     } finally {
       setLoading(false);
       onClose();
