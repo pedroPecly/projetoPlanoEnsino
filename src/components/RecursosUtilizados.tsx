@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import type { RecursoUtilizado } from '../tipos';
 
@@ -8,6 +8,20 @@ interface Props {
 }
 
 export function RecursosUtilizados({ recursos = [], onChange }: Props) {
+  useEffect(() => {
+    // Adiciona um recurso inicial se o array estiver vazio
+    if (recursos.length === 0) {
+      onChange([
+        {
+          id: crypto.randomUUID(),
+          tipo: 'fisico',
+          descricao: '',
+          quantidade: 1
+        }
+      ]);
+    }
+  }, [recursos, onChange]);
+
   const addRecurso = () => {
     onChange([
       ...recursos,

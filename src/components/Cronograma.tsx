@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import type { CronogramaItem } from '../tipos';
 
@@ -8,6 +8,23 @@ interface Props {
 }
 
 export function Cronograma({ cronograma = [], onChange }: Props) {
+  React.useEffect(() => {
+    // Adiciona um item inicial ao cronograma se estiver vazio
+    if (cronograma.length === 0) {
+      onChange([
+        {
+          id: crypto.randomUUID(),
+          semana: 1,
+          data_inicio: '',
+          data_fim: '',
+          atividades: [''],
+          recursos: [''],
+          avaliacao: ''
+        }
+      ]);
+    }
+  }, [cronograma, onChange]);
+
   const addItem = () => {
     onChange([
       ...cronograma,
@@ -28,51 +45,87 @@ export function Cronograma({ cronograma = [], onChange }: Props) {
   };
 
   const updateItem = (id: string, field: keyof CronogramaItem, value: any) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? { ...item, [field]: value } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
   };
 
   const addAtividade = (id: string) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? { ...item, atividades: [...item.atividades, ''] } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? { ...item, atividades: [...item.atividades, ''] }
+          : item
+      )
+    );
   };
 
   const removeAtividade = (id: string, index: number) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? { ...item, atividades: item.atividades.filter((_, i) => i !== index) } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? {
+              ...item,
+              atividades: item.atividades.filter((_, i) => i !== index)
+            }
+          : item
+      )
+    );
   };
 
   const updateAtividade = (id: string, index: number, value: string) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? {
-        ...item,
-        atividades: item.atividades.map((atv, i) => i === index ? value : atv)
-      } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? {
+              ...item,
+              atividades: item.atividades.map((atv, i) =>
+                i === index ? value : atv
+              )
+            }
+          : item
+      )
+    );
   };
 
   const addRecurso = (id: string) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? { ...item, recursos: [...item.recursos, ''] } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? { ...item, recursos: [...item.recursos, ''] }
+          : item
+      )
+    );
   };
 
   const removeRecurso = (id: string, index: number) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? { ...item, recursos: item.recursos.filter((_, i) => i !== index) } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? {
+              ...item,
+              recursos: item.recursos.filter((_, i) => i !== index)
+            }
+          : item
+      )
+    );
   };
 
   const updateRecurso = (id: string, index: number, value: string) => {
-    onChange(cronograma.map(item => 
-      item.id === id ? {
-        ...item,
-        recursos: item.recursos.map((rec, i) => i === index ? value : rec)
-      } : item
-    ));
+    onChange(
+      cronograma.map(item =>
+        item.id === id
+          ? {
+              ...item,
+              recursos: item.recursos.map((rec, i) =>
+                i === index ? value : rec
+              )
+            }
+          : item
+      )
+    );
   };
 
   return (

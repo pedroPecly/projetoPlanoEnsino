@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import type { VisitaTecnica } from '../tipos';
 
@@ -8,6 +8,20 @@ interface Props {
 }
 
 export function VisitasTecnicas({ visitas = [], onChange }: Props) {
+  useEffect(() => {
+    // Adiciona uma visita técnica inicial se o array estiver vazio
+    if (visitas.length === 0) {
+      onChange([
+        {
+          id: crypto.randomUUID(),
+          local: '',
+          data_prevista: '',
+          materiais_necessarios: ['']
+        }
+      ]);
+    }
+  }, [visitas, onChange]);
+
   const addVisita = () => {
     onChange([
       ...visitas,
@@ -25,42 +39,63 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
   };
 
   const updateVisita = (id: string, field: keyof VisitaTecnica, value: any) => {
-    onChange(visitas.map(visita => 
-      visita.id === id ? { ...visita, [field]: value } : visita
-    ));
+    onChange(
+      visitas.map(visita =>
+        visita.id === id ? { ...visita, [field]: value } : visita
+      )
+    );
   };
 
   const addMaterial = (id: string) => {
-    onChange(visitas.map(visita => 
-      visita.id === id ? {
-        ...visita,
-        materiais_necessarios: [...visita.materiais_necessarios, '']
-      } : visita
-    ));
+    onChange(
+      visitas.map(visita =>
+        visita.id === id
+          ? {
+              ...visita,
+              materiais_necessarios: [...visita.materiais_necessarios, '']
+            }
+          : visita
+      )
+    );
   };
 
   const removeMaterial = (id: string, index: number) => {
-    onChange(visitas.map(visita => 
-      visita.id === id ? {
-        ...visita,
-        materiais_necessarios: visita.materiais_necessarios.filter((_, i) => i !== index)
-      } : visita
-    ));
+    onChange(
+      visitas.map(visita =>
+        visita.id === id
+          ? {
+              ...visita,
+              materiais_necessarios: visita.materiais_necessarios.filter(
+                (_, i) => i !== index
+              )
+            }
+          : visita
+      )
+    );
   };
 
   const updateMaterial = (id: string, index: number, value: string) => {
-    onChange(visitas.map(visita => 
-      visita.id === id ? {
-        ...visita,
-        materiais_necessarios: visita.materiais_necessarios.map((mat, i) => i === index ? value : mat)
-      } : visita
-    ));
+    onChange(
+      visitas.map(visita =>
+        visita.id === id
+          ? {
+              ...visita,
+              materiais_necessarios: visita.materiais_necessarios.map((mat, i) =>
+                i === index ? value : mat
+              )
+            }
+          : visita
+      )
+    );
   };
 
   return (
     <div className="space-y-6">
-      {visitas.map((visita) => (
-        <div key={visita.id} className="bg-white p-6 rounded-lg border border-gray-200">
+      {visitas.map(visita => (
+        <div
+          key={visita.id}
+          className="bg-white p-6 rounded-lg border border-gray-200"
+        >
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium">Visita Técnica</h3>
             <button
@@ -74,34 +109,44 @@ export function VisitasTecnicas({ visitas = [], onChange }: Props) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Local</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Local
+              </label>
               <input
                 type="text"
                 value={visita.local}
-                onChange={(e) => updateVisita(visita.id, 'local', e.target.value)}
+                onChange={e => updateVisita(visita.id, 'local', e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                 placeholder="Local da visita"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Data Prevista</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Data Prevista
+              </label>
               <input
                 type="date"
                 value={visita.data_prevista}
-                onChange={(e) => updateVisita(visita.id, 'data_prevista', e.target.value)}
+                onChange={e =>
+                  updateVisita(visita.id, 'data_prevista', e.target.value)
+                }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
               />
             </div>
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Materiais Necessários</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Materiais Necessários
+            </label>
             {visita.materiais_necessarios.map((material, index) => (
               <div key={index} className="flex gap-2 mb-2">
                 <input
                   type="text"
                   value={material}
-                  onChange={(e) => updateMaterial(visita.id, index, e.target.value)}
+                  onChange={e =>
+                    updateMaterial(visita.id, index, e.target.value)
+                  }
                   className="flex-1 rounded-md border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50"
                   placeholder="Descreva o material necessário"
                 />

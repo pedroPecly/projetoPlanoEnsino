@@ -9,6 +9,20 @@ interface Props {
 }
 
 export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
+  React.useEffect(() => {
+    // Adiciona um tópico inicial se o array estiver vazio
+    if (conteudos.length === 0) {
+      onChange([
+        {
+          id: crypto.randomUUID(),
+          titulo: '',
+          subtopicos: [],
+          ordem: 0,
+        },
+      ]);
+    }
+  }, [conteudos, onChange]);
+
   const [expandedItems, setExpandedItems] = React.useState<Set<string>>(
     new Set(conteudos.filter(topico => topico.subtopicos.length > 0).map(topico => topico.id))
   );
@@ -23,7 +37,7 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
     // Update ordem field
     const updatedItems = items.map((item, index) => ({
       ...item,
-      ordem: index
+      ordem: index,
     }));
 
     onChange(updatedItems);
@@ -47,8 +61,8 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
         id: newId,
         titulo: '',
         subtopicos: [],
-        ordem: conteudos.length
-      }
+        ordem: conteudos.length,
+      },
     ]);
   };
 
@@ -63,9 +77,9 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
               id: crypto.randomUUID(),
               titulo: '',
               subtopicos: [],
-              ordem: topico.subtopicos.length
-            }
-          ]
+              ordem: topico.subtopicos.length,
+            },
+          ],
         };
       }
       return topico;
@@ -143,7 +157,7 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
                           <Trash2 className="h-5 w-5" />
                         </button>
                       </div>
-                      
+
                       {expandedItems.has(topico.id) && topico.subtopicos.length > 0 && (
                         <div className="ml-8 mt-2 space-y-2">
                           {topico.subtopicos.map((subtopico, index) => (
@@ -156,11 +170,11 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
                                     if (t.id === topico.id) {
                                       return {
                                         ...t,
-                                        subtopicos: t.subtopicos.map(s => 
-                                          s.id === subtopico.id 
+                                        subtopicos: t.subtopicos.map(s =>
+                                          s.id === subtopico.id
                                             ? { ...s, titulo: e.target.value }
                                             : s
-                                        )
+                                        ),
                                       };
                                     }
                                     return t;
@@ -177,7 +191,7 @@ export function ObjetivosEspecificos({ conteudos, onChange }: Props) {
                                     if (t.id === topico.id) {
                                       return {
                                         ...t,
-                                        subtopicos: t.subtopicos.filter(s => s.id !== subtopico.id)
+                                        subtopicos: t.subtopicos.filter(s => s.id !== subtopico.id),
                                       };
                                     }
                                     return t;

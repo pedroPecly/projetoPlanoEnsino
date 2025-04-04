@@ -9,6 +9,20 @@ interface Props {
 }
 
 export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
+  React.useEffect(() => {
+    // Adiciona um tópico inicial se o array estiver vazio
+    if (conteudos.length === 0) {
+      onChange([
+        {
+          id: crypto.randomUUID(),
+          titulo: '',
+          subtopicos: [],
+          ordem: 0,
+        },
+      ]);
+    }
+  }, [conteudos, onChange]);
+
   const [expandedItems, setExpandedItems] = React.useState<Set<string>>(
     new Set(conteudos.filter(topico => topico.subtopicos.length > 0).map(topico => topico.id))
   );
@@ -22,7 +36,7 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
 
     const updatedItems = items.map((item, index) => ({
       ...item,
-      ordem: index
+      ordem: index,
     }));
 
     onChange(updatedItems);
@@ -124,19 +138,6 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                             <ChevronRight className="h-5 w-5" />
                           )}
                         </button>
-                        {/*<input
-                          type="date"
-                          value={topico.data_prevista || ''}
-                          onChange={(e) => updateTopico(topico.id, 'data_prevista', e.target.value)}
-                          className="w-40 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
-                        />
-                        <input
-                          type="text"
-                          value={topico.carga_horaria || ''}
-                          onChange={(e) => updateTopico(topico.id, 'carga_horaria', e.target.value)}
-                          placeholder="Carga horária (ex: 2h/a)"
-                          className="w-32 border-gray-300 rounded-md shadow-sm focus:outline-none hover:bg-gray-50"
-                        />*/}
                         <input
                           type="text"
                           value={topico.titulo || ''}
@@ -159,7 +160,6 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                           <Trash2 className="h-5 w-5" />
                         </button>
                       </div>
-                      
                       {expandedItems.has(topico.id) && topico.subtopicos.length > 0 && (
                         <div className="ml-8 mt-2 space-y-2">
                           {topico.subtopicos.map((subtopico, index) => (
@@ -172,11 +172,11 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                                     if (t.id === topico.id) {
                                       return {
                                         ...t,
-                                        subtopicos: t.subtopicos.map(s => 
-                                          s.id === subtopico.id 
+                                        subtopicos: t.subtopicos.map(s =>
+                                          s.id === subtopico.id
                                             ? { ...s, titulo: e.target.value }
                                             : s
-                                        )
+                                        ),
                                       };
                                     }
                                     return t;
@@ -193,7 +193,7 @@ export function ConteudoProgramatico({ conteudos = [], onChange }: Props) {
                                     if (t.id === topico.id) {
                                       return {
                                         ...t,
-                                        subtopicos: t.subtopicos.filter(s => s.id !== subtopico.id)
+                                        subtopicos: t.subtopicos.filter(s => s.id !== subtopico.id),
                                       };
                                     }
                                     return t;
