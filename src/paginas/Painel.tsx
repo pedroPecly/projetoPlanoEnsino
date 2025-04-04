@@ -239,7 +239,7 @@ export function Painel() {
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
                 onClick={() => setMenuAberto(!menuAberto)}
               >
-                Filtros e Ordenação {(menuAberto ? <ArrowDown className="ml-1 h-4 w-4" /> : <ArrowUp className="ml-1 h-4 w-4" />)}
+                Filtros e Ordem {(menuAberto ? <ArrowDown className="ml-1 h-4 w-4" /> : <ArrowUp className="ml-1 h-4 w-4" />)}
               </button>
               <input
                 type="text"
@@ -248,8 +248,11 @@ export function Painel() {
                 placeholder="Pesquisar..."
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64 focus:outline-none "
               />
-              {menuAberto && (
-                <div className="absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition duration-200 transform origin-top z-50">
+              <div
+                className={`absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 transform origin-top z-50 ${menuAberto ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
+                  }`}
+              >
+                {menuAberto && (
                   <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     <div className="px-4 py-2">
                       <label className="block text-sm font-medium text-gray-700">Filtros</label>
@@ -336,8 +339,8 @@ export function Painel() {
                       </button>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="flex space-x-2">
               <button
@@ -465,63 +468,63 @@ export function Painel() {
                 ))}
             </div>
           ) : planosFiltrados.length === 0 ? (
-              <div className="text-center py-12">
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
-                  Nenhum plano de ensino encontrado
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Tente ajustar os filtros ou criar um novo plano de ensino.
-                </p>
-                <div className="mt-6">
-                  <button
-                    onClick={() => navigate('/novo-plano')}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
-                  >
-                    <PlusCircle className="h-5 w-5 mr-2" />
-                    Criar novo plano
-                  </button>
-                </div>
+            <div className="text-center py-12">
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                Nenhum plano de ensino encontrado
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Tente ajustar os filtros ou criar um novo plano de ensino.
+              </p>
+              <div className="mt-6">
+                <button
+                  onClick={() => navigate('/novo-plano')}
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
+                >
+                  <PlusCircle className="h-5 w-5 mr-2" />
+                  Criar novo plano
+                </button>
               </div>
-            ) : (
-              <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition duration-200">
-                {planosFiltrados.map((plano) => (
-                  <div
-                    key={plano.id}
-                    onClick={() => navigate(`/editar-plano/${plano.id}`)}
-                    className="relative bg-white border rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer"
-                  >
-                    <div className="absolute top-4 right-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${plano.status === 'finalizado'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                        {plano.status === 'finalizado' ? 'Finalizado' : 'Rascunho'}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 truncate pr-20">
-                      {plano.titulo}
-                    </h3>
-                    <div className="mt-2 space-y-1">
-                      <p className="text-sm text-gray-500">
-                        Disciplina: {plano.disciplina}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Período: {plano.periodo}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Curso: {cursos[plano.curso_id]?.nome}
-                      </p>
-                      <p className='text-sm text-gray-500'>
-                        Ano/periodo: {plano.ano_periodo}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Atualizado em: {new Date(plano.atualizado_em).toLocaleDateString()}
-                      </p>
-                    </div>
+            </div>
+          ) : (
+            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition duration-200">
+              {planosFiltrados.map((plano) => (
+                <div
+                  key={plano.id}
+                  onClick={() => navigate(`/editar-plano/${plano.id}`)}
+                  className="relative bg-white border rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                >
+                  <div className="absolute top-4 right-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${plano.status === 'finalizado'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
+                      }`}>
+                      {plano.status === 'finalizado' ? 'Finalizado' : 'Rascunho'}
+                    </span>
                   </div>
-                ))}
-              </div>
-            )}
+                  <h3 className="text-lg font-medium text-gray-900 truncate pr-20">
+                    {plano.titulo}
+                  </h3>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-sm text-gray-500">
+                      Disciplina: {plano.disciplina}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Período: {plano.periodo}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Curso: {cursos[plano.curso_id]?.nome}
+                    </p>
+                    <p className='text-sm text-gray-500'>
+                      Ano/periodo: {plano.ano_periodo}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Atualizado em: {new Date(plano.atualizado_em).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         {showImportModal && (
           <ImportPlano onClose={() => setShowImportModal(false)} />
