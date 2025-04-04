@@ -21,13 +21,14 @@ const summaryItems = [
   { id: '3', label: 'Ementa', target: 'ementa' },
   { id: '4', label: 'Objetivo', target: 'objetivo-geral' },
   { id: '5', label: 'Conteúdo Programático', target: 'conteudo-programatico' },
-  { id: '6', label: 'Cronograma', target: 'cronograma' },
-  { id: '7', label: 'Recursos Utilizados', target: 'recursos' },
-  { id: '8', label: 'Visitas Técnicas', target: 'visitas' },
-  { id: '9', label: 'Metodologia', target: 'metodologia' },
-  { id: '10', label: 'Bibliografia', target: 'bibliografia' },
-  { id: '11', label: 'Atividades de Extensão', target: 'atividades_extensao' },
-  { id: '12', label: 'Justificativa Modalidade', target: 'justificativa_modalidade' },
+  { id: '6', label: 'Metodologia', target: 'metodologia' },
+  { id: '7', label: 'Atividades de Extensão', target: 'atividades_extensao' },
+  { id: '8', label: 'Justificativa Modalidade', target: 'justificativa_modalidade' },
+  { id: '9', label: 'Recursos Utilizados', target: 'recursos' },
+  { id: '10', label: 'Visitas Técnicas', target: 'visitas' },
+  { id: '11', label: 'Cronograma', target: 'cronograma' },
+  { id: '12', label: 'Bibliografia', target: 'bibliografia' },
+
 ];
 
 export function EditarPlano() {
@@ -455,30 +456,6 @@ export function EditarPlano() {
               />
             </div>
 
-            <div id="cronograma" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Cronograma</h2>
-              <Cronograma
-                cronograma={plano.cronograma}
-                onChange={handleCronogramaChange}
-              />
-            </div>
-
-            <div id="recursos" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Recursos Utilizados</h2>
-              <RecursosUtilizados
-                recursos={plano.recursos_utilizados}
-                onChange={handleRecursosUtilizadosChange}
-              />
-            </div>
-
-            <div id="visitas" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas Técnicas</h2>
-              <VisitasTecnicas
-                visitas={plano.visitas_tecnicas}
-                onChange={handleVisitasTecnicasChange}
-              />
-            </div>
-
             <div id="metodologia" className="bg-white shadow rounded-lg p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
               <textarea
@@ -487,14 +464,6 @@ export function EditarPlano() {
                 onChange={handleChange}
                 rows={6}
                 className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
-              />
-            </div>
-
-            <div id="bibliografia" className="bg-white shadow rounded-lg p-6">
-              <Bibliografia
-                basica={plano.bibliografia_basica}
-                complementar={plano.bibliografia_complementar}
-                onChange={handleBibliografiaChange}
               />
             </div>
 
@@ -517,6 +486,38 @@ export function EditarPlano() {
                 onChange={handleChange}
                 rows={5}
                 className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+              />
+            </div>
+
+            <div id="recursos" className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Recursos Utilizados</h2>
+              <RecursosUtilizados
+                recursos={plano.recursos_utilizados}
+                onChange={handleRecursosUtilizadosChange}
+              />
+            </div>
+
+            <div id="visitas" className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas Técnicas</h2>
+              <VisitasTecnicas
+                visitas={plano.visitas_tecnicas}
+                onChange={handleVisitasTecnicasChange}
+              />
+            </div>
+
+            <div id="cronograma" className="bg-white shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Cronograma</h2>
+              <Cronograma
+                cronograma={plano.cronograma}
+                onChange={handleCronogramaChange}
+              />
+            </div>
+
+            <div id="bibliografia" className="bg-white shadow rounded-lg p-6">
+              <Bibliografia
+                basica={plano.bibliografia_basica}
+                complementar={plano.bibliografia_complementar}
+                onChange={handleBibliografiaChange}
               />
             </div>
 
