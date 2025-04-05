@@ -93,7 +93,7 @@ export function AlterarDadosUsuario() {
     <div className="min-h-screen bg-gray-100">
       {/* Cabeçalho */}
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
@@ -113,7 +113,7 @@ export function AlterarDadosUsuario() {
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <LogOut className="h-5 w-5 mr-2" />
                 Sair

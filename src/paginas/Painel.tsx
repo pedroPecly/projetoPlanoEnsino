@@ -201,7 +201,7 @@ export function Painel() {
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
@@ -221,7 +221,7 @@ export function Painel() {
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <LogOut className="h-5 w-5 mr-2" />
                 Sair
@@ -231,12 +231,12 @@ export function Painel() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="max-w-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
         {!professor?.admin && (
-          <div className="mb-4 flex flex-wrap items-center justify-between">
+          <div className="mb-4 flex flex-wrap items-center justify-between space-y-4 lg:space-y-0">
             <div className="relative flex items-center space-x-2">
               <button
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
                 onClick={() => setMenuAberto(!menuAberto)}
               >
                 Filtros e Ordem {(menuAberto ? <ArrowDown className="ml-1 h-4 w-4" /> : <ArrowUp className="ml-1 h-4 w-4" />)}
@@ -246,10 +246,10 @@ export function Painel() {
                 value={termoPesquisa}
                 onChange={(e) => setTermoPesquisa(e.target.value)}
                 placeholder="Pesquisar..."
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-64 focus:outline-none "
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-56 lg:w-80 focus:outline-none"
               />
               <div
-                className={`absolute top-12 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 transform origin-top z-50 ${menuAberto ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
+                className={`absolute top-12 left-0 mt-2 w-56 lg:w-72 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 transform origin-top z-50 ${menuAberto ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
                   }`}
               >
                 {menuAberto && (
@@ -345,14 +345,14 @@ export function Painel() {
             <div className="flex space-x-2">
               <button
                 onClick={() => setShowImportModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
               >
                 <Upload className="h-5 w-5 mr-2" />
                 Importar PDF
               </button>
               <button
                 onClick={() => navigate('/novo-plano')}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
+                className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
               >
                 <PlusCircle className="h-5 w-5 mr-2" />
                 Novo Plano
@@ -361,7 +361,7 @@ export function Painel() {
           </div>
         )}
         <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-3 border-b border-gray-200">
             <h2 className="text-lg font-medium text-gray-900">
               {professor?.admin ? 'Todos os Planos de Ensino' : 'Meus Planos de Ensino'}
             </h2>

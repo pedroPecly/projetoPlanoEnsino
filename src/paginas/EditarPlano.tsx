@@ -217,7 +217,7 @@ export function EditarPlano() {
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
@@ -237,7 +237,7 @@ export function EditarPlano() {
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <LogOut className="h-5 w-5 mr-2" />
                 Sair
@@ -246,7 +246,7 @@ export function EditarPlano() {
           </div>
         </div>
       </nav>
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex items-center justify-between">
           <button
             onClick={() => navigate('/painel')}
@@ -262,7 +262,7 @@ export function EditarPlano() {
           <div className="flex space-x-4">
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
+              className="inline-flex items-center px-3 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
             >
               <Trash2 className="h-5 w-5 mr-2" />
               Excluir Plano
@@ -271,7 +271,7 @@ export function EditarPlano() {
               <PDFDownloadLink
                 document={<PlanoPDF planos={[plano]} curso={cursos.find(curso => curso.id === plano.curso_id)?.nome || ''} periodo={String(plano.periodo_numero)} />}
                 fileName={`${plano.disciplina} - Plano de ensino ${plano.ano_periodo}.pdf`}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <FileText className="h-5 w-5 mr-2" />
                 Exportar PDF
