@@ -47,6 +47,99 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
     }
   };
 
+  // Helper function to extract disciplina and abreviatura with improved pattern matching
+  const extractDisciplinaAndAbreviatura = (content: string): { disciplina: string; abreviatura: string } => {
+    try {
+      const patterns = [
+        /(?:Componente\s+Curricular|Disciplina):?\s*([^:\n]+?)(?:\s+abreviatura:?\s*([^:\s\n]+)|\s*$)/i,
+      ];
+
+      for (const pattern of patterns) {
+        const match = content.match(pattern);
+        if (match) {
+          return {
+            disciplina: match[1]?.trim() || 'Nova Disciplina',
+            abreviatura: match[2]?.trim() || ''
+          };
+        }
+      }
+
+      return {
+        disciplina: 'Nova Disciplina',
+        abreviatura: ''
+      };
+    } catch (error) {
+      console.error('Error in extractDisciplinaAndAbreviatura:', error);
+      return {
+        disciplina: 'Nova Disciplina',
+        abreviatura: ''
+      };
+    }
+  };
+
+  // Helper function to extract objetivos específicos with improved hierarchical structure
+  const extractObjetivosEspecificos = (content: string): any[] => {
+    try {
+      const objetivosSection = extractBetween(content, '(?:3\\.2|III\\.2)\\s*Espec[íi]ficos', '(?:4|IV)\\)');
+      const items: any[] = [];
+      
+      // First, find all main objectives (3.2.1, 3.2.2, etc.)
+      const mainTopicRegex = /(?:3\.2\.|III\.2\.)(\d+)\s*([^\n.]+?)(?=\s*(?:3\.2\.|III\.2\.|\d+\.\d+\.|$))/g;
+      let mainMatch;
+      
+      while ((mainMatch = mainTopicRegex.exec(objetivosSection)) !== null) {
+        const mainNumber = mainMatch[1];
+        const mainContent = mainMatch[2].trim();
+        
+        // Find subtopics for this main objective
+        const subtopicRegex = new RegExp(`(?:3\\.2\\.|III\\.2\\.)${mainNumber}\\.(\\d+)\\s*([^\n.]+?)(?=\s*(?:3\\.2\\.|III\\.2\\.\\d+|\\d+\\.\\d+\\.\\d+|$))`, 'g');
+        const subtopics = [];
+        let subtopicMatch;
+        
+        // Reset lastIndex to start searching from beginning of section
+        subtopicRegex.lastIndex = 0;
+        
+        while ((subtopicMatch = subtopicRegex.exec(objetivosSection)) !== null) {
+          const subNumber = subtopicMatch[1];
+          const subContent = subtopicMatch[2].trim();
+          
+          // Find sub-subtopics if any
+          const subSubtopicRegex = new RegExp(`(?:3\\.2\\.|III\\.2\\.)${mainNumber}\\.${subNumber}\\.(\\d+)\\s*([^\n.]+?)(?=\s*(?:3\\.2\\.|III\\.2\\.\\d+|\\d+\\.\\d+\\.\\d+|$))`, 'g');
+          const subSubtopics = [];
+          let subSubtopicMatch;
+          
+          while ((subSubtopicMatch = subSubtopicRegex.exec(objetivosSection)) !== null) {
+            subSubtopics.push({
+              id: crypto.randomUUID(),
+              titulo: subSubtopicMatch[2].trim(),
+              subtopicos: [],
+              ordem: parseInt(subSubtopicMatch[1]) - 1
+            });
+          }
+          
+          subtopics.push({
+            id: crypto.randomUUID(),
+            titulo: subContent,
+            subtopicos: subSubtopics,
+            ordem: parseInt(subNumber) - 1
+          });
+        }
+
+        items.push({
+          id: crypto.randomUUID(),
+          titulo: mainContent,
+          subtopicos: subtopics,
+          ordem: parseInt(mainNumber) - 1
+        });
+      }
+      
+      return items;
+    } catch (error) {
+      console.error('Error in extractObjetivosEspecificos:', error);
+      return [];
+    }
+  };
+
   // Helper function to extract numbered items with subtopics
   const extractNumberedItemsWithSubtopics = (content: string, mainPattern: string): any[] => {
     try {
@@ -169,83 +262,6 @@ export function ImportPlano({ onClose }: ImportPlanoProps) {
         carga_horaria_distancia: 12,
         carga_horaria_distancia_percentual: 20
       };
-    }
-  };
-
-  // Helper function to extract disciplina and abreviatura
-  const extractDisciplinaAndAbreviatura = (content: string): { disciplina: string; abreviatura: string } => {
-    try {
-      const patterns = [
-        /Componente\s+Curricular:?\s*([^:]+?)(?:\s+abreviatura:?\s*([a-zA-Z0-9]+)|$)/i,
-        /Disciplina:?\s*([^:]+?)(?:\s+abreviatura:?\s*([a-zA-Z0-9]+)|$)/i
-      ];
-  
-      for (const pattern of patterns) {
-        const match = content.match(pattern);
-        if (match) {
-          return {
-            disciplina: match[1]?.trim() || '',
-            abreviatura: match[2]?.trim() || ''
-          };
-        }
-      }
-  
-      return {
-        disciplina: '',
-        abreviatura: ''
-      };
-    } catch (error) {
-      console.error('Error in extractDisciplinaAndAbreviatura:', error);
-      return {
-        disciplina: '',
-        abreviatura: ''
-      };
-    }
-  };
-
-  // Helper function to extract objetivos específicos with proper structure
-  const extractObjetivosEspecificos = (content: string): any[] => {
-    try {
-      const objetivosSection = extractBetween(content, '(?:3\\.2|III\\.2)\\s*Espec[íi]ficos', '(?:4|IV)\\)');
-      const items: any[] = [];
-      
-      // Match main objectives (3.2.1, 3.2.2, etc)
-      const mainObjectivePattern = /(?:3\.2\.|III\.2\.)(\d+)\s*([^.]+?)(?=(?:3\.2\.|III\.2\.|\d+\.\d+\.|$))/g;
-      let mainMatch;
-      
-      while ((mainMatch = mainObjectivePattern.exec(objetivosSection)) !== null) {
-        const mainNumber = mainMatch[1];
-        const mainContent = mainMatch[2].trim();
-        
-        // Find subtopics for this main objective
-        const subtopicPattern = new RegExp(`(?:3\\.2\\.|III\\.2\\.)${mainNumber}\\.(\\d+)\\s*([^.]+?)(?=(?:3\\.2\\.|III\\.2\\.\\d+|\\d+\\.\\d+\\.|$))`, 'g');
-        const subtopics = [];
-        let subtopicMatch;
-        
-        // Reset lastIndex to start searching from beginning of section
-        subtopicPattern.lastIndex = 0;
-        
-        while ((subtopicMatch = subtopicPattern.exec(objetivosSection)) !== null) {
-          subtopics.push({
-            id: crypto.randomUUID(),
-            titulo: subtopicMatch[2].trim(),
-            subtopicos: [],
-            ordem: parseInt(subtopicMatch[1]) - 1
-          });
-        }
-
-        items.push({
-          id: crypto.randomUUID(),
-          titulo: mainContent,
-          subtopicos: subtopics,
-          ordem: parseInt(mainNumber) - 1
-        });
-      }
-      
-      return items;
-    } catch (error) {
-      console.error('Error in extractObjetivosEspecificos:', error);
-      return [];
     }
   };
 
