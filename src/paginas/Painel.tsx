@@ -343,13 +343,13 @@ export function Painel() {
               </div>
             </div>
             <div className="flex space-x-2">
-              <button
+              {/*<button
                 onClick={() => setShowImportModal(true)}
                 className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
               >
                 <Upload className="h-5 w-5 mr-2" />
                 Importar PDF
-              </button>
+              </button>*/}
               <button
                 onClick={() => navigate('/novo-plano')}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
