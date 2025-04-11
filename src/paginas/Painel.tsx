@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { ImportPlano } from '../components/ImportPlano';
 import { PlanoPDF } from '../components/PlanoPDF';
+import { GerenciarCursos } from '../components/GerenciarCursos';
+import { GerenciarUsuarios } from '../components/GerenciarUsuarios';
 
 type OrganizedPlanos = {
   [anoPeriodo: string]: {
@@ -21,6 +23,7 @@ export function Painel() {
   const [planosEnsino, setPlanosEnsino] = useState<PlanoEnsino[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [professor, setProfessor] = useState<Professor | null>(null);
+  const [professores, setProfessores] = useState<Professor[]>([]);
   const [cursos, setCursos] = useState<Record<string, Curso>>({});
   const [filtroCurso, setFiltroCurso] = useState<string>('');
   const [filtroPeriodo, setFiltroPeriodo] = useState<string>('');
@@ -31,8 +34,10 @@ export function Painel() {
   const [menuAberto, setMenuAberto] = useState<boolean>(false);
   const [termoPesquisa, setTermoPesquisa] = useState<string>('');
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showGerenciarCursos, setShowGerenciarCursos] = useState(false);
   const [expandedAnoPeriodo, setExpandedAnoPeriodo] = useState<string | null>(null);
   const [expandedCurso, setExpandedCurso] = useState<string | null>(null);
+  const [showGerenciarUsuarios, setShowGerenciarUsuarios] = useState(false);
   const [anosPeriodsDisponiveis, setAnosPeriodsDisponiveis] = useState<string[]>([]);
 
   useEffect(() => {
@@ -115,6 +120,22 @@ export function Painel() {
     }
   }
 
+  async function carregarProfessores() {
+    try {
+      const { data, error } = await supabase
+        .from('professores')
+        .select('*')
+        .order('nome');
+
+      if (error) throw error;
+
+      setProfessores(data || []);
+    } catch (error) {
+      console.error('Erro ao carregar professores:', error);
+      toast.error('Erro ao carregar professores');
+    }
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut();
     navigate('/login');
@@ -143,22 +164,24 @@ export function Painel() {
     });
 
   function organizarPlanos(planos: PlanoEnsino[]): OrganizedPlanos {
-    return planos.reduce((acc, plano) => {
-      const { ano_periodo, curso_id, periodo } = plano;
+    return planos
+      .filter(plano => plano.status === 'finalizado') // Filtra apenas os planos finalizados
+      .reduce((acc, plano) => {
+        const { ano_periodo, curso_id, periodo } = plano;
 
-      if (!acc[ano_periodo]) {
-        acc[ano_periodo] = {};
-      }
-      if (!acc[ano_periodo][curso_id]) {
-        acc[ano_periodo][curso_id] = {};
-      }
-      if (!acc[ano_periodo][curso_id][periodo]) {
-        acc[ano_periodo][curso_id][periodo] = [];
-      }
+        if (!acc[ano_periodo]) {
+          acc[ano_periodo] = {};
+        }
+        if (!acc[ano_periodo][curso_id]) {
+          acc[ano_periodo][curso_id] = {};
+        }
+        if (!acc[ano_periodo][curso_id][periodo]) {
+          acc[ano_periodo][curso_id][periodo] = [];
+        }
 
-      acc[ano_periodo][curso_id][periodo].push(plano);
-      return acc;
-    }, {} as OrganizedPlanos);
+        acc[ano_periodo][curso_id][periodo].push(plano);
+        return acc;
+      }, {} as OrganizedPlanos);
   }
 
   function renderPlanosList(planos: PlanoEnsino[]) {
@@ -290,7 +313,7 @@ export function Painel() {
                         className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:outline-none hover:bg-gray-50 text-sm font-medium text-gray-700"
                       >
                         <option value="">Todos Períodos</option>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                           <option key={num} value={`${num}º Período`}>
                             {num}º Período
                           </option>
@@ -360,6 +383,27 @@ export function Painel() {
             </div>
           </div>
         )}
+        {professor?.admin && (
+          <div className="flex justify-start mb-4 space-x-4"> {/* Adicionado space-x-4 para espaçamento padrão */}
+            <button
+              onClick={() => setShowGerenciarCursos(true)}
+              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            >
+              <GraduationCap className="h-5 w-5 mr-2" />
+              Gerenciar Cursos
+            </button>
+            <button
+              onClick={() => {
+                setShowGerenciarUsuarios(true);
+                carregarProfessores();
+              }}
+              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            >
+              <User className="h-5 w-5 mr-2" />
+              Gerenciar Usuários
+            </button>
+          </div>
+        )}
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-200">
             <h2 className="text-lg font-medium text-gray-900">
@@ -368,105 +412,116 @@ export function Painel() {
           </div>
 
           {professor?.admin ? (
-            <div className="divide-y divide-gray-200">
-              {Object.entries(organizedPlanos)
-                .sort(([a], [b]) => b.localeCompare(a))
-                .map(([anoPeriodo, cursosPlanos]) => (
-                  <div key={anoPeriodo} className="bg-white">
-                    <button
-                      onClick={() => setExpandedAnoPeriodo(expandedAnoPeriodo === anoPeriodo ? null : anoPeriodo)}
-                      className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors duration-200"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Calendar className="h-5 w-5 text-[#2b9f3f]" />
-                        <span className="font-medium text-gray-900">Ano/Período: {anoPeriodo}</span>
-                      </div>
-                      {expandedAnoPeriodo === anoPeriodo ? (
-                        <ChevronDown className="h-5 w-5 text-gray-400" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-gray-400" />
-                      )}
-                    </button>
+            Object.keys(organizedPlanos).length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  Nenhum plano de ensino encontrado
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Não há planos de ensino cadastrados no sistema.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-200">
+                {Object.entries(organizedPlanos)
+                  .sort(([a], [b]) => b.localeCompare(a))
+                  .map(([anoPeriodo, cursosPlanos]) => (
+                    <div key={anoPeriodo} className="bg-white">
+                      <button
+                        onClick={() => setExpandedAnoPeriodo(expandedAnoPeriodo === anoPeriodo ? null : anoPeriodo)}
+                        className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 transition-colors duration-200"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Calendar className="h-5 w-5 text-[#2b9f3f]" />
+                          <span className="font-medium text-gray-900">Ano/Período: {anoPeriodo}</span>
+                        </div>
+                        {expandedAnoPeriodo === anoPeriodo ? (
+                          <ChevronDown className="h-5 w-5 text-gray-400" />
+                        ) : (
+                          <ChevronRight className="h-5 w-5 text-gray-400" />
+                        )}
+                      </button>
 
-                    {expandedAnoPeriodo === anoPeriodo && (
-                      <div className="ml-4 bg-gray-50 rounded-lg m-4">
-                        {Object.entries(cursosPlanos)
-                          .sort(([a, b]) => {
-                            const cursoA = cursos[a]?.nome || '';
-                            const cursoB = cursos[b as unknown as string]?.nome || '';
-                            return cursoA.localeCompare(cursoB);
-                          })
-                          .map(([cursoId, periodos]) => {
-                            const cursoNome = cursos[cursoId]?.nome;
-                            if (!cursoNome) return null;
+                      {expandedAnoPeriodo === anoPeriodo && (
+                        <div className="ml-4 bg-gray-50 rounded-lg m-4">
+                          {Object.entries(cursosPlanos)
+                            .sort(([a, b]) => {
+                              const cursoA = cursos[a]?.nome || '';
+                              const cursoB = cursos[b as unknown as string]?.nome || '';
+                              return cursoA.localeCompare(cursoB);
+                            })
+                            .map(([cursoId, periodos]) => {
+                              const cursoNome = cursos[cursoId]?.nome;
+                              if (!cursoNome) return null;
 
-                            return (
-                              <div key={cursoId} className="border-l-4 border-[#2b9f3f] bg-white rounded-lg shadow-sm m-4">
-                                <button
-                                  onClick={() => setExpandedCurso(expandedCurso === cursoId ? null : cursoId)}
-                                  className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                                >
-                                  <div className="flex items-center space-x-3">
-                                    <GraduationCap className="h-5 w-5 text-[#2b9f3f]" />
-                                    <span className="font-medium text-gray-900">{cursoNome}</span>
-                                  </div>
-                                  {expandedCurso === cursoId ? (
-                                    <ChevronDown className="h-5 w-5 text-gray-400" />
-                                  ) : (
-                                    <ChevronRight className="h-5 w-5 text-gray-400" />
-                                  )}
-                                </button>
+                              return (
+                                <div key={cursoId} className="border-l-4 border-[#2b9f3f] bg-white rounded-lg shadow-sm m-4">
+                                  <button
+                                    onClick={() => setExpandedCurso(expandedCurso === cursoId ? null : cursoId)}
+                                    className="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                                  >
+                                    <div className="flex items-center space-x-3">
+                                      <GraduationCap className="h-5 w-5 text-[#2b9f3f]" />
+                                      <span className="font-medium text-gray-900">{cursoNome}</span>
+                                    </div>
+                                    {expandedCurso === cursoId ? (
+                                      <ChevronDown className="h-5 w-5 text-gray-400" />
+                                    ) : (
+                                      <ChevronRight className="h-5 w-5 text-gray-400" />
+                                    )}
+                                  </button>
 
-                                {expandedCurso === cursoId && (
-                                  <div className="ml-4">
-                                    {Object.entries(periodos)
-                                      .sort(([a], [b]) => {
-                                        const numA = parseInt(a.split('º')[0]);
-                                        const numB = parseInt(b.split('º')[0]);
-                                        return numA - numB;
-                                      })
-                                      .map(([periodo, planos]) => (
-                                        <div key={periodo} className="border-l-2 border-gray-200 m-4">
-                                          <div className="flex items-center justify-between px-6 py-3 bg-gray-50 rounded-lg">
-                                            <div className="flex items-center space-x-3">
-                                              <BookOpen className="h-5 w-5 text-[#2b9f3f]" />
-                                              <span className="font-medium text-gray-900">{periodo}</span>
-                                              <span className="text-sm text-gray-500">({planos.length} planos)</span>
+                                  {expandedCurso === cursoId && (
+                                    <div className="ml-4">
+                                      {Object.entries(periodos)
+                                        .sort(([a], [b]) => {
+                                          const numA = parseInt(a.split('º')[0]);
+                                          const numB = parseInt(b.split('º')[0]);
+                                          return numA - numB;
+                                        })
+                                        .map(([periodo, planos]) => (
+                                          <div key={periodo} className="border-l-2 border-gray-200 m-4">
+                                            <div className="flex items-center justify-between px-6 py-3 bg-gray-50 rounded-lg">
+                                              <div className="flex items-center space-x-3">
+                                                <BookOpen className="h-5 w-5 text-[#2b9f3f]" />
+                                                <span className="font-medium text-gray-900">{periodo}</span>
+                                                <span className="text-sm text-gray-500">({planos.length} planos)</span>
+                                              </div>
+                                              <PDFDownloadLink
+                                                document={
+                                                  <PlanoPDF
+                                                    planos={planos}
+                                                    curso={cursoNome}
+                                                    periodo={periodo.split('º')[0]}
+                                                  />
+                                                }
+                                                fileName={`planos-${anoPeriodo}-${cursoNome}-${periodo}.pdf`}
+                                                className="flex items-center space-x-2 text-sm text-[#2b9f3f] hover:text-[#248a35] transition-colors duration-200"
+                                              >
+                                                {({ loading }) => (
+                                                  <>
+                                                    <FileText className="h-5 w-5" />
+                                                    <span>{loading ? 'Gerando PDF...' : 'Baixar PDF'}</span>
+                                                  </>
+                                                )}
+                                              </PDFDownloadLink>
                                             </div>
-                                            <PDFDownloadLink
-                                              document={
-                                                <PlanoPDF
-                                                  planos={planos}
-                                                  curso={cursoNome}
-                                                  periodo={periodo.split('º')[0]}
-                                                />
-                                              }
-                                              fileName={`planos-${anoPeriodo}-${cursoNome}-${periodo}.pdf`}
-                                              className="flex items-center space-x-2 text-sm text-[#2b9f3f] hover:text-[#248a35] transition-colors duration-200"
-                                            >
-                                              {({ loading }) => (
-                                                <>
-                                                  <FileText className="h-5 w-5" />
-                                                  <span>{loading ? 'Gerando PDF...' : 'Baixar PDF'}</span>
-                                                </>
-                                              )}
-                                            </PDFDownloadLink>
+                                            <div className="space-y-1 mt-2">
+                                              {renderPlanosList(planos)}
+                                            </div>
                                           </div>
-                                          <div className="space-y-1 mt-2">
-                                            {renderPlanosList(planos)}
-                                          </div>
-                                        </div>
-                                      ))}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
+                                        ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+              </div>
+            )
           ) : planosFiltrados.length === 0 ? (
             <div className="text-center py-12">
               <h3 className="mt-2 text-sm font-medium text-gray-900">
@@ -528,6 +583,23 @@ export function Painel() {
         </div>
         {showImportModal && (
           <ImportPlano onClose={() => setShowImportModal(false)} />
+        )}
+        {showGerenciarCursos && (
+          <GerenciarCursos
+            cursos={Object.values(cursos)}
+            onClose={() => setShowGerenciarCursos(false)}
+            onUpdate={carregarDados}
+          />
+        )}
+        {showGerenciarUsuarios && (
+          <GerenciarUsuarios
+            usuarios={professores}
+            onClose={() => setShowGerenciarUsuarios(false)}
+            onUpdate={() => {
+              carregarDados();
+              carregarProfessores();
+            }}
+          />
         )}
       </main>
     </div>

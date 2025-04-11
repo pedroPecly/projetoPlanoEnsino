@@ -360,7 +360,7 @@ export function EditarPlano() {
                     onChange={handleChange}
                     className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
                   >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                       <option key={num} value={num}>
                         {num}º Período
                       </option>

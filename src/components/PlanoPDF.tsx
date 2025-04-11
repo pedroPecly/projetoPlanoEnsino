@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#333',
     borderStyle: 'solid',
+    breakInside: 'avoid',
   },
   sectionTitle: {
     fontSize: 11,
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#333',
     borderBottomWidth: 1,
     borderBottomColor: '#333',
+    breakAfter: 'page',
   },
   infoRow: {
     flexDirection: 'row',
@@ -113,7 +115,6 @@ const styles = StyleSheet.create({
     borderColor: '#333',
     minHeight: 35,
     marginHorizontal: -10,
-    marginBottom: -10,
   },
   cronogramaCell: {
     padding: 5,
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderTopWidth: 1,
     minHeight: 35,
-    marginBottom: -10,
     marginLeft: -10,
     marginRight: -11,
   },
@@ -142,6 +142,12 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRightWidth: 1,
     borderRightColor: '#333',
+  },
+  sectionWrapper: {
+    marginBottom: 20,
+  },
+  tableWrapper: {
+    breakInside: 'avoid',
   },
 });
 
@@ -169,15 +175,27 @@ function formatCronogramaContent(semana: any): string {
   const parts = [];
 
   if (semana.atividades?.length) {
-    parts.push(semana.atividades.join('; '));
+    parts.push('Atividades:');
+    semana.atividades.forEach((atividade: any, index: number) => {
+      parts.push(`${index + 1}. ${atividade.titulo}`);
+      if (atividade.subtopicos?.length) {
+        atividade.subtopicos.forEach((sub: any, subIndex: number) => {
+          parts.push(`${index + 1}.${subIndex + 1}. ${sub.titulo}`);
+        });
+      }
+    });
   }
 
-  if (semana.recursos?.length) {
-    parts.push(`Recursos: ${semana.recursos.join('; ')}`);
-  }
-
-  if (semana.avaliacao) {
-    parts.push(`Avaliação: ${semana.avaliacao}`);
+  if (semana.avaliacao?.length) {
+    parts.push('\nAvaliação:');
+    semana.avaliacao.forEach((aval: any, index: number) => {
+      parts.push(`${index + 1}. ${aval.titulo}`);
+      if (aval.subtopicos?.length) {
+        aval.subtopicos.forEach((sub: any, subIndex: number) => {
+          parts.push(`${index + 1}.${subIndex + 1}. ${sub.titulo}`);
+        });
+      }
+    });
   }
 
   return parts.join('\n');
@@ -186,12 +204,11 @@ function formatCronogramaContent(semana: any): string {
 export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        
-        {planos.map((plano, index) => (
-          <View key={plano.id}>
-            <Text style={styles.subtitle}>Ano {plano.ano_periodo}</Text>
-            {index > 0 && <View style={styles.pageBreak} />}
+      {planos.map((plano) => (
+        <Page key={plano.id} size="A4" style={styles.page}>
+          <Text style={styles.subtitle}>Ano {plano.ano_periodo}</Text>
+          
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>1) IDENTIFICAÇÃO DO COMPONENTE CURRICULAR</Text>
               <View>
@@ -245,12 +262,16 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 </View>
               </View>
             </View>
+          </View>
 
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>2) Ementa</Text>
               <Text style={styles.content}>{formatValue(plano.ementa)}</Text>
             </View>
+          </View>
 
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>3) Objetivos</Text>
               <Text style={styles.content}>3.1 Geral:</Text>
@@ -269,7 +290,9 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 ))}
               </View>
             </View>
+          </View>
 
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>4) Conteúdo</Text>
               <View style={styles.list}>
@@ -285,100 +308,104 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
                 ))}
               </View>
             </View>
+          </View>
 
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>5) Metodologia</Text>
               <Text style={styles.content}>{formatValue(plano.metodologia)}</Text>
             </View>
+          </View>
 
-            {plano.justificativa_modalidade && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>6) Justificativa da Modalidade</Text>
-                <Text style={styles.content}>{formatValue(plano.justificativa_modalidade)}</Text>
+          <View style={styles.sectionWrapper}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>6) Justificativa da Modalidade</Text>
+              <Text style={styles.content}>{formatValue(plano.justificativa_modalidade)}</Text>
+            </View>
+          </View>
+
+          <View style={styles.sectionWrapper}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>7) Atividades de Extensão</Text>
+              <Text style={styles.content}>{formatValue(plano.atividades_extensao)}</Text>
+            </View>
+          </View>
+
+          <View style={styles.sectionWrapper}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>8) Recursos Utilizados</Text>
+              <View style={styles.list}>
+                {plano.recursos_utilizados.map((recurso, index) => (
+                  <View key={index}>
+                    <Text style={styles.listItem}>
+                      8.{index + 1} {recurso.tipo.charAt(0).toUpperCase() + recurso.tipo.slice(1)}: {recurso.descricao}
+                      {recurso.quantidade && ` (Quantidade: ${recurso.quantidade})`}
+                    </Text>
+                  </View>
+                ))}
               </View>
-            )}
+            </View>
+          </View>
 
-            {plano.atividades_extensao && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>7) Atividades de Extensão</Text>
-                <Text style={styles.content}>{formatValue(plano.atividades_extensao)}</Text>
-              </View>
-            )}
-
-            {plano.recursos_utilizados.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>8) Recursos Utilizados</Text>
-                <View style={styles.list}>
-                  {plano.recursos_utilizados.map((recurso, index) => (
-                    <View key={index}>
-                      <Text style={styles.listItem}>
-                        8.{index + 1} {recurso.tipo.charAt(0).toUpperCase() + recurso.tipo.slice(1)}: {recurso.descricao}
-                        {recurso.quantidade && ` (Quantidade: ${recurso.quantidade})`}
-                      </Text>
-                    </View>
-                  ))}
+          <View style={styles.sectionWrapper}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
+              <View style={styles.tableWrapper}>
+                <View style={styles.visitaHeader}>
+                  <View style={[styles.visitaCell, { width: '45%' }]}>
+                    <Text>Local</Text>
+                  </View>
+                  <View style={[styles.visitaCell, { width: '20%' }]}>
+                    <Text>Data Prevista</Text>
+                  </View>
+                  <View style={[styles.visitaCell, { width: '35%' }]}>
+                    <Text>Materiais Necessários</Text>
+                  </View>
                 </View>
-              </View>
-            )}
-
-            {plano.visitas_tecnicas.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>9) Visitas Técnicas</Text>
-                <View>
-                  <View style={styles.visitaHeader}>
+                {plano.visitas_tecnicas.map((visita, index) => (
+                  <View key={index} style={styles.visitaRow}>
                     <View style={[styles.visitaCell, { width: '45%' }]}>
-                      <Text>Local</Text>
+                      <Text>{visita.local}</Text>
                     </View>
                     <View style={[styles.visitaCell, { width: '20%' }]}>
-                      <Text>Data Prevista</Text>
+                      <Text>{formatDate(visita.data_prevista)}</Text>
                     </View>
                     <View style={[styles.visitaCell, { width: '35%' }]}>
-                      <Text>Materiais Necessários</Text>
+                      <Text>{visita.materiais_necessarios.join(', ')}</Text>
                     </View>
                   </View>
-                  {plano.visitas_tecnicas.map((visita, index) => (
-                    <View key={index} style={styles.visitaRow}>
-                      <View style={[styles.visitaCell, { width: '45%' }]}>
-                        <Text>{visita.local}</Text>
-                      </View>
-                      <View style={[styles.visitaCell, { width: '20%' }]}>
-                        <Text>{formatDate(visita.data_prevista)}</Text>
-                      </View>
-                      <View style={[styles.visitaCell, { width: '35%' }]}>
-                        <Text>{visita.materiais_necessarios.join(', ')}</Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
+                ))}
               </View>
-            )}
+            </View>
+          </View>
 
-            {plano.cronograma.length > 0 && (
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>10) Cronograma</Text>
-                <View>
-                  <View style={styles.cronogramaHeader}>
+          <View style={styles.sectionWrapper}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>10) Cronograma</Text>
+              <View style={styles.tableWrapper}>
+                <View style={styles.cronogramaHeader}>
+                  <View style={[styles.cronogramaCell, { width: '13%' }]}>
+                    <Text>Data</Text>
+                  </View>
+                  <View style={[styles.cronogramaCell, { width: '87%', borderRightWidth: 0 }]}>
+                    <Text>Conteúdo / Atividade docente e/ou discente</Text>
+                  </View>
+                </View>
+                {plano.cronograma.map((semana, index) => (
+                  <View key={index} style={styles.cronogramaRow}>
                     <View style={[styles.cronogramaCell, { width: '13%' }]}>
-                      <Text>Data</Text>
+                      <Text>{formatDate(semana.data_inicio)} a {formatDate(semana.data_fim)}</Text>
                     </View>
                     <View style={[styles.cronogramaCell, { width: '87%', borderRightWidth: 0 }]}>
-                      <Text>Conteúdo / Atividade docente e/ou discente</Text>
+                      <Text>{formatCronogramaContent(semana)}</Text>
                     </View>
                   </View>
-                  {plano.cronograma.map((semana, index) => (
-                    <View key={index} style={styles.cronogramaRow}>
-                      <View style={[styles.cronogramaCell, { width: '13%' }]}>
-                        <Text>{formatDate(semana.data_inicio)} a {formatDate(semana.data_fim)}</Text>
-                      </View>
-                      <View style={[styles.cronogramaCell, { width: '87%', borderRightWidth: 0 }]}>
-                        <Text>{formatCronogramaContent(semana)}</Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
+                ))}
               </View>
-            )}
+            </View>
+          </View>
 
+          <View style={styles.sectionWrapper}>
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>11) Bibliografia</Text>
               <Text style={styles.content}>11.1 Básica:</Text>
@@ -399,8 +426,8 @@ export function PlanoPDF({ planos, curso, periodo }: PlanoPDFProps) {
               </View>
             </View>
           </View>
-        ))}
-      </Page>
+        </Page>
+      ))}
     </Document>
   );
 }

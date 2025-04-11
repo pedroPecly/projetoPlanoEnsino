@@ -91,7 +91,13 @@ export interface CronogramaItem {
   semana: number;
   data_inicio: string;
   data_fim: string;
-  atividades: string[];
-  recursos: string[];
-  avaliacao?: string;
+  atividades: CronogramaTopico[];
+  avaliacao: CronogramaTopico[];
+}
+
+export interface CronogramaTopico {
+  id: string;
+  titulo: string;
+  subtopicos: CronogramaTopico[];
+  ordem: number;
 }
