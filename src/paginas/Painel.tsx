@@ -189,23 +189,18 @@ export function Painel() {
       <div
         key={plano.id}
         onClick={() => navigate(`/editar-plano/${plano.id}`)}
-        className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 cursor-pointer ml-8 rounded-md transition-all duration-200"
+        className="flex items-center gap-3 px-5 py-3 hover:bg-[#2b9f3f]/5 cursor-pointer ml-4 rounded-lg transition group"
       >
-        <File className="h-4 w-4 text-gray-400" />
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-900">{plano.disciplina}</p>
-          <div className="flex items-center space-x-2 text-xs text-gray-500">
-            <User className="h-3 w-3" />
-            <span>{plano.professor_nome}</span>
-            <Clock className="h-3 w-3 ml-2" />
-            <span>{new Date(plano.atualizado_em).toLocaleDateString()}</span>
+        <File className="h-4 w-4 text-gray-300 group-hover:text-[#2b9f3f] flex-shrink-0 transition" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-gray-800 truncate">{plano.disciplina}</p>
+          <div className="flex items-center gap-3 text-xs text-gray-400 mt-0.5">
+            <span className="flex items-center gap-1"><User className="h-3 w-3" />{plano.professor_nome}</span>
+            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(plano.atualizado_em).toLocaleDateString('pt-BR')}</span>
           </div>
         </div>
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${plano.status === 'finalizado'
-          ? 'bg-green-100 text-green-800'
-          : 'bg-yellow-100 text-yellow-800'
-          }`}>
-          {plano.status === 'finalizado' ? 'Finalizado' : 'Rascunho'}
+        <span className="flex-shrink-0 text-gray-300 group-hover:text-[#2b9f3f] transition">
+          <ChevronRight className="h-4 w-4" />
         </span>
       </div>
     ));
@@ -215,61 +210,68 @@ export function Painel() {
 
   if (carregando) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <svg className="animate-spin h-8 w-8 text-[#2b9f3f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          </svg>
+          <span className="text-sm text-gray-500">Carregando...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
-              <span className="ml-2 text-xl font-semibold text-gray-900">
-                Planos de Ensino
-              </span>
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-7 w-7 text-[#2b9f3f]" />
+              <span className="text-lg font-bold text-gray-900">Planos de Ensino</span>
+              {professor?.admin && (
+                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#2b9f3f]/10 text-[#2b9f3f]">Admin</span>
+              )}
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-700">
-                <span>Olá, {professor?.nome}</span>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="hidden sm:block text-sm text-gray-500">Olá, <strong className="text-gray-700">{professor?.nome}</strong></span>
               <button
                 onClick={() => navigate('/alterar-dados-usuario')}
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="p-2 rounded-lg border border-gray-200 text-gray-500 hover:text-[#2b9f3f] hover:border-[#2b9f3f] transition"
+                title="Meu perfil"
               >
                 <User className="h-5 w-5" />
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:text-red-600 hover:border-red-300 transition"
               >
-                <LogOut className="h-5 w-5 mr-2" />
-                Sair
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sair</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-full mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {!professor?.admin && (
-          <div className="mb-4 flex flex-wrap items-center justify-between space-y-4 lg:space-y-0">
-            <div className="relative flex items-center space-x-2">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="relative flex items-center gap-2">
               <button
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
+                className="flex items-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 transition"
                 onClick={() => setMenuAberto(!menuAberto)}
               >
-                Filtros e Ordem {(menuAberto ? <ArrowDown className="ml-1 h-4 w-4" /> : <ArrowUp className="ml-1 h-4 w-4" />)}
+                {menuAberto ? <ArrowDown className="h-4 w-4" /> : <ArrowUp className="h-4 w-4" />}
+                Filtros
               </button>
               <input
                 type="text"
                 value={termoPesquisa}
                 onChange={(e) => setTermoPesquisa(e.target.value)}
-                placeholder="Pesquisar..."
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200 w-56 lg:w-80 focus:outline-none"
+                placeholder="Buscar por disciplina, título ou curso..."
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white w-56 lg:w-96 focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
               <div
                 className={`absolute top-12 left-0 mt-2 w-56 lg:w-72 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-all duration-300 transform origin-top z-50 ${menuAberto ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'
@@ -365,31 +367,24 @@ export function Painel() {
                 )}
               </div>
             </div>
-            <div className="flex space-x-2">
-              {/*<button
-                onClick={() => setShowImportModal(true)}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-200"
-              >
-                <Upload className="h-5 w-5 mr-2" />
-                Importar PDF
-              </button>*/}
+            <div className="flex gap-2">
               <button
                 onClick={() => navigate('/novo-plano')}
-                className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] transition duration-200"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm"
               >
-                <PlusCircle className="h-5 w-5 mr-2" />
+                <PlusCircle className="h-4 w-4" />
                 Novo Plano
               </button>
             </div>
           </div>
         )}
         {professor?.admin && (
-          <div className="flex justify-start mb-4 space-x-4"> {/* Adicionado space-x-4 para espaçamento padrão */}
+          <div className="flex flex-wrap gap-3 mb-6">
             <button
               onClick={() => setShowGerenciarCursos(true)}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-[#2b9f3f] hover:text-[#2b9f3f] transition shadow-sm"
             >
-              <GraduationCap className="h-5 w-5 mr-2" />
+              <GraduationCap className="h-4 w-4" />
               Gerenciar Cursos
             </button>
             <button
@@ -397,28 +392,32 @@ export function Painel() {
                 setShowGerenciarUsuarios(true);
                 carregarProfessores();
               }}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-[#2b9f3f] hover:text-[#2b9f3f] transition shadow-sm"
             >
-              <User className="h-5 w-5 mr-2" />
+              <User className="h-4 w-4" />
               Gerenciar Usuários
             </button>
           </div>
         )}
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
               {professor?.admin ? 'Todos os Planos de Ensino' : 'Meus Planos de Ensino'}
             </h2>
+            {!professor?.admin && planosFiltrados.length > 0 && (
+              <span className="text-xs text-gray-400">{planosFiltrados.length} plano{planosFiltrados.length !== 1 ? 's' : ''}</span>
+            )}
           </div>
 
           {professor?.admin ? (
             Object.keys(organizedPlanos).length === 0 ? (
-              <div className="text-center py-12">
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
-                  Nenhum plano de ensino encontrado
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Não há planos de ensino cadastrados no sistema.
+              <div className="flex flex-col items-center justify-center py-20 px-6">
+                <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                  <BookOpen className="h-8 w-8 text-gray-300" />
+                </div>
+                <h3 className="text-base font-semibold text-gray-700">Nenhum plano finalizado</h3>
+                <p className="mt-1 text-sm text-gray-400 text-center max-w-xs">
+                  Não há planos de ensino finalizados cadastrados no sistema ainda.
                 </p>
               </div>
             ) : (
@@ -523,58 +522,64 @@ export function Painel() {
               </div>
             )
           ) : planosFiltrados.length === 0 ? (
-            <div className="text-center py-12">
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
-                Nenhum plano de ensino encontrado
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Tente ajustar os filtros ou criar um novo plano de ensino.
+            <div className="flex flex-col items-center justify-center py-20 px-6">
+              <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                <BookOpen className="h-8 w-8 text-gray-300" />
+              </div>
+              <h3 className="text-base font-semibold text-gray-700">Nenhum plano encontrado</h3>
+              <p className="mt-1 text-sm text-gray-400 text-center max-w-xs">
+                {termoPesquisa || filtroCurso || filtroPeriodo || filtroStatus
+                  ? 'Tente ajustar os filtros de busca.'
+                  : 'Você ainda não possui planos de ensino. Crie o primeiro!'}
               </p>
-              <div className="mt-6">
+              {!termoPesquisa && !filtroCurso && !filtroPeriodo && !filtroStatus && (
                 <button
                   onClick={() => navigate('/novo-plano')}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200"
+                  className="mt-5 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm"
                 >
-                  <PlusCircle className="h-5 w-5 mr-2" />
-                  Criar novo plano
+                  <PlusCircle className="h-4 w-4" />
+                  Criar primeiro plano
                 </button>
-              </div>
+              )}
             </div>
           ) : (
-            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition duration-200">
+            <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {planosFiltrados.map((plano) => (
                 <div
                   key={plano.id}
                   onClick={() => navigate(`/editar-plano/${plano.id}`)}
-                  className="relative bg-white border rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                  className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md hover:border-[#2b9f3f]/40 transition-all duration-200 cursor-pointer group flex flex-col"
                 >
-                  <div className="absolute top-4 right-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${plano.status === 'finalizado'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                      plano.status === 'finalizado'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
                       {plano.status === 'finalizado' ? 'Finalizado' : 'Rascunho'}
                     </span>
+                    <span className="text-xs text-gray-400">{plano.ano_periodo}</span>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 truncate pr-20">
-                    {plano.titulo}
+                  <h3 className="text-sm font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-[#2b9f3f] transition mb-3 flex-1">
+                    {plano.titulo || plano.disciplina}
                   </h3>
-                  <div className="mt-2 space-y-1">
-                    <p className="text-sm text-gray-500">
-                      Disciplina: {plano.disciplina}
+                  <div className="space-y-1.5">
+                    <p className="text-xs text-gray-500 flex items-center gap-1.5">
+                      <BookOpen className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">{plano.disciplina}</span>
                     </p>
-                    <p className="text-sm text-gray-500">
-                      Período: {plano.periodo}
+                    <p className="text-xs text-gray-500 flex items-center gap-1.5">
+                      <GraduationCap className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">{cursos[plano.curso_id]?.nome}</span>
                     </p>
-                    <p className="text-sm text-gray-500">
-                      Curso: {cursos[plano.curso_id]?.nome}
+                    <p className="text-xs text-gray-500 flex items-center gap-1.5">
+                      <Folder className="h-3 w-3 flex-shrink-0" />
+                      <span>{plano.periodo}</span>
                     </p>
-                    <p className='text-sm text-gray-500'>
-                      Ano/periodo: {plano.ano_periodo}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Atualizado em: {new Date(plano.atualizado_em).toLocaleDateString()}
-                    </p>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-gray-100 flex items-center gap-1 text-xs text-gray-400">
+                    <Clock className="h-3 w-3" />
+                    <span>Atualizado {new Date(plano.atualizado_em).toLocaleDateString('pt-BR')}</span>
                   </div>
                 </div>
               ))}

@@ -151,20 +151,19 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-4 sm:p-6 max-w-lg sm:max-w-xl lg:max-w-4xl w-full mx-4 overflow-y-auto max-h-[90vh]">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            Gerenciar Usuários
-          </h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg sm:max-w-xl lg:max-w-4xl w-full mx-4 overflow-hidden max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 flex-shrink-0">
+          <h3 className="text-base font-bold text-gray-900">Gerenciar Usuários</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
+        <div className="p-6 overflow-y-auto flex-1">
         {/* Botão Novo Usuário */}
         <button
           onClick={() => setNovoUsuario({
@@ -174,16 +173,16 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
             admin: false,
             senha: ''
           })}
-          className="mb-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35]"
+          className="mb-4 flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm"
         >
-          <Plus className="h-5 w-5 mr-2" />
+          <Plus className="h-4 w-4" />
           Novo Usuário
         </button>
 
         {/* Formulário de Novo Usuário */}
         {novoUsuario && (
-          <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <h4 className="text-lg font-medium mb-4">Novo Usuário</h4>
+          <div className="mb-5 p-4 border border-[#2b9f3f]/30 rounded-xl bg-[#2b9f3f]/5">
+            <h4 className="text-sm font-bold text-gray-800 mb-4">Novo Usuário</h4>
             <form onSubmit={handleCriarUsuario} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -238,18 +237,18 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
                   />
                 </div>
               </div>
-              <div className="flex justify-end space-x-2">
+              <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setNovoUsuario(null)}
-                  className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={carregando}
-                  className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35]"
+                  className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition disabled:opacity-50"
                 >
                   Criar Usuário
                 </button>
@@ -264,14 +263,14 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
             type="text"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
-            placeholder="Pesquisar por nome ou email"
-            className="block w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
+            placeholder="Pesquisar por nome ou email..."
+            className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
           />
         </div>
 
-        <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+        <div className="space-y-2.5">
           {usuariosFiltrados.map((usuario) => (
-            <div key={usuario.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div key={usuario.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
               {editandoUsuario?.id === usuario.id ? (
                 <form onSubmit={handleEditarUsuario} className="w-full">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -312,20 +311,20 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
                       />
                     </div>
                   </div>
-                  <div className="mt-4 flex justify-end space-x-2">
+                  <div className="mt-4 flex justify-end gap-2">
                     <button
                       type="button"
                       onClick={() => setEditandoUsuario(null)}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
                       disabled={carregando}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35]"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition disabled:opacity-50"
                     >
-                      <Save className="h-4 w-4 mr-2" />
+                      <Save className="h-4 w-4" />
                       Salvar
                     </button>
                   </div>
@@ -333,14 +332,18 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
               ) : (
                 <>
                   <div className="flex-1">
-                    <h4 className="text-lg font-medium">{usuario.nome}</h4>
-                    <div className="text-sm text-gray-500">
-                      <p>Email: {usuario.email}</p>
-                      <p>Matrícula SIAPE: {usuario.matricula_siape || 'Não informada'}</p>
-                      <p>Tipo: {usuario.admin ? 'Administrador' : 'Professor'}</p>
+                    <h4 className="text-sm font-bold text-gray-900">{usuario.nome}</h4>
+                    <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
+                      <p>{usuario.email}</p>
+                      <p>SIAPE: {usuario.matricula_siape || 'Não informada'}</p>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                        usuario.admin ? 'bg-[#2b9f3f]/10 text-[#2b9f3f]' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {usuario.admin ? 'Administrador' : 'Professor'}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex gap-2 mt-2 sm:mt-0">
+                  <div className="flex gap-1.5 mt-2 sm:mt-0">
                     <button
                       onClick={() => setEditandoUsuario({
                         id: usuario.id,
@@ -349,21 +352,24 @@ export function GerenciarUsuarios({ usuarios, onClose, onUpdate }: Props) {
                         matricula_siape: usuario.matricula_siape || '',
                         admin: usuario.admin
                       })}
-                      className="text-indigo-600 hover:text-indigo-700"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#2b9f3f] hover:bg-[#2b9f3f]/10 transition"
+                      title="Editar"
                     >
-                      <Edit2 className="h-5 w-5" />
+                      <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleExcluirUsuario(usuario.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition"
+                      title="Excluir"
                     >
-                      <Trash2 className="h-5 w-5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </>
               )}
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>

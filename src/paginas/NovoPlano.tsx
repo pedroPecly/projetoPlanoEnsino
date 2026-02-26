@@ -264,51 +264,54 @@ export function NovoPlano() {
 
   if (carregando) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <svg className="animate-spin h-8 w-8 text-[#2b9f3f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          </svg>
+          <span className="text-sm text-gray-500">Carregando...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-[#2b9f3f]" />
-              <span className="ml-2 text-xl font-semibold text-gray-900">
-                Planos de Ensino
-              </span>
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-7 w-7 text-[#2b9f3f]" />
+              <span className="text-lg font-bold text-gray-900">Planos de Ensino</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center text-sm text-gray-700">
-                <span>Olá, {professor?.nome}</span>
-              </div>
+            <div className="flex items-center gap-3">
+              <span className="hidden sm:block text-sm text-gray-500">Olá, <strong className="text-gray-700">{professor?.nome}</strong></span>
               <button
                 onClick={() => navigate('/alterar-dados-usuario')}
-                className="inline-flex items-center px-2 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="p-2 rounded-lg border border-gray-200 text-gray-500 hover:text-[#2b9f3f] hover:border-[#2b9f3f] transition"
+                title="Meu perfil"
               >
                 <User className="h-5 w-5" />
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:text-red-600 hover:border-red-300 transition"
               >
-                <LogOut className="h-5 w-5 mr-2" />
-                Sair
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sair</span>
               </button>
             </div>
           </div>
         </div>
       </nav>
-      <div className="max-w-full mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-center">
+      <div className="max-w-full mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center justify-between">
           <button
             onClick={() => navigate('/painel')}
-            className="flex items-center text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 transition"
           >
-            <ArrowLeft className="h-5 w-5 mr-2" />
+            <ArrowLeft className="h-4 w-4" />
             Voltar ao Painel
           </button>
         </div>
@@ -321,14 +324,17 @@ export function NovoPlano() {
           </div>
 
           <div className="flex-1 space-y-6">
-            <div id="ano-periodo" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Ano/Período</h2>
-              <div className="mt-1 flex space-x-4">
+            <div id="ano-periodo" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Ano/Período</h2>
+              </div>
+              <div className="p-6">
+              <div className="flex space-x-4">
                 <select
                   name="ano_periodo"
                   value={plano.ano_periodo}
                   onChange={handleChange}
-                  className="block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                  className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                 >
                   {[currentYear - 1, currentYear, currentYear + 1].map(year => (
                     <React.Fragment key={year}>
@@ -338,17 +344,22 @@ export function NovoPlano() {
                   ))}
                 </select>
               </div>
+              </div>
             </div>
 
-            <div id="info-basicas" className="bg-white shadow rounded-lg p-6">
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div id="info-basicas" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Informações Básicas</h2>
+              </div>
+              <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Curso</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Curso</label>
                   <select
                     name="curso_id"
                     value={plano.curso_id}
                     onChange={handleChange}
-                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                   >
                     {cursos.map(curso => (
                       <option key={curso.id} value={curso.id}>
@@ -359,12 +370,12 @@ export function NovoPlano() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Período</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Período</label>
                   <select
                     name="periodo_numero"
                     value={plano.periodo_numero}
                     onChange={handleChange}
-                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                   >
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                       <option key={num} value={num}>
@@ -375,41 +386,41 @@ export function NovoPlano() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Disciplina</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Disciplina</label>
                   <input
                     type="text"
                     name="disciplina"
                     value={plano.disciplina}
                     onChange={handleChange}
-                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Abreviatura</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Abreviatura</label>
                   <input
                     type="text"
                     name="abreviatura"
                     value={plano.abreviatura}
                     onChange={handleChange}
-                    className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                    className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                   />
                 </div>
               </div>
 
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700">Título do Plano</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Título do Plano</label>
                 <input
                   type="text"
                   name="titulo"
                   value={plano.titulo}
                   onChange={handleChange}
-                  className="mt-2 block w-full rounded-md border border-gray-200 shadow-sm focus:outline-none hover:bg-gray-50"
+                  className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                 />
               </div>
 
-              <div className="mt-6">
+              <div>
                 <CargaHoraria
                   carga_horaria_total={plano.carga_horaria_total}
                   carga_horaria_presencial={plano.carga_horaria_presencial}
@@ -425,123 +436,170 @@ export function NovoPlano() {
                   onChange={handleCargaHorariaChange}
                 />
               </div>
+              </div>
             </div>
 
-            <div id="ementa" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Ementa</h2>
+            <div id="ementa" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Ementa</h2>
+              </div>
+              <div className="p-6">
               <textarea
                 name="ementa"
                 value={plano.ementa}
                 onChange={handleChange}
                 rows={4}
-                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
+              </div>
             </div>
 
-            <div id="objetivo-geral" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivo geral</h2>
+            <div id="objetivo-geral" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Objetivos</h2>
+              </div>
+              <div className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Objetivo Geral</label>
               <textarea
                 name="objetivo_geral"
                 value={plano.objetivo_geral}
                 onChange={handleChange}
                 rows={3}
-                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Objetivos Específicos</h2>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Objetivos Específicos</label>
               <ObjetivosEspecificos
                 conteudos={plano.objetivos_especificos}
                 onChange={handleObjetivosEspecificosChange}
               />
+              </div>
+              </div>
             </div>
 
-            <div id="conteudo-programatico" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Conteúdo</h2>
+            <div id="conteudo-programatico" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Conteúdo Programático</h2>
+              </div>
+              <div className="p-6">
               <ConteudoProgramatico
                 conteudos={plano.conteudo_programatico}
                 onChange={handleConteudoProgramaticoChange}
               />
+              </div>
             </div>
 
-            <div id="metodologia" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Metodologia</h2>
+            <div id="metodologia" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Metodologia</h2>
+              </div>
+              <div className="p-6">
               <textarea
                 name="metodologia"
                 value={plano.metodologia}
                 onChange={handleChange}
                 rows={6}
-                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
+              </div>
             </div>
 
-            <div id="atividades_extensao" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">atividade de extensão</h2>
+            <div id="atividades_extensao" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Atividades de Extensão</h2>
+              </div>
+              <div className="p-6">
               <textarea
                 name="atividades_extensao"
                 value={plano.atividades_extensao}
                 onChange={handleChange}
                 rows={5}
-                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
+              </div>
             </div>
 
-            <div id="justificativa_modalidade" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Justificativa de Modalidade</h2>
+            <div id="justificativa_modalidade" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Justificativa de Modalidade</h2>
+              </div>
+              <div className="p-6">
               <textarea
                 name="justificativa_modalidade"
                 value={plano.justificativa_modalidade}
                 onChange={handleChange}
                 rows={5}
-                className="mt-1 block w-full rounded-md border border-gray-200 p-2 shadow-sm focus:outline-none hover:bg-gray-50"
+                className="block w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
               />
+              </div>
             </div>
 
-            <div id="recursos" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Recursos Utilizados</h2>
+            <div id="recursos" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Recursos Utilizados</h2>
+              </div>
+              <div className="p-6">
               <RecursosUtilizados
                 recursos={plano.recursos_utilizados}
                 onChange={handleRecursosUtilizadosChange}
               />
+              </div>
             </div>
 
-            <div id="visitas" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Visitas Técnicas</h2>
+            <div id="visitas" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Visitas Técnicas</h2>
+              </div>
+              <div className="p-6">
               <VisitasTecnicas
                 visitas={plano.visitas_tecnicas}
                 onChange={handleVisitasTecnicasChange}
               />
+              </div>
             </div>
 
-            <div id="cronograma" className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Cronograma</h2>
+            <div id="cronograma" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Cronograma</h2>
+              </div>
+              <div className="p-6">
               <Cronograma
                 cronograma={plano.cronograma}
                 onChange={handleCronogramaChange}
               />
+              </div>
             </div>
 
-            <div id="bibliografia" className="bg-white shadow rounded-lg p-6">
+            <div id="bibliografia" className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Bibliografia</h2>
+              </div>
+              <div className="p-6">
               <Bibliografia
                 basica={plano.bibliografia_basica}
                 complementar={plano.bibliografia_complementar}
                 onChange={handleBibliografiaChange}
               />
+              </div>
             </div>
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end gap-3 pb-8">
               <button
                 onClick={() => salvarPlano('rascunho')}
                 disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none hover:bg-gray-50 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition shadow-sm disabled:opacity-50"
               >
-                <Save className="h-5 w-5 mr-2" />
+                <Save className="h-4 w-4" />
                 Salvar Rascunho
               </button>
               <button
                 onClick={() => salvarPlano('finalizado')}
                 disabled={carregando}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm disabled:opacity-50"
               >
-                <CheckCircle className="h-5 w-5 mr-2" />
+                <CheckCircle className="h-4 w-4" />
                 Finalizar Plano
               </button>
             </div>

@@ -83,63 +83,62 @@ export function GerenciarCursos({ cursos, onClose, onUpdate }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-4 sm:p-6 max-w-lg sm:max-w-xl lg:max-w-2xl w-full mx-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            Gerenciar Cursos
-          </h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-lg sm:max-w-xl lg:max-w-2xl w-full mx-4 overflow-hidden">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+          <h3 className="text-base font-bold text-gray-900">Gerenciar Cursos</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <form onSubmit={handleAdicionarCurso} className="mb-6">
+        <div className="p-6">
+        <form onSubmit={handleAdicionarCurso} className="mb-5">
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               value={novoCurso}
               onChange={(e) => setNovoCurso(e.target.value)}
-              placeholder="Nome do novo curso"
-              className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
+              placeholder="Nome do novo curso..."
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
             />
             <button
               type="submit"
               disabled={carregando || !novoCurso.trim()}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm disabled:opacity-50"
             >
-              <Plus className="h-5 w-5 mr-2" />
+              <Plus className="h-4 w-4" />
               Adicionar
             </button>
           </div>
         </form>
 
-        <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+        <div className="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1">
           {cursos.map((curso) => (
-            <div key={curso.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div key={curso.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
               {editandoCurso?.id === curso.id ? (
                 <form onSubmit={handleEditarCurso} className="flex-1 flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={editandoCurso.nome}
                     onChange={(e) => setEditandoCurso({ ...editandoCurso, nome: e.target.value })}
-                    className="flex-1 rounded-md border border-gray-300 shadow-sm px-3 py-2 focus:outline-none focus:ring-[#2b9f3f] focus:border-[#2b9f3f]"
+                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2b9f3f] focus:border-[#2b9f3f] transition"
                   />
                   <div className="flex gap-2">
                     <button
                       type="submit"
                       disabled={carregando || !editandoCurso.nome.trim()}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b9f3f] hover:bg-[#248a35] focus:outline-none disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition disabled:opacity-50"
                     >
                       Salvar
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditandoCurso(null)}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      className="px-3 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                     >
                       Cancelar
                     </button>
@@ -147,25 +146,28 @@ export function GerenciarCursos({ cursos, onClose, onUpdate }: Props) {
                 </form>
               ) : (
                 <>
-                  <span className="text-gray-900">{curso.nome}</span>
-                  <div className="flex gap-2 mt-2 sm:mt-0">
+                  <span className="text-sm font-medium text-gray-800">{curso.nome}</span>
+                  <div className="flex gap-1.5 mt-2 sm:mt-0">
                     <button
                       onClick={() => setEditandoCurso({ id: curso.id, nome: curso.nome })}
-                      className="text-indigo-600 hover:text-indigo-700"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#2b9f3f] hover:bg-[#2b9f3f]/10 transition"
+                      title="Editar"
                     >
-                      <Edit2 className="h-5 w-5" />
+                      <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleExcluirCurso(curso.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition"
+                      title="Excluir"
                     >
-                      <Trash2 className="h-5 w-5" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 </>
               )}
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>
