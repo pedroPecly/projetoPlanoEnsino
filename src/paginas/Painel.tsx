@@ -369,6 +369,13 @@ export function Painel() {
             </div>
             <div className="flex gap-2">
               <button
+                onClick={() => setShowImportModal(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 border border-gray-300 bg-white hover:bg-gray-50 hover:border-[#2b9f3f] hover:text-[#2b9f3f] transition shadow-sm"
+              >
+                <Upload className="h-4 w-4" />
+                Importar PDF
+              </button>
+              <button
                 onClick={() => navigate('/novo-plano')}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#2b9f3f] hover:bg-[#248a35] transition shadow-sm"
               >
@@ -586,8 +593,13 @@ export function Painel() {
             </div>
           )}
         </div>
-        {showImportModal && (
-          <ImportPlano onClose={() => setShowImportModal(false)} />
+        {showImportModal && professor && (
+          <ImportPlano
+            cursos={Object.values(cursos)}
+            professor={professor}
+            onClose={() => setShowImportModal(false)}
+            onImportSuccess={carregarDados}
+          />
         )}
         {showGerenciarCursos && (
           <GerenciarCursos

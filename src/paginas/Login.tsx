@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { BookOpen, Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
@@ -11,6 +11,17 @@ export function Login() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState('');
+  const [lembrarLogin, setLembrarLogin] = useState(false);
+
+  useEffect(() => {
+    const emailSalvo = localStorage.getItem('plano_email');
+    const senhaSalva = localStorage.getItem('plano_senha');
+    if (emailSalvo && senhaSalva) {
+      setEmail(emailSalvo);
+      setSenha(senhaSalva);
+      setLembrarLogin(true);
+    }
+  }, []);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -30,6 +41,14 @@ export function Login() {
           setErro('Erro ao fazer login. Tente novamente.');
         }
         return;
+      }
+
+      if (lembrarLogin) {
+        localStorage.setItem('plano_email', email);
+        localStorage.setItem('plano_senha', senha);
+      } else {
+        localStorage.removeItem('plano_email');
+        localStorage.removeItem('plano_senha');
       }
 
       toast.success('Login realizado com sucesso!');
@@ -125,6 +144,19 @@ export function Login() {
                   {mostrarSenha ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                id="lembrar"
+                type="checkbox"
+                checked={lembrarLogin}
+                onChange={(e) => setLembrarLogin(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-[#2b9f3f] focus:ring-[#2b9f3f] cursor-pointer"
+              />
+              <label htmlFor="lembrar" className="text-sm text-gray-600 cursor-pointer select-none">
+                Lembrar e-mail e senha
+              </label>
             </div>
 
             <button
