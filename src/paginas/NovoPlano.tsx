@@ -11,6 +11,7 @@ import { VisitasTecnicas } from '../components/VisitasTecnicas';
 import { Bibliografia } from '../components/Bibliografia';
 import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 import { PlanoSumario } from '../components/PlanoSumario';
+import { VoltarTopo } from '../components/VoltarTopo';
 import type { Curso, Professor } from '../tipos';
 
 const summaryItems = [
@@ -606,6 +607,7 @@ export function NovoPlano() {
           </div>
         </div>
       </div>
+      <VoltarTopo />
     </div>
   );
 }

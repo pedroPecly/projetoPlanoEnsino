@@ -14,6 +14,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import type { PlanoEnsino, Professor, Curso } from '../tipos';
 import { ObjetivosEspecificos } from '../components/ObjetivosEspecificos';
 import { PlanoSumario } from '../components/PlanoSumario';
+import { VoltarTopo } from '../components/VoltarTopo';
 
 const summaryItems = [
   { id: '1', label: 'Ano/Período', target: 'ano-periodo' },
@@ -598,6 +599,7 @@ export function EditarPlano() {
           </div>
         </div>
       </div>
+      <VoltarTopo />
     </div>
   );
 }
