@@ -1,9 +1,10 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import calibriUrl from '../assets/fonts/Calibri.ttf?url';
 import type { PlanoEnsino } from '../tipos';
 
 Font.register({
   family: 'Calibri',
-  src: '/src/assets/fonts/Calibri.ttf',
+  src: calibriUrl,
 });
 
 const styles = StyleSheet.create({
